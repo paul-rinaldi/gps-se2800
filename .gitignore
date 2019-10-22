@@ -1,0 +1,22 @@
+# Add any directories, files, or patterns you don't want to be tracked by version control
+#ignore all files in the .idea, bin/ and /out directories (takes care of .class files for some IDEs)
+bin/
+out/
+.idea/
+
+#ignore automatically generated backup files (created by some editors)
+*.out
+*.iml
+*.class
+*.bak
+*.nbc
+*.pch
+*.bin
+*.ar
+
+#ignore Enterprise Architect and Microsoft temporary files
+*.ldb
+~*
+
+#ignore all files that begin with a dot (this includes .classpath, .project, etc)
+.*
