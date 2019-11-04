@@ -1,6 +1,7 @@
 package gps;
 
 
+import javafx.application.Platform;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.Spinner;
 
@@ -54,8 +55,18 @@ public class GPSController {
 	 * 
 	 * @param filename
 	 */
-	public void parseTrackFile(Path filename){
+	private void parseTrackFile(Path filename){
 
+	}
+
+	/**
+	 * @author Austin Demars
+	 *
+	 * Called when 'File/Exit' is pressed
+	 * Closes (exits) the application
+	 */
+	public void exit() { //Austin
+		Platform.exit();
 	}
 
 }
