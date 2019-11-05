@@ -10,7 +10,11 @@ import java.util.jar.Attributes;
  */
 public class GPXHandler extends AbstractParserEventHandler {
 
+	private enum PossibleStates {INITIAL};
+	private PossibleStates currentState = PossibleStates.INITIAL;
+
 	private TracksHandler tracksHandler;
+	private Track currentTrack;
 
 	public GPXHandler(){
 		super();
