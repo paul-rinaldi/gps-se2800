@@ -4,7 +4,7 @@ package gps;
 import java.util.Date;
 
 /**
- * @author demarsa
+ * @author demarsa and aleckm
  * @version 1.0
  * @created 04-Nov-2019 9:32:33 AM
  */
@@ -16,23 +16,33 @@ public class TrackPoint {
 	private Date time;
 
 	public TrackPoint(){
+		this.elevation = 0;
+		this.latitude = 0;
+		this.longitude = 0;
+		this.time = null;
+	}
 
+	public TrackPoint(double elevation, double latitude, double longitude, Date time) {
+		this.elevation = elevation;
+		this.latitude = latitude;
+		this.longitude = longitude;
+		this.time = time;
 	}
 
 	public double getElevation(){
-		return 0;
+		return this.elevation;
 	}
 
 	public double getLatitude(){
-		return 0;
+		return this.latitude;
 	}
 
 	public double getLongitude(){
-		return 0;
+		return this.longitude;
 	}
 
 	public Date getTime(){
-		return null;
+		return this.time;
 	}
 
 }
