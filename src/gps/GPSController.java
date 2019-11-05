@@ -2,7 +2,9 @@ package gps;
 
 
 import javafx.application.Platform;
+import javafx.fxml.FXML;
 import javafx.scene.control.Spinner;
+import javafx.scene.control.TextField;
 import javafx.stage.FileChooser;
 import org.xml.sax.SAXException;
 
@@ -16,13 +18,35 @@ import java.io.File;
 public class GPSController {
 
 	private TracksHandler tracksHandler;
-	private Spinner trackSpinner;
 	private AbstractParserEventHandler handler = new GPXHandler();
-	private int tracksLoaded = 0;
+	private int tracksRemaining = 10;
 
+	@FXML
+	private TextField trackName;
+	@FXML
+	private Spinner<Integer> trackSpinner;
+
+
+	public void changeTrackSelected() {
+
+		if (tracksHandler != null) {
+			int tracksLoaded = tracksHandler.getTrackAmount();
+			int trackSelected = trackSpinner.getValue();
+
+			if (trackSelected <= tracksLoaded) {
+				trackName.setText(tracksHandler.getTrack(trackSelected - 1).getName());
+			}
+		}
+
+	}
 
 	public void calcTrackStats(){
+		tracksHandler.calculateTrackStats(trackSpinner.getValue().toString());
+		displayTrackStats();
+	}
 
+	private void displayTrackStats(){
+		Track track = tracksHandler.getTrack(trackSpinner.getValue().toString());
 	}
 
 	/**
@@ -45,7 +69,7 @@ public class GPSController {
 
 	public void loadTrack(){
 
-		if(tracksLoaded != 10) {
+		if(tracksRemaining != 0) {
 
 			FileChooser chooser = new FileChooser();
 			chooser.setInitialDirectory(new File(System.getProperty("user.dir")));
@@ -56,7 +80,18 @@ public class GPSController {
 			if (inputFile != null) {
 
 				parseTrackFile(inputFile.getAbsolutePath());
-				tracksLoaded++;
+				tracksRemaining--;
+
+				//This takes the most recently added track and displays its name and points loaded
+				int trackIdx = tracksHandler.getTrackAmount()-1;
+				Track trackLoaded = tracksHandler.getTrack(trackIdx);
+				createInfoDialog("Track Successfully Created",
+						"Name of track: " + trackLoaded.getName()
+									+ "\nPoints loaded: " + trackLoaded.getPointAmount());
+
+				if(tracksRemaining == 9){
+					trackName.setText(trackLoaded.getName());
+				}
 
 
 			}
@@ -74,7 +109,7 @@ public class GPSController {
 
 		handler.enableLogging(true); // enable debug logging to System.out
 
-		Parser parser = null;
+		Parser parser;
 		try {
 			parser = new Parser( handler ); // create the Parser
 			parser.parse(filename);		// parse a file!
@@ -87,7 +122,7 @@ public class GPSController {
 			System.out.println("ParserDemoApp: Parser threw Exception: " + e.getMessage() );
 		}
 
-		if(tracksLoaded == 0) {
+		if(tracksRemaining == 10) {
 			tracksHandler = ((GPXHandler) handler).getTrackHandler();
 		}
 
