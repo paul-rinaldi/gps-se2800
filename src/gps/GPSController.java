@@ -45,6 +45,7 @@ public class GPSController {
 
 	public void loadTrack(){
 
+<<<<<<< HEAD
 		FileChooser chooser = new FileChooser();
 		chooser.setInitialDirectory(new File(System.getProperty("user.dir")));
 
@@ -57,6 +58,25 @@ public class GPSController {
 			tracksLoaded ++;
 
 
+=======
+		if(tracksLoaded != 10) {
+
+			FileChooser chooser = new FileChooser();
+			chooser.setInitialDirectory(new File(System.getProperty("user.dir")));
+
+
+			File inputFile = chooser.showOpenDialog(null);
+
+			if (inputFile != null) {
+
+				parseTrackFile(inputFile.getAbsolutePath());
+				tracksLoaded++;
+
+
+			}
+		} else {
+			//Inform them their tracks have reached maximum
+>>>>>>> 0e13ed8cb2586f9195a6d456d3d33ec6cba09952
 		}
 
 	}
