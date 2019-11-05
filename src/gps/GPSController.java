@@ -2,10 +2,11 @@ package gps;
 
 
 import javafx.application.Platform;
-import javafx.scene.control.MenuItem;
 import javafx.scene.control.Spinner;
+import javafx.stage.FileChooser;
+import org.xml.sax.SAXException;
 
-import java.nio.file.Path;
+import java.io.File;
 
 /**
  * @author demarsa
@@ -14,16 +15,11 @@ import java.nio.file.Path;
  */
 public class GPSController {
 
-	private MenuItem loadButton;
-	private GPXParser parser;
-	private MenuItem statsButton;
 	private TracksHandler tracksHandler;
 	private Spinner trackSpinner;
-	private GPXParser gpxParser;
+	private AbstractParserEventHandler handler = new GPXHandler();
+	private int tracksLoaded = 0;
 
-	public GPSController(){
-
-	}
 
 	public void calcTrackStats(){
 
@@ -49,13 +45,46 @@ public class GPSController {
 
 	public void loadTrack(){
 
+		FileChooser chooser = new FileChooser();
+		chooser.setInitialDirectory(new File(System.getProperty("user.dir")));
+
+
+		File inputFile = chooser.showOpenDialog(null);
+
+		if(inputFile != null) {
+
+			parseTrackFile(inputFile.getAbsolutePath());
+			tracksLoaded ++;
+
+
+		}
+
 	}
 
 	/**
 	 * 
 	 * @param filename
 	 */
-	private void parseTrackFile(Path filename){
+	private void parseTrackFile(String filename){
+
+		handler.enableLogging(true); // enable debug logging to System.out
+
+		Parser parser = null;
+		try {
+			parser = new Parser( handler ); // create the Parser
+			parser.parse(filename);		// parse a file!
+		} catch (SAXException e) {
+			// something went wrong during parsing; print to the console since this is a console demo app.
+			System.out.println("ParserDemoApp: Parser threw SAXException: " + e.getMessage() );
+			System.out.println("The error occurred near line " + handler.getLine() + ", col "+ handler.getColumn());
+		} catch (Exception e) {
+			// something went wrong when initializing the Parser; print to the console since this is a console demo app.
+			System.out.println("ParserDemoApp: Parser threw Exception: " + e.getMessage() );
+		}
+
+		if(tracksLoaded == 0) {
+			tracksHandler = ((GPXHandler) handler).getTrackHandler();
+		}
 
 	}
 

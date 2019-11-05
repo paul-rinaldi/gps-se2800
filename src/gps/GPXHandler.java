@@ -8,13 +8,13 @@ import java.util.jar.Attributes;
  * @version 1.0
  * @created 04-Nov-2019 9:32:33 AM
  */
-public class GPXParser {
+public class GPXHandler extends AbstractParserEventHandler {
 
-	private TracksHandler trackHandler;
 	private TracksHandler tracksHandler;
 
-	public void GPXParser(){
-
+	public GPXHandler(){
+		super();
+		tracksHandler = new TracksHandler();
 	}
 
 	/**
@@ -42,7 +42,7 @@ public class GPXParser {
 	}
 
 	public TracksHandler getTrackHandler(){
-		return null;
+		return tracksHandler;
 	}
 
 	/**
