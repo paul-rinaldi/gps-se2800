@@ -24,14 +24,14 @@ public class GPSController {
 	@FXML
 	private TextField trackName;
 	@FXML
-	private Spinner trackSpinner;
+	private Spinner<Integer> trackSpinner;
 
 
 	public void changeTrackSelected() {
 
 		if (tracksHandler != null) {
 			int tracksLoaded = tracksHandler.getTrackAmount();
-			int trackSelected = Integer.parseInt(trackSpinner.getValue().toString());
+			int trackSelected = trackSpinner.getValue();
 
 			if (trackSelected <= tracksLoaded) {
 				trackName.setText(tracksHandler.getTrack(trackSelected - 1).getName());
