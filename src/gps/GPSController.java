@@ -2,7 +2,9 @@ package gps;
 
 
 import javafx.application.Platform;
+import javafx.fxml.FXML;
 import javafx.scene.control.Spinner;
+import javafx.scene.control.TextField;
 import javafx.stage.FileChooser;
 import org.xml.sax.SAXException;
 
@@ -16,10 +18,27 @@ import java.io.File;
 public class GPSController {
 
 	private TracksHandler tracksHandler;
-	private Spinner trackSpinner;
 	private AbstractParserEventHandler handler = new GPXHandler();
 	private int tracksRemaining = 10;
 
+	@FXML
+	private TextField trackName;
+	@FXML
+	private Spinner trackSpinner;
+
+
+	public void changeTrackSelected() {
+
+		if (tracksHandler != null) {
+			int tracksLoaded = tracksHandler.getTrackAmount();
+			int trackSelected = Integer.parseInt(trackSpinner.getValue().toString());
+
+			if (trackSelected <= tracksLoaded) {
+				trackName.setText(tracksHandler.getTrack(trackSelected - 1).getName());
+			}
+		}
+
+	}
 
 	public void calcTrackStats(){
 		tracksHandler.calculateTrackStats(trackSpinner.getValue().toString());
@@ -69,6 +88,10 @@ public class GPSController {
 				createInfoDialog("Track Successfully Created",
 						"Name of track: " + trackLoaded.getName()
 									+ "\nPoints loaded: " + trackLoaded.getPointAmount());
+
+				if(tracksRemaining == 9){
+					trackName.setText(trackLoaded.getName());
+				}
 
 
 			}
