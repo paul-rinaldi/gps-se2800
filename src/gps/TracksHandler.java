@@ -1,6 +1,7 @@
 package gps;
 
 
+import javax.xml.crypto.dsig.Transform;
 import java.util.List;
 
 /**
@@ -44,16 +45,20 @@ public class TracksHandler {
 	 * 
 	 * @param index
 	 */
-	public void getTrack(int index){
-
+	public Track getTrack(int index){
+		return tracks.get(index);
 	}
 
 	/**
 	 * 
 	 * @param name
 	 */
-	public void getTrack(String name){
+	public Track getTrack(String name){
+		return null;
+	}
 
+	public int getTrackAmount(){
+		return tracks.size();
 	}
 
 }

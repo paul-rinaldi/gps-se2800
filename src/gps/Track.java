@@ -28,7 +28,11 @@ public class Track {
 	}
 
 	public int getPointAmount(){
-		return 0;
+		return trackPoints.size();
+	}
+
+	public String getName(){
+		return name;
 	}
 
 	/**
