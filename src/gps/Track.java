@@ -29,17 +29,13 @@ public class Track {
 		this.stats = new TrackStats();
 	}
 
-<<<<<<< HEAD
 	public int getPointAmount() {
-		return trackPoints.size();
-=======
-	public int getPointAmount(){
 		return trackPoints.size();
 	}
 
+
 	public String getName(){
 		return name;
->>>>>>> 9d214b3003e3a11cfb68b9e4e738234aa817b2f4
 	}
 
 	/**
