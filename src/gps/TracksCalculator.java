@@ -27,7 +27,18 @@ public class TracksCalculator {
 	private double totalDistanceM;
 
 	public TracksCalculator(){
-
+		avgSpeedK = 0;
+		avgSpeedM = 0;
+		totalDistanceK = 0;
+		totalDistanceM = 0;
+		maxSpeedK = Integer.MIN_VALUE;
+		maxSpeedM = Integer.MIN_VALUE;
+		minElev = Integer.MAX_VALUE;
+		maxElev = Integer.MIN_VALUE;
+		minLat = Integer.MAX_VALUE;
+		maxLat = Integer.MIN_VALUE;
+		minLong = Integer.MAX_VALUE;
+		maxLong = Integer.MIN_VALUE;
 	}
 
 	/**
@@ -35,6 +46,7 @@ public class TracksCalculator {
 	 * @param track the track whose metrics are being calculated
 	 */
 	public void calculateMetrics(Track track){
+		track.setStats(new TrackStats());
 		TrackPoint a;
 		TrackPoint b;
 		double deltaX;
@@ -45,6 +57,17 @@ public class TracksCalculator {
 		avgSpeedM = 0;
 
 		int pointNum = track.getPointAmount();
+		if(pointNum < 1) {
+			a = track.getTrackPoint(0);
+			calcMinMaxLat(a);
+			calcMinMaxLong(a);
+			calcMinMaxElev(a);
+			throw new UnsupportedOperationException("Track only has one point");
+			/*
+			Austin needs to display a message stating that the distance and speed can't be calculated
+			Calculate min/max for elevation, latitude, and longitude as normal
+			 */
+		}
 
 		for(int i = 0; i < pointNum; i++) {
 			if(i != pointNum-1) {
@@ -97,6 +120,7 @@ public class TracksCalculator {
 	 * @param pointNum the total number of track points
 	 * @param counter the current iteration of the loop
 	 */
+	//Don't execute anything if pointNum < 1
 	private void calcAvgMaxSpeed(double deltaT, double distance, int pointNum, int counter) {
 		double speedK = distance*M_TO_KM/deltaT;
 		double speedM = distance*M_TO_MI/deltaT;
@@ -119,6 +143,8 @@ public class TracksCalculator {
 	 *
 	 * @param point the current track point
 	 */
+	//If on first iteration must set max/min to current value
+	//Then compare as normal
 	private void calcMinMaxElev(TrackPoint point) {
 		double elevation = point.getElevation();
 		if(elevation > maxElev) {
@@ -135,6 +161,8 @@ public class TracksCalculator {
 	 *
 	 * @param point the current track point
 	 */
+	//If on first iteration must set max/min to current value
+	//Then compare as normal
 	private void calcMinMaxLat(TrackPoint point) {
 		double latitude = point.getLatitude();
 		if(latitude > maxLat) {
@@ -150,6 +178,8 @@ public class TracksCalculator {
 	 *
 	 * @param point the current track point
 	 */
+	//If on first iteration must set max/min to current value
+	//Then compare as normal
 	private void calcMinMaxLong(TrackPoint point){
 		double longitude = point.getLongitude();
 		if(longitude > maxLong) {
@@ -165,6 +195,7 @@ public class TracksCalculator {
 	 *
 	 * @param distance the distance between the current two track points
 	 */
+	//Don't execute if pointNum < 1
 	private void calcTotalDistance(double distance) {
 		totalDistanceK += distance*M_TO_KM;
 		totalDistanceM += distance*M_TO_MI;

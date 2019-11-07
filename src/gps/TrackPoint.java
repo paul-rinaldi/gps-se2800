@@ -15,14 +15,14 @@ public class TrackPoint {
 	private double longitude;
 	private Date time;
 
-	public TrackPoint(){
+	public TrackPoint() {
 		this.elevation = 0;
 		this.latitude = 0;
 		this.longitude = 0;
 		this.time = null;
 	}
 
-	public TrackPoint(double elevation, double latitude, double longitude, Date time) {
+	public TrackPoint(double latitude, double longitude, double elevation, Date time) {
 		this.elevation = elevation;
 		this.latitude = latitude;
 		this.longitude = longitude;
