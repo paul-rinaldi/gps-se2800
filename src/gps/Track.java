@@ -1,7 +1,7 @@
 package gps;
 
 
-import java.util.List;
+import java.util.ArrayList;
 
 /**
  * @author demarsa and aleckm
@@ -12,33 +12,27 @@ public class Track {
 
 	private String name;
 	private TrackStats stats;
-	private List<TrackPoint> trackPoints;
+	private ArrayList<TrackPoint> trackPoints;
 
-	public Track(){
-
-	}
 
 	/**
 	 * 
 	 * @param name
 	 * @param trackPoints
 	 */
-	public void Track(String name, List<TrackPoint> trackPoints){
+	public Track(String name, ArrayList<TrackPoint> trackPoints){
 		this.name = name;
 		this.trackPoints = trackPoints;
-		this.stats = new TrackStats();
+		this.stats = null;
 	}
 
 	public int getPointAmount() {
 		return trackPoints.size();
 	}
 
-<<<<<<< HEAD
-	public String getName() {
-=======
+
 
 	public String getName(){
->>>>>>> 6445766aa200b11a7393a2ae11253b182eff8b97
 		return name;
 	}
 
@@ -52,6 +46,10 @@ public class Track {
 
 	public TrackStats getTrackStats() {
 		return stats;
+	}
+
+	public void setStats(TrackStats stats) {
+		this.stats = stats;
 	}
 
 }

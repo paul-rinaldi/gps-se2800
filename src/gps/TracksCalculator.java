@@ -27,7 +27,18 @@ public class TracksCalculator {
 	private double totalDistanceM;
 
 	public TracksCalculator(){
-
+		avgSpeedK = 0;
+		avgSpeedM = 0;
+		totalDistanceK = 0;
+		totalDistanceM = 0;
+		maxSpeedK = Integer.MIN_VALUE;
+		maxSpeedM = Integer.MIN_VALUE;
+		minElev = Integer.MAX_VALUE;
+		maxElev = Integer.MIN_VALUE;
+		minLat = Integer.MAX_VALUE;
+		maxLat = Integer.MIN_VALUE;
+		minLong = Integer.MAX_VALUE;
+		maxLong = Integer.MIN_VALUE;
 	}
 
 	/**
@@ -35,6 +46,7 @@ public class TracksCalculator {
 	 * @param track the track whose metrics are being calculated
 	 */
 	public void calculateMetrics(Track track){
+		track.setStats(new TrackStats());
 		TrackPoint a;
 		TrackPoint b;
 		double deltaX;
@@ -46,6 +58,11 @@ public class TracksCalculator {
 
 		int pointNum = track.getPointAmount();
 		if(pointNum < 1) {
+			a = track.getTrackPoint(0);
+			calcMinMaxLat(a);
+			calcMinMaxLong(a);
+			calcMinMaxElev(a);
+			throw new UnsupportedOperationException("Track only has one point");
 			/*
 			Austin needs to display a message stating that the distance and speed can't be calculated
 			Calculate min/max for elevation, latitude, and longitude as normal

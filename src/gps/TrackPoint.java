@@ -22,7 +22,7 @@ public class TrackPoint {
 		this.time = null;
 	}
 
-	public TrackPoint(double elevation, double latitude, double longitude, Date time) {
+	public TrackPoint(double latitude, double longitude, double elevation, Date time) {
 		this.elevation = elevation;
 		this.latitude = latitude;
 		this.longitude = longitude;
