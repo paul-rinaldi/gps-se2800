@@ -2,7 +2,9 @@ package gps;
 
 
 import javafx.application.Platform;
+import javafx.fxml.FXML;
 import javafx.scene.control.Spinner;
+import javafx.scene.control.TextField;
 import javafx.stage.FileChooser;
 import org.xml.sax.SAXException;
 
@@ -16,18 +18,75 @@ import java.io.File;
 public class GPSController {
 
 	private TracksHandler tracksHandler;
-	private Spinner trackSpinner;
 	private AbstractParserEventHandler handler = new GPXHandler();
 	private int tracksRemaining = 10;
 
+	@FXML
+	private TextField trackName;
+	@FXML
+	private Spinner<Integer> trackSpinner;
+	@FXML
+	private TextField maxLat;
+	@FXML
+	private TextField minLat;
+	@FXML
+	private TextField maxLong;
+	@FXML
+	private TextField minLong;
+	@FXML
+	private TextField maxElev;
+	@FXML
+	private TextField minElev;
+	@FXML
+	private TextField dMiles;
+	@FXML
+	private TextField dKilometers;
+	@FXML
+	private TextField avSpeedMPH;
+	@FXML
+	private TextField avSpeedKPH;
+	@FXML
+	private TextField maxSpeedMPH;
+	@FXML
+	private TextField maxSpeedKPH;
+
+
+	public void changeTrackSelected() {
+
+		if (tracksHandler != null) {
+			int tracksLoaded = tracksHandler.getTrackAmount();
+			int trackSelected = trackSpinner.getValue();
+
+			if (trackSelected <= tracksLoaded) {
+				trackName.setText(tracksHandler.getTrack(trackSelected - 1).getName());
+			}
+		}
+
+	}
 
 	public void calcTrackStats(){
-		tracksHandler.calculateTrackStats(trackSpinner.getValue().toString());
+		tracksHandler.calculateTrackStats(trackSpinner.getValue()-1);
 		displayTrackStats();
 	}
 
 	private void displayTrackStats(){
-		Track track = tracksHandler.getTrack(trackSpinner.getValue().toString());
+		Track track = tracksHandler.getTrack(trackSpinner.getValue()-1);
+		TrackStats stats = track.getTrackStats();
+
+		//Set stats in boxes
+		maxLat.setText(Double.toString(stats.getMaxLat()));
+		minLat.setText(Double.toString(stats.getMinLat()));
+		maxLong.setText(Double.toString(stats.getMaxLong()));
+		minLong.setText(Double.toString(stats.getMinLong()));
+		maxElev.setText(Double.toString(stats.getMaxElev()));
+		minElev.setText(Double.toString(stats.getMinElev()));
+		dMiles.setText(Double.toString(stats.getDistM()));
+		dKilometers.setText(Double.toString(stats.getDistK()));
+		avSpeedMPH.setText(Double.toString(stats.getAvgSpeedM()));
+		avSpeedKPH.setText(Double.toString(stats.getAvgSpeedK()));
+		maxSpeedMPH.setText(Double.toString(stats.getMaxSpeedM()));
+		maxSpeedKPH.setText(Double.toString(stats.getMaxSpeedK()));
+
 	}
 
 	/**
@@ -69,6 +128,10 @@ public class GPSController {
 				createInfoDialog("Track Successfully Created",
 						"Name of track: " + trackLoaded.getName()
 									+ "\nPoints loaded: " + trackLoaded.getPointAmount());
+
+				if(tracksRemaining == 9){
+					trackName.setText(trackLoaded.getName());
+				}
 
 
 			}

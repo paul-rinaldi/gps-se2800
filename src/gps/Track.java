@@ -4,7 +4,7 @@ package gps;
 import java.util.List;
 
 /**
- * @author demarsa
+ * @author demarsa and aleckm
  * @version 1.0
  * @created 04-Nov-2019 9:32:33 AM
  */
@@ -24,12 +24,15 @@ public class Track {
 	 * @param trackPoints
 	 */
 	public void Track(String name, List<TrackPoint> trackPoints){
-
+		this.name = name;
+		this.trackPoints = trackPoints;
+		this.stats = new TrackStats();
 	}
 
-	public int getPointAmount(){
+	public int getPointAmount() {
 		return trackPoints.size();
 	}
+
 
 	public String getName(){
 		return name;
@@ -39,12 +42,12 @@ public class Track {
 	 * 
 	 * @param index
 	 */
-	public TrackPoint getTrackPoint(int index){
-		return null;
+	public TrackPoint getTrackPoint(int index) {
+		return trackPoints.get(index);
 	}
 
-	public TrackStats getTrackStats(){
-		return null;
+	public TrackStats getTrackStats() {
+		return stats;
 	}
 
 }

@@ -1,22 +1,52 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.Spinner?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gps.GPSController">
+<AnchorPane prefHeight="441.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gps.GPSController">
    <children>
       <MenuBar layoutY="2.0" prefHeight="25.0" prefWidth="600.0">
         <menus>
           <Menu mnemonicParsing="false" text="File">
             <items>
               <MenuItem mnemonicParsing="false" onAction="#loadTrack" text="Load" />
-                  <MenuItem onAction="#calcTrackStats" mnemonicParsing="false" text="Track Stats" />
+                  <MenuItem mnemonicParsing="false" onAction="#calcTrackStats" text="Track Stats" />
                   <MenuItem mnemonicParsing="false" onAction="#exit" text="Exit" />
             </items>
           </Menu>
         </menus>
       </MenuBar>
+      <Label layoutX="168.0" layoutY="38.0" prefHeight="18.0" prefWidth="79.0" text="Track Selected:" />
+      <TextField editable="false" fx:id="trackName" layoutX="265.0" layoutY="34.0" />
+      <Spinner fx:id="trackSpinner" layoutX="414.0" layoutY="34.0" max="10" min="1" onMouseClicked="#changeTrackSelected" prefHeight="26.0" prefWidth="24.0" />
+      <TextField editable="false" fx:id="maxLat" layoutX="168.0" layoutY="111.0" prefHeight="26.0" prefWidth="94.0" />
+      <TextField editable="false" fx:id="minLat" layoutX="319.0" layoutY="111.0" prefHeight="26.0" prefWidth="94.0" />
+      <TextField editable="false" fx:id="maxElev" layoutX="168.0" layoutY="193.0" prefHeight="26.0" prefWidth="94.0" />
+      <TextField editable="false" fx:id="minElev" layoutX="319.0" layoutY="193.0" prefHeight="26.0" prefWidth="94.0" />
+      <TextField editable="false" fx:id="dMiles" layoutX="168.0" layoutY="262.0" prefHeight="26.0" prefWidth="94.0" />
+      <TextField editable="false" fx:id="dKilometers" layoutX="319.0" layoutY="262.0" prefHeight="26.0" prefWidth="94.0" />
+      <TextField editable="false" fx:id="avSpeedKPH" layoutX="319.0" layoutY="342.0" prefHeight="26.0" prefWidth="94.0" />
+      <TextField editable="false" fx:id="avSpeedMPH" layoutX="168.0" layoutY="342.0" prefHeight="26.0" prefWidth="94.0" />
+      <TextField editable="false" fx:id="maxSpeedMPH" layoutX="168.0" layoutY="390.0" prefHeight="26.0" prefWidth="94.0" />
+      <TextField editable="false" fx:id="maxSpeedKPH" layoutX="319.0" layoutY="390.0" prefHeight="26.0" prefWidth="94.0" />
+      <Label layoutX="204.0" layoutY="90.0" text="Max" />
+      <Label layoutX="356.0" layoutY="90.0" text="Min" />
+      <TextField editable="false" fx:id="minLong" layoutX="319.0" layoutY="150.0" prefHeight="26.0" prefWidth="94.0" />
+      <TextField editable="false" fx:id="maxLong" layoutX="168.0" layoutY="150.0" prefHeight="26.0" prefWidth="94.0" />
+      <Label layoutX="110.0" layoutY="115.0" text="Latitude" />
+      <Label layoutX="105.0" layoutY="154.0" text="Longitude" />
+      <Label layoutX="108.0" layoutY="197.0" text="Elevation" />
+      <Label layoutX="201.0" layoutY="236.0" text="Miles" />
+      <Label layoutX="338.0" layoutY="236.0" text="Kilometers" />
+      <Label layoutX="83.0" layoutY="266.0" text="Total Distance" />
+      <Label layoutX="202.0" layoutY="321.0" text="MPH" />
+      <Label layoutX="355.0" layoutY="321.0" text="KPH" />
+      <Label layoutX="81.0" layoutY="346.0" text="Average Speed" />
+      <Label layoutX="76.0" layoutY="394.0" text="Maximum Speed" />
    </children>
 </AnchorPane>
