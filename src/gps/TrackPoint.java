@@ -15,7 +15,7 @@ public class TrackPoint {
 	private double longitude;
 	private Date time;
 
-	public TrackPoint(){
+	public TrackPoint() {
 		this.elevation = 0;
 		this.latitude = 0;
 		this.longitude = 0;

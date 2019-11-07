@@ -22,7 +22,7 @@ public class TracksHandler {
 	 * @param track
 	 */
 	public void addTrack(Track track){
-
+		tracks.add(track);
 	}
 
 	/**
