@@ -190,9 +190,6 @@ public class GPXHandler extends AbstractParserEventHandler {
 				// if some other element is found, we have an invalid file, so throw a SAXException.
 			}
 			currentState = PossibleStates.GPX; // once <gpx> is found, we're in the GPX state!
-
-			// Now that we've found a <gpx> element, we know we have a valid file. We can init our track collection here.
-			currentTrack = new Track();
 		}
 
 		if( localName.equalsIgnoreCase("trx")) {
