@@ -3,6 +3,7 @@ package gps;
 
 import javafx.application.Platform;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Spinner;
 import javafx.scene.control.TextField;
 import javafx.stage.FileChooser;
@@ -11,6 +12,8 @@ import org.xml.sax.SAXException;
 import java.io.File;
 
 /**
+ * Handles all GUI events and distributes tasks to other classes
+ *
  * @author demarsa
  * @version 1.0
  * @created 04-Nov-2019 9:32:33 AM
@@ -51,6 +54,10 @@ public class GPSController {
 	private TextField maxSpeedKPH;
 
 
+	/**
+	 * Changes the displayed track name on the GUI
+	 * If stats exist, it displays its stats as well
+	 */
 	public void changeTrackSelected() {
 
 		if (tracksHandler != null) {
@@ -58,17 +65,33 @@ public class GPSController {
 			int trackSelected = trackSpinner.getValue();
 
 			if (trackSelected <= tracksLoaded) {
-				trackName.setText(tracksHandler.getTrack(trackSelected - 1).getName());
+				Track track = tracksHandler.getTrack(trackSelected-1);
+				trackName.setText(track.getName());
+				if(track.getTrackStats() != null){
+					displayTrackStats();
+				}
 			}
 		}
 
 	}
 
+	/**
+	 * Calculates metrics of selected Track in the Spinner
+	 * Won't calculate stats if stats have been calculated
+	 */
 	public void calcTrackStats(){
-		tracksHandler.calculateTrackStats(trackSpinner.getValue()-1);
+
+		int trackSelected = trackSpinner.getValue()-1;
+
+		if(tracksHandler.getTrack(trackSelected).getTrackStats() == null) {
+			tracksHandler.calculateTrackStats(trackSelected);
+		}
 		displayTrackStats();
 	}
 
+	/**
+	 * Gets the currently selected track in the Spinner and displays all the calculated metrics.
+	 */
 	private void displayTrackStats(){
 		Track track = tracksHandler.getTrack(trackSpinner.getValue()-1);
 		TrackStats stats = track.getTrackStats();
@@ -90,23 +113,40 @@ public class GPSController {
 	}
 
 	/**
-	 * 
-	 * @param errorType
-	 * @param errorMsg
+	 * Creates an error dialog from a type and message
+	 *
+	 * @param errorType type of error
+	 * @param errorMsg message error provides
 	 */
 	private void createErrorDialog(String errorType, String errorMsg){
+
+		Alert headerError = new Alert(Alert.AlertType.ERROR);
+		headerError.setTitle("Error Dialog");
+		headerError.setHeaderText(errorType);
+		headerError.setContentText(errorMsg);
+		headerError.showAndWait();
 
 	}
 
 	/**
-	 * 
-	 * @param infoType
-	 * @param infoMsg
+	 * Creates an information dialog to show the user
+	 *
+	 * @param infoType type of information provided
+	 * @param infoMsg information message provided
 	 */
 	private void createInfoDialog(String infoType, String infoMsg){
 
+		Alert headerError = new Alert(Alert.AlertType.INFORMATION);
+		headerError.setTitle("Information Dialog");
+		headerError.setHeaderText(infoType);
+		headerError.setContentText(infoMsg);
+		headerError.showAndWait();
+
 	}
 
+	/**
+	 * Loads a track by using a GPS file selected by the user
+	 */
 	public void loadTrack(){
 
 		if(tracksRemaining != 0) {
@@ -137,13 +177,17 @@ public class GPSController {
 			}
 		} else {
 			//Inform them their tracks have reached maximum
+			createInfoDialog("Maximum Tracks Loaded",
+					"You have loaded the maximum allowable tracks");
 		}
 
 	}
 
 	/**
-	 * 
-	 * @param filename
+	 * Uses Parser class to parse the GPS file selected by the user
+	 * (Used inside of loadTrack)
+	 *
+	 * @param filename String filename of GPS file selected
 	 */
 	private void parseTrackFile(String filename){
 
@@ -157,9 +201,11 @@ public class GPSController {
 			// something went wrong during parsing; print to the console since this is a console demo app.
 			System.out.println("ParserDemoApp: Parser threw SAXException: " + e.getMessage() );
 			System.out.println("The error occurred near line " + handler.getLine() + ", col "+ handler.getColumn());
+			//TODO
 		} catch (Exception e) {
 			// something went wrong when initializing the Parser; print to the console since this is a console demo app.
 			System.out.println("ParserDemoApp: Parser threw Exception: " + e.getMessage() );
+			//TODO
 		}
 
 		if(tracksRemaining == 10) {
