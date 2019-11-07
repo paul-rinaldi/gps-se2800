@@ -33,7 +33,12 @@ public class Track {
 		return trackPoints.size();
 	}
 
+<<<<<<< HEAD
 	public String getName() {
+=======
+
+	public String getName(){
+>>>>>>> 6445766aa200b11a7393a2ae11253b182eff8b97
 		return name;
 	}
 
