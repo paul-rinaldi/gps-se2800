@@ -26,10 +26,13 @@ public class GPSController {
 	private TracksHandler tracksHandler;
 	private AbstractParserEventHandler handler = new GPXHandler();
 	private int tracksRemaining = 10;
-	private ObservableList<String> trackNames = FXCollections.observableArrayList();
+	private ObservableList<String> trackNames;
+	private SpinnerValueFactory<String> valueFactory;
 
 	@FXML
 	private Spinner<String> trackSpinner;
+	@FXML
+	private TextField tracksRemainingBox;
 	@FXML
 	private TextField maxLat;
 	@FXML
@@ -56,9 +59,7 @@ public class GPSController {
 	private TextField maxSpeedKPH;
 
 	public GPSController(){
-		SpinnerValueFactory<String> valueFactory =
-				new SpinnerValueFactory.ListSpinnerValueFactory<>(trackNames);
-		trackSpinner.setValueFactory(valueFactory);
+		trackNames = FXCollections.observableArrayList();
 	}
 
 	/**
@@ -70,6 +71,8 @@ public class GPSController {
 
 			if(tracksHandler.getTrack(trackSpinner.getValue()).getTrackStats() != null){
 				displayTrackStats();
+			} else {
+				clearStatsDisplay();
 			}
 		}
 
@@ -83,9 +86,11 @@ public class GPSController {
 
 		if(tracksHandler != null) {
 
-			if (tracksHandler.getTrack(trackSpinner.getValue()).getTrackStats() == null) {
-				//tracksHandler.calculateTrackStats(trackSelected);
-				//displayTrackStats();
+			String test = trackSpinner.getValue();
+
+			if (tracksHandler.getTrack(test).getTrackStats() == null) {
+				tracksHandler.calculateTrackStats(trackSpinner.getValue());
+				displayTrackStats();
 			}
 		}
 	}
@@ -111,6 +116,24 @@ public class GPSController {
 		maxSpeedMPH.setText(Double.toString(stats.getMaxSpeedM()));
 		maxSpeedKPH.setText(Double.toString(stats.getMaxSpeedK()));
 
+	}
+
+	/**
+	 * Clears displayed stats of a track
+	 */
+	private void clearStatsDisplay(){
+		maxLat.setText("");
+		minLat.setText("");
+		maxLong.setText("");
+		minLong.setText("");
+		maxElev.setText("");
+		minElev.setText("");
+		dMiles.setText("");
+		dKilometers.setText("");
+		avSpeedMPH.setText("");
+		avSpeedKPH.setText("");
+		maxSpeedMPH.setText("");
+		maxSpeedKPH.setText("");
 	}
 
 	/**
@@ -170,7 +193,13 @@ public class GPSController {
 						"Name of track: " + trackLoaded.getName()
 								+ "\nPoints loaded: " + trackLoaded.getPointAmount());
 
+
+				tracksRemainingBox.setText(Integer.toString(tracksRemaining));
 				trackNames.add(trackLoaded.getName());
+
+				valueFactory = new SpinnerValueFactory.ListSpinnerValueFactory<>(trackNames);
+				trackSpinner.setValueFactory(valueFactory);
+
 
 			}
 		} else {
@@ -199,11 +228,14 @@ public class GPSController {
 			// something went wrong during parsing; print to the console since this is a console demo app.
 			System.out.println("ParserDemoApp: Parser threw SAXException: " + e.getMessage() );
 			System.out.println("The error occurred near line " + handler.getLine() + ", col "+ handler.getColumn());
-			//TODO
+
+			createErrorDialog("Parsing Error", e.getLocalizedMessage() +
+					"\nThe error occurred near line " + handler.getLine() + ", col "+ handler.getColumn());
 		} catch (Exception e) {
 			// something went wrong when initializing the Parser; print to the console since this is a console demo app.
 			System.out.println("ParserDemoApp: Parser threw Exception: " + e.getMessage() );
-			//TODO
+
+			createErrorDialog("Parsing Error", e.getLocalizedMessage());
 		}
 
 		if(tracksRemaining == 10) {
