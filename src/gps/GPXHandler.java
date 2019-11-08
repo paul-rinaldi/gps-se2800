@@ -192,9 +192,9 @@ public class GPXHandler extends AbstractParserEventHandler {
 			currentState = PossibleStates.GPX; // once <gpx> is found, we're in the GPX state!
 		}
 
-		if( localName.equalsIgnoreCase("trx")) {
+		if( localName.equalsIgnoreCase("trk")) {
 			if( currentState != PossibleStates.GPX ) { // <trk> should only be found within <gpx>
-				throw new SAXException("<trx> element found in illegal location!");
+				throw new SAXException("<trk> element found in illegal location!");
 			}
 			currentState = PossibleStates.TRK; // once <trk> is found, we're in the TRK state!
 		}
