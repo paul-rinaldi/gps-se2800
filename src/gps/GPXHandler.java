@@ -23,8 +23,7 @@ public class GPXHandler extends AbstractParserEventHandler {
 
 	private TracksHandler tracksHandler;
 	private String name;
-	private Track currentTrack;
-	private ArrayList<TrackPoint> currentTrackPoint;
+	private ArrayList<TrackPoint> TrackPointList;
 	private double latitude;
 	private double longitude;
 	private Date time;
@@ -34,7 +33,7 @@ public class GPXHandler extends AbstractParserEventHandler {
 	public GPXHandler(){
 		super();
 		tracksHandler = new TracksHandler();
-		currentTrackPoint = new ArrayList<>();
+		TrackPointList = new ArrayList<>();
 		simpleDateFormat = new SimpleDateFormat("dd-MMM-yyyy'T'HH:mm:ss'Z'");
 		latitude = 0;
 		longitude = 0;
@@ -82,8 +81,8 @@ public class GPXHandler extends AbstractParserEventHandler {
 		if( currentState != PossibleStates.FINAL ){
 			throw new SAXException("Document structure error. Not in FINAL state at the end of the document!");
 		} else {
-			currentTrack = new Track(name, currentTrackPoint);
-			tracksHandler.addTrack(currentTrack);
+
+			tracksHandler.addTrack(new Track(name, TrackPointList));
 		}
 	}
 
@@ -127,7 +126,7 @@ public class GPXHandler extends AbstractParserEventHandler {
 				throw new SAXException("<trkpt> element is missing an <ele> subelement or attribute! line "+line + ", col "+column );
 
 			// if everything is OK, add the Student to the list!
-			currentTrackPoint.add(new TrackPoint(latitude, longitude, elevation, time));
+			TrackPointList.add(new TrackPoint(latitude, longitude, elevation, time));
 			latitude = 0;
 			longitude = 0;
 			elevation = -10000;
@@ -192,9 +191,9 @@ public class GPXHandler extends AbstractParserEventHandler {
 			currentState = PossibleStates.GPX; // once <gpx> is found, we're in the GPX state!
 		}
 
-		if( localName.equalsIgnoreCase("trx")) {
+		if( localName.equalsIgnoreCase("trk")) {
 			if( currentState != PossibleStates.GPX ) { // <trk> should only be found within <gpx>
-				throw new SAXException("<trx> element found in illegal location!");
+				throw new SAXException("<trk> element found in illegal location!");
 			}
 			currentState = PossibleStates.TRK; // once <trk> is found, we're in the TRK state!
 		}
@@ -251,10 +250,10 @@ public class GPXHandler extends AbstractParserEventHandler {
 				throw new SAXException("<trkpt> element has one or more illegal attributes: " + firstAtt + ":" + secondAtt );
 
 			//checks to make sure that latitude and longitude are valid values
-			if(-90.0>=latitude && latitude>=90) {
+			if(-90>latitude && latitude>90) {
 				throw new SAXException("Invalid value for latitude! Latitude cannot be between -90 and 90 degrees, " +
 						"it was found to be " + latitude);
-			} else if(-180.0>=longitude && longitude>=180){
+			} else if(-180>longitude && longitude>180){
 				throw new SAXException("Invalid value for latitude! Longitude cannot be between -180 and 180 degrees, " +
 						"it was found to be " + latitude);
 			} else {

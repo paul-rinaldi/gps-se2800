@@ -2,6 +2,7 @@ package gps;
 
 
 import javax.xml.crypto.dsig.Transform;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -15,8 +16,9 @@ public class TracksHandler {
 	private TracksCalculator tc;
 
 	public TracksHandler() {
-
+		this.tracks = new ArrayList<>();
 	}
+
 
 	/**
 	 * 
@@ -47,7 +49,7 @@ public class TracksHandler {
 	 * 
 	 * @param index
 	 */
-	public Track getTrack(int index){
+	public Track getTrack(int index) {
 		return tracks.get(index);
 	}
 
@@ -55,11 +57,11 @@ public class TracksHandler {
 	 * 
 	 * @param name
 	 */
-	public Track getTrack(String name){
+	public Track getTrack(String name) {
 		return null;
 	}
 
-	public int getTrackAmount(){
+	public int getTrackAmount() {
 		return tracks.size();
 	}
 
