@@ -13,8 +13,9 @@ import java.util.List;
 public class TracksHandler {
 
 	private List<Track> tracks;
+	private TracksCalculator tc;
 
-	public TracksHandler(){
+	public TracksHandler() {
 		this.tracks = new ArrayList<>();
 	}
 
@@ -23,7 +24,7 @@ public class TracksHandler {
 	 * 
 	 * @param track
 	 */
-	public void addTrack(Track track){
+	public void addTrack(Track track) {
 		tracks.add(track);
 	}
 
@@ -31,23 +32,29 @@ public class TracksHandler {
 	 * 
 	 * @param index
 	 */
-	public void calculateTrackStats(int index){
-
+	//To Do
+	public void calculateTrackStats(int index) {
+		tc.calculateMetrics(tracks.get(index));
 	}
 
 	/**
 	 * 
 	 * @param name
 	 */
-	public void calculateTrackStats(String name){
-
+	public void calculateTrackStats(String name) {
+		for(Track t : tracks) {
+			if (t.getName().equals(name)) {
+				tc.calculateMetrics(t);
+				break;
+			}
+		}
 	}
 
 	/**
 	 * 
 	 * @param index
 	 */
-	public Track getTrack(int index){
+	public Track getTrack(int index) {
 		return tracks.get(index);
 	}
 
@@ -55,11 +62,11 @@ public class TracksHandler {
 	 * 
 	 * @param name
 	 */
-	public Track getTrack(String name){
+	public Track getTrack(String name) {
 		return null;
 	}
 
-	public int getTrackAmount(){
+	public int getTrackAmount() {
 		return tracks.size();
 	}
 
