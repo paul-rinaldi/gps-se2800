@@ -12,8 +12,9 @@ import java.util.List;
 public class TracksHandler {
 
 	private List<Track> tracks;
+	private TracksCalculator tc;
 
-	public TracksHandler(){
+	public TracksHandler() {
 
 	}
 
@@ -21,7 +22,7 @@ public class TracksHandler {
 	 * 
 	 * @param track
 	 */
-	public void addTrack(Track track){
+	public void addTrack(Track track) {
 		tracks.add(track);
 	}
 
@@ -29,15 +30,16 @@ public class TracksHandler {
 	 * 
 	 * @param index
 	 */
-	public void calculateTrackStats(int index){
-
+	//To Do
+	public void calculateTrackStats(int index) {
+		tc.calculateMetrics(tracks.get(index));
 	}
 
 	/**
 	 * 
 	 * @param name
 	 */
-	public void calculateTrackStats(String name){
+	public void calculateTrackStats(String name) {
 
 	}
 

@@ -34,16 +34,16 @@ public class GPSTest2 {
         tc.calculateMetrics(t);
         TrackStats ts = t.getTrackStats();
         assertEquals(43.3, ts.getMaxLat(), DELTA);
-        assertEquals(-87.9, ts.getMinLat(), DELTA);
-        assertEquals(500.0, ts.getMaxElev(), DELTA);
+        assertEquals(43.3, ts.getMinLat(), DELTA);
+        assertEquals(2500.0, ts.getMaxElev(), DELTA);
         assertEquals(500.0, ts.getMinElev(), DELTA);
-        assertEquals(500.0, ts.getMaxLong(), DELTA);
-        assertEquals(500.0, ts.getMinLong(), DELTA);
+        assertEquals(-87.9, ts.getMaxLong(), DELTA);
+        assertEquals(-88.0, ts.getMinLong(), DELTA);
         assertEquals(500.0, ts.getAvgSpeedK(), DELTA);
         assertEquals(500.0, ts.getAvgSpeedM(), DELTA);
         assertEquals(500.0, ts.getMaxSpeedK(), DELTA);
         assertEquals(500.0, ts.getMaxSpeedM(), DELTA);
         assertEquals(8.260, ts.getDistK(), DELTA);
-        assertEquals(, ts.getDistM(), DELTA);
+        assertEquals(5.132526, ts.getDistM(), DELTA);
     }
 }
