@@ -44,6 +44,6 @@ public class GPSTest2 {
         assertEquals(500.0, ts.getMaxSpeedK(), DELTA);
         assertEquals(500.0, ts.getMaxSpeedM(), DELTA);
         assertEquals(8.260, ts.getDistK(), DELTA);
-        assertEquals(, ts.getDistM(), DELTA);
+        assertEquals(2, ts.getDistM(), DELTA);
     }
 }

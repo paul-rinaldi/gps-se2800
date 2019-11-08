@@ -81,12 +81,14 @@ public class GPSController {
 	 */
 	public void calcTrackStats(){
 
-		int trackSelected = trackSpinner.getValue()-1;
+		if(tracksHandler != null) {
+			int trackSelected = trackSpinner.getValue() - 1;
 
-		if(tracksHandler.getTrack(trackSelected).getTrackStats() == null) {
-			tracksHandler.calculateTrackStats(trackSelected);
+			if (tracksHandler.getTrack(trackSelected).getTrackStats() == null) {
+				tracksHandler.calculateTrackStats(trackSelected);
+			}
+			displayTrackStats();
 		}
-		displayTrackStats();
 	}
 
 	/**
