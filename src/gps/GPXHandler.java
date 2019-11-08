@@ -34,7 +34,7 @@ public class GPXHandler extends AbstractParserEventHandler {
 		super();
 		tracksHandler = new TracksHandler();
 		TrackPointList = new ArrayList<>();
-		simpleDateFormat = new SimpleDateFormat("dd-MMM-yyyy'T'HH:mm:ss'Z'");
+		simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
 		latitude = 0;
 		longitude = 0;
 		elevation = -10000;

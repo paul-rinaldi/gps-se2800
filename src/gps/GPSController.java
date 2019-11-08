@@ -2,9 +2,12 @@ package gps;
 
 
 import javafx.application.Platform;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Spinner;
+import javafx.scene.control.SpinnerValueFactory;
 import javafx.scene.control.TextField;
 import javafx.stage.FileChooser;
 import org.xml.sax.SAXException;
@@ -23,11 +26,10 @@ public class GPSController {
 	private TracksHandler tracksHandler;
 	private AbstractParserEventHandler handler = new GPXHandler();
 	private int tracksRemaining = 10;
+	private ObservableList<String> trackNames = FXCollections.observableArrayList();
 
 	@FXML
-	private TextField trackName;
-	@FXML
-	private Spinner<Integer> trackSpinner;
+	private Spinner<String> trackSpinner;
 	@FXML
 	private TextField maxLat;
 	@FXML
@@ -53,23 +55,21 @@ public class GPSController {
 	@FXML
 	private TextField maxSpeedKPH;
 
+	public GPSController(){
+		SpinnerValueFactory<String> valueFactory =
+				new SpinnerValueFactory.ListSpinnerValueFactory<>(trackNames);
+		trackSpinner.setValueFactory(valueFactory);
+	}
 
 	/**
-	 * Changes the displayed track name on the GUI
-	 * If stats exist, it displays its stats as well
+	 * Changes the displayed stats to whatever track is selected if the stats aren't null
 	 */
-	public void changeTrackSelected() {
+	public void changeTrackStatDisplay() {
 
 		if (tracksHandler != null) {
-			int tracksLoaded = tracksHandler.getTrackAmount();
-			int trackSelected = trackSpinner.getValue();
 
-			if (trackSelected <= tracksLoaded) {
-				Track track = tracksHandler.getTrack(trackSelected-1);
-				trackName.setText(track.getName());
-				if(track.getTrackStats() != null){
-					displayTrackStats();
-				}
+			if(tracksHandler.getTrack(trackSpinner.getValue()).getTrackStats() != null){
+				displayTrackStats();
 			}
 		}
 
@@ -82,12 +82,11 @@ public class GPSController {
 	public void calcTrackStats(){
 
 		if(tracksHandler != null) {
-			int trackSelected = trackSpinner.getValue() - 1;
 
-			if (tracksHandler.getTrack(trackSelected).getTrackStats() == null) {
-				tracksHandler.calculateTrackStats(trackSelected);
+			if (tracksHandler.getTrack(trackSpinner.getValue()).getTrackStats() == null) {
+				//tracksHandler.calculateTrackStats(trackSelected);
+				//displayTrackStats();
 			}
-			displayTrackStats();
 		}
 	}
 
@@ -95,7 +94,7 @@ public class GPSController {
 	 * Gets the currently selected track in the Spinner and displays all the calculated metrics.
 	 */
 	private void displayTrackStats(){
-		Track track = tracksHandler.getTrack(trackSpinner.getValue()-1);
+		Track track = tracksHandler.getTrack(trackSpinner.getValue());
 		TrackStats stats = track.getTrackStats();
 
 		//Set stats in boxes
@@ -169,12 +168,9 @@ public class GPSController {
 				Track trackLoaded = tracksHandler.getTrack(trackIdx);
 				createInfoDialog("Track Successfully Created",
 						"Name of track: " + trackLoaded.getName()
-									+ "\nPoints loaded: " + trackLoaded.getPointAmount());
+								+ "\nPoints loaded: " + trackLoaded.getPointAmount());
 
-				if(tracksRemaining == 9){
-					trackName.setText(trackLoaded.getName());
-				}
-
+				trackNames.add(trackLoaded.getName());
 
 			}
 		} else {
