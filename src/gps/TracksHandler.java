@@ -42,7 +42,12 @@ public class TracksHandler {
 	 * @param name
 	 */
 	public void calculateTrackStats(String name) {
-
+		for(Track t : tracks) {
+			if (t.getName().equals(name)) {
+				tc.calculateMetrics(t);
+				break;
+			}
+		}
 	}
 
 	/**
