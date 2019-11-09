@@ -41,6 +41,15 @@ public class GPXHandler extends AbstractParserEventHandler {
 		time = null;
 	}
 
+	private void resetAttributes(){
+		TrackPointList = new ArrayList<>();
+		latitude = 0;
+		longitude = 0;
+		elevation = -10000;
+		time = null;
+		currentState = PossibleStates.INITIAL;
+	}
+
 	/**
 	 * 
 	 * @param ch
@@ -83,6 +92,7 @@ public class GPXHandler extends AbstractParserEventHandler {
 		} else {
 
 			tracksHandler.addTrack(new Track(name, TrackPointList));
+			resetAttributes();
 		}
 	}
 
