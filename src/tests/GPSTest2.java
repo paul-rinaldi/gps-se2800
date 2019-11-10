@@ -39,10 +39,10 @@ public class GPSTest2 {
         assertEquals(500.0, ts.getMinElev(), DELTA);
         assertEquals(-87.9, ts.getMaxLong(), DELTA);
         assertEquals(-88.0, ts.getMinLong(), DELTA);
-        assertEquals(500.0, ts.getAvgSpeedK(), DELTA);
-        assertEquals(500.0, ts.getAvgSpeedM(), DELTA);
-        assertEquals(500.0, ts.getMaxSpeedK(), DELTA);
-        assertEquals(500.0, ts.getMaxSpeedM(), DELTA);
+        assertEquals(50.026730, ts.getAvgSpeedK(), DELTA);
+        assertEquals(31.085159, ts.getAvgSpeedM(), DELTA);
+        assertEquals(50.026730, ts.getMaxSpeedK(), DELTA);
+        assertEquals(31.085159, ts.getMaxSpeedM(), DELTA);
         assertEquals(8.260, ts.getDistK(), DELTA);
         assertEquals(5.132526, ts.getDistM(), DELTA);
         assertEquals(2, ts.getDistM(), DELTA);

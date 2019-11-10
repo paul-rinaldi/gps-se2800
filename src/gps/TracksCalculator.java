@@ -31,14 +31,14 @@ public class TracksCalculator {
 		avgSpeedM = 0;
 		totalDistanceK = 0;
 		totalDistanceM = 0;
-		maxSpeedK = Integer.MIN_VALUE;
-		maxSpeedM = Integer.MIN_VALUE;
-		minElev = Integer.MAX_VALUE;
-		maxElev = Integer.MIN_VALUE;
-		minLat = Integer.MAX_VALUE;
-		maxLat = Integer.MIN_VALUE;
-		minLong = Integer.MAX_VALUE;
-		maxLong = Integer.MIN_VALUE;
+		maxSpeedK = Double.MIN_VALUE;
+		maxSpeedM = Double.MIN_VALUE;
+		minElev = Double.MAX_VALUE;
+		maxElev = Double.MIN_VALUE;
+		minLat = Double.MAX_VALUE;
+		maxLat = Double.MIN_VALUE;
+		minLong = Double.MAX_VALUE;
+		maxLong = Double.MIN_VALUE;
 	}
 
 	/**
@@ -122,8 +122,8 @@ public class TracksCalculator {
 	 */
 	//Don't execute anything if pointNum < 1
 	private void calcAvgMaxSpeed(double deltaT, double distance, int pointNum, int counter) {
-		double speedK = distance*M_TO_KM/deltaT;
-		double speedM = distance*M_TO_MI/deltaT;
+		double speedK = (distance*M_TO_KM)/deltaT;
+		double speedM = (distance*M_TO_MI)/deltaT;
 		avgSpeedK += speedK;
 		avgSpeedM += speedM;
 		if(counter == pointNum-1) {
@@ -150,7 +150,7 @@ public class TracksCalculator {
 		if(elevation > maxElev) {
 			maxElev = elevation;
 		}
-		if(point.getElevation() < minElev) {
+		if(elevation < minElev) {
 			minElev = elevation;
 		}
 	}
