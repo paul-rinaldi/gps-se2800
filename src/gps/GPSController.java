@@ -27,7 +27,6 @@ public class GPSController {
 	private AbstractParserEventHandler handler = new GPXHandler();
 	private int tracksRemaining = 10;
 	private ObservableList<String> trackNames;
-	private SpinnerValueFactory<String> valueFactory;
 
 	@FXML
 	private Spinner<String> trackSpinner;
@@ -197,7 +196,8 @@ public class GPSController {
 				tracksRemainingBox.setText(Integer.toString(tracksRemaining));
 				trackNames.add(trackLoaded.getName());
 
-				valueFactory = new SpinnerValueFactory.ListSpinnerValueFactory<>(trackNames);
+				SpinnerValueFactory<String> valueFactory =
+						new SpinnerValueFactory.ListSpinnerValueFactory<>(trackNames);
 				trackSpinner.setValueFactory(valueFactory);
 
 

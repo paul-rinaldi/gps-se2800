@@ -15,7 +15,7 @@
           <Menu mnemonicParsing="false" text="File">
             <items>
               <MenuItem mnemonicParsing="false" onAction="#loadTrack" text="Load" />
-                  <MenuItem mnemonicParsing="false" onAction="#calcTrackStats" text="Track Stats" />
+                  <MenuItem mnemonicParsing="false" onAction="#calcTrackStats" text="Calculate Metrics" />
                   <MenuItem mnemonicParsing="false" onAction="#exit" text="Exit" />
             </items>
           </Menu>
@@ -48,6 +48,6 @@
       <Label layoutX="81.0" layoutY="346.0" text="Average Speed" />
       <Label layoutX="76.0" layoutY="394.0" text="Maximum Speed" />
       <Label layoutX="429.0" layoutY="39.0" text="Tracks Remaining:" />
-      <TextField fx:id="tracksRemainingBox" editable="false" layoutX="532.0" layoutY="35.0" prefHeight="25.0" prefWidth="54.0" />
+      <TextField text="10" fx:id="tracksRemainingBox" editable="false" layoutX="532.0" layoutY="35.0" prefHeight="25.0" prefWidth="54.0" />
    </children>
 </AnchorPane>
