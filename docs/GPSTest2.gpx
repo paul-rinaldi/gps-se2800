@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gpx>
+  <trk>
+    <name>GPS Test: 2 points. 8260 meters</name>
+    <trkseg>
+      <trkpt lat="43.30000000000000" lon="-87.90000000000000">
+        <ele>500.0000000000000</ele>
+        <time>2016-02-10T13:00:00Z</time>
+      </trkpt>
+      <trkpt lat="43.30000000000000" lon="-88.00000000000000">
+        <ele>2500.0000000000000</ele>
+        <time>2016-02-10T13:10:00Z</time>
+      </trkpt>
+    </trkseg>
+  </trk>
+</gpx>

@@ -21,7 +21,7 @@ public class TracksHandler {
 
 
 	/**
-	 * 
+	 *
 	 * @param track
 	 */
 	public void addTrack(Track track) {
@@ -29,7 +29,7 @@ public class TracksHandler {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param index
 	 */
 	//To Do
@@ -38,15 +38,16 @@ public class TracksHandler {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param name
 	 */
 	public void calculateTrackStats(String name) {
+		tc = new TracksCalculator();
 		tc.calculateMetrics(getTrack(name));
 	}
 
 	/**
-	 * 
+	 *
 	 * @param index
 	 */
 	public Track getTrack(int index) {
@@ -54,13 +55,13 @@ public class TracksHandler {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param name
 	 */
 	private Track getTrack(String name) {
 		Track toReturn = null;
-		for(Track t : tracks) {
-			if(t.getName().equals(name)) {
+		for (Track t : tracks) {
+			if (t.getName().equals(name)) {
 				toReturn = t;
 			}
 		}

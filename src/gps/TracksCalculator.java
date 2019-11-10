@@ -67,6 +67,7 @@ public class TracksCalculator {
 			Austin needs to display a message stating that the distance and speed can't be calculated
 			Calculate min/max for elevation, latitude, and longitude as normal
 			 */
+			//TODO
 		}
 
 		for(int i = 0; i < pointNum; i++) {
@@ -89,6 +90,10 @@ public class TracksCalculator {
 				calcMinMaxLat(a);
 				calcMinMaxLong(a);
 			} else {
+
+				avgSpeedK = avgSpeedK/pointNum-1;
+				avgSpeedM = avgSpeedM/pointNum-1;
+
 				a = track.getTrackPoint(i);
 
 				calcMinMaxElev(a);
@@ -126,10 +131,10 @@ public class TracksCalculator {
 		double speedM = (distance*M_TO_MI)/deltaT;
 		avgSpeedK += speedK;
 		avgSpeedM += speedM;
-		if(counter == pointNum-1) {
+		/*if(counter == pointNum-1) {
 			avgSpeedK = avgSpeedK/pointNum-1;
 			avgSpeedM = avgSpeedM/pointNum-1;
-		}
+		}*/
 		if(speedK > maxSpeedK) {
 			maxSpeedK = speedK;
 		}

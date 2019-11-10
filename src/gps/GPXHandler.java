@@ -34,11 +34,20 @@ public class GPXHandler extends AbstractParserEventHandler {
 		super();
 		tracksHandler = new TracksHandler();
 		TrackPointList = new ArrayList<>();
-		simpleDateFormat = new SimpleDateFormat("dd-MMM-yyyy'T'HH:mm:ss'Z'");
+		simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
 		latitude = 0;
 		longitude = 0;
 		elevation = -10000;
 		time = null;
+	}
+
+	private void resetAttributes(){
+		TrackPointList = new ArrayList<>();
+		latitude = 0;
+		longitude = 0;
+		elevation = -10000;
+		time = null;
+		currentState = PossibleStates.INITIAL;
 	}
 
 	/**
@@ -83,6 +92,7 @@ public class GPXHandler extends AbstractParserEventHandler {
 		} else {
 
 			tracksHandler.addTrack(new Track(name, TrackPointList));
+			resetAttributes();
 		}
 	}
 
