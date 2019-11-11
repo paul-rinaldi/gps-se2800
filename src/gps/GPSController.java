@@ -172,41 +172,56 @@ public class GPSController {
 	 */
 	public void loadTrack(){
 
-		if(tracksRemaining != 0) {
+		try {
 
-			FileChooser chooser = new FileChooser();
-			chooser.setInitialDirectory(new File(System.getProperty("user.dir")));
+			if(tracksRemaining != 0) {
 
-
-			File inputFile = chooser.showOpenDialog(null);
-
-			if (inputFile != null) {
-
-				parseTrackFile(inputFile.getAbsolutePath());
-				tracksRemaining--;
-
-				//This takes the most recently added track and displays its name and points loaded
-				int trackIdx = tracksHandler.getTrackAmount()-1;
-				Track trackLoaded = tracksHandler.getTrack(trackIdx);
-				createInfoDialog("Track Successfully Created",
-						"Name of track: " + trackLoaded.getName()
-								+ "\nPoints loaded: " + trackLoaded.getPointAmount());
+				FileChooser chooser = new FileChooser();
+				chooser.setInitialDirectory(new File(System.getProperty("user.dir")));
 
 
-				tracksRemainingBox.setText(Integer.toString(tracksRemaining));
-				trackNames.add(trackLoaded.getName());
+				File inputFile = chooser.showOpenDialog(null);
 
-				SpinnerValueFactory<String> valueFactory =
-						new SpinnerValueFactory.ListSpinnerValueFactory<>(trackNames);
-				trackSpinner.setValueFactory(valueFactory);
+				if (inputFile != null) {
 
 
+					parseTrackFile(inputFile.getAbsolutePath());
+					tracksRemaining--;
+
+					//This takes the most recently added track and displays its name and points loaded
+					int trackIdx = tracksHandler.getTrackAmount() - 1;
+					Track trackLoaded = tracksHandler.getTrack(trackIdx);
+					createInfoDialog("Track Successfully Created",
+							"Name of track: " + trackLoaded.getName()
+									+ "\nPoints loaded: " + trackLoaded.getPointAmount());
+
+
+					tracksRemainingBox.setText(Integer.toString(tracksRemaining));
+					trackNames.add(trackLoaded.getName());
+
+					SpinnerValueFactory<String> valueFactory =
+							new SpinnerValueFactory.ListSpinnerValueFactory<>(trackNames);
+					trackSpinner.setValueFactory(valueFactory);
+
+				}
+
+			} else {
+				//Inform them their tracks have reached maximum
+				createInfoDialog("Maximum Tracks Loaded",
+						"You have loaded the maximum allowable tracks");
 			}
-		} else {
-			//Inform them their tracks have reached maximum
-			createInfoDialog("Maximum Tracks Loaded",
-					"You have loaded the maximum allowable tracks");
+
+		} catch (SAXException e){
+
+			createErrorDialog("Parsing Error", e.getLocalizedMessage() +
+					"\nThe error occurred near line " + handler.getLine() + ", col "+ handler.getColumn());
+
+		} catch (Exception e) {
+
+			createErrorDialog("Parsing Error", e.getLocalizedMessage());
 		}
+
+
 
 	}
 
@@ -215,32 +230,37 @@ public class GPSController {
 	 * (Used inside of loadTrack)
 	 *
 	 * @param filename String filename of GPS file selected
+	 * @exception SAXException thrown if parser encounters an exception
+	 * @exception Exception thrown when any other exception is caught from the parser
 	 */
-	private void parseTrackFile(String filename){
+	private void parseTrackFile(String filename) throws SAXException, Exception{
 
-		handler.enableLogging(true); // enable debug logging to System.out
+		handler.enableLogging(true);
 
 		Parser parser;
 		try {
-			parser = new Parser( handler ); // create the Parser
-			parser.parse(filename);		// parse a file!
+			parser = new Parser( handler );
+			parser.parse(filename);
+
+			if(tracksRemaining == 10) {
+				tracksHandler = ((GPXHandler) handler).getTrackHandler();
+			}
+
 		} catch (SAXException e) {
-			// something went wrong during parsing; print to the console since this is a console demo app.
+
 			System.out.println("ParserDemoApp: Parser threw SAXException: " + e.getMessage() );
 			System.out.println("The error occurred near line " + handler.getLine() + ", col "+ handler.getColumn());
+			throw e;
 
-			createErrorDialog("Parsing Error", e.getLocalizedMessage() +
-					"\nThe error occurred near line " + handler.getLine() + ", col "+ handler.getColumn());
+			//createErrorDialog("Parsing Error", e.getLocalizedMessage() +
+			//"\nThe error occurred near line " + handler.getLine() + ", col "+ handler.getColumn());
 		} catch (Exception e) {
-			// something went wrong when initializing the Parser; print to the console since this is a console demo app.
 			System.out.println("ParserDemoApp: Parser threw Exception: " + e.getMessage() );
+			throw e;
 
-			createErrorDialog("Parsing Error", e.getLocalizedMessage());
+			//createErrorDialog("Parsing Error", e.getLocalizedMessage());
 		}
 
-		if(tracksRemaining == 10) {
-			tracksHandler = ((GPXHandler) handler).getTrackHandler();
-		}
 
 	}
 
