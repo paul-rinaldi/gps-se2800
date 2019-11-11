@@ -5,6 +5,7 @@ import gps.Parser;
 import org.junit.jupiter.api.Test;
 import org.xml.sax.SAXException;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class InvalidGPX {
@@ -14,11 +15,12 @@ public class InvalidGPX {
 
     @Test
     public void testSAXExceptionIsThrown() {
-        assertThrows(SAXException.class,
+        SAXException sax = assertThrows(SAXException.class,
                 ()-> {
             handler.enableLogging(true);
             Parser parser = new Parser(handler);
             parser.parse(filename);
         });
+        assertEquals("Expected <gpx> element at this location! line 2, col 6", sax.getMessage());
     }
 }

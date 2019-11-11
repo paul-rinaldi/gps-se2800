@@ -5,6 +5,7 @@ import gps.Parser;
 import org.junit.jupiter.api.Test;
 import org.xml.sax.SAXException;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class MissingTime {
@@ -14,11 +15,12 @@ public class MissingTime {
 
     @Test
     public void testSAXExceptionIsThrown() {
-        assertThrows(SAXException.class,
+        SAXException sax = assertThrows(SAXException.class,
                 ()-> {
                     handler.enableLogging(true);
                     Parser parser = new Parser(handler);
                     parser.parse(filename);
                 });
+        assertEquals("<trkpt> element is missing a <time> subelement or attribute! line 13, col 14" , sax.getMessage());
     }
 }
