@@ -41,7 +41,11 @@ public class GPXHandler extends AbstractParserEventHandler {
 		time = null;
 	}
 
-	private void resetAttributes(){
+	/**
+	 * Allows the this class to reset attributes if a track was loaded successfully or
+	 * allows the controller to call this to reset attributes if an error is thrown
+	 */
+	public void resetAttributes(){
 		TrackPointList = new ArrayList<>();
 		latitude = 0;
 		longitude = 0;

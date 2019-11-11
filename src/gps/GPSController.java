@@ -85,9 +85,10 @@ public class GPSController {
 
 		if(tracksHandler != null) {
 
-			String test = trackSpinner.getValue();
+			String trackName = trackSpinner.getValue();
 
-			if (tracksHandler.getTrack(test).getTrackStats() == null) {
+			//Only calculates stats if there are none already
+			if (tracksHandler.getTrack(trackName).getTrackStats() == null) {
 				tracksHandler.calculateTrackStats(trackSpinner.getValue());
 				displayTrackStats();
 			}
@@ -214,11 +215,15 @@ public class GPSController {
 		} catch (SAXException e){
 
 			createErrorDialog("Parsing Error", e.getLocalizedMessage() +
-					"\nThe error occurred near line " + handler.getLine() + ", col "+ handler.getColumn());
+					"\nThe error occurred near line " +
+						handler.getLine() + ", col "+ handler.getColumn());
+			
+			((GPXHandler)handler).resetAttributes();
 
 		} catch (Exception e) {
 
 			createErrorDialog("Parsing Error", e.getLocalizedMessage());
+			((GPXHandler)handler).resetAttributes();
 		}
 
 
