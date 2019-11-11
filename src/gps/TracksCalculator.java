@@ -62,11 +62,7 @@ public class TracksCalculator {
 			calcMinMaxLong(a);
 			calcMinMaxElev(a);
 			throw new UnsupportedOperationException("Track only has one point");
-			/*
-			Austin needs to display a message stating that the distance and speed can't be calculated
-			Calculate min/max for elevation, latitude, and longitude as normal
-			 */
-			//TODO
+
 		}
 
 		for(int i = 0; i < pointNum; i++) {
