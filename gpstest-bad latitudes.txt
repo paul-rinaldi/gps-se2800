@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gpx>
+  <trk>
+    <name>GPS Test: 2 bad latitudes</name>
+    <trkseg>
+      <trkpt lon="-87.90000000000000" lat="-90.0000000000000">
+        <ele>200.0000000000000</ele>
+        <time>2014-10-19T13:17:00Z</time>
+      </trkpt>
+        <!-- Note: latitude out of range -90 to +90 -->
+     <trkpt lon="-87.90100000000000" lat="-90.10000000000000">
+        <ele>250.0000000000000</ele>
+        <time>2014-10-19T13:17:10Z</time>
+      </trkpt>
+      <trkpt lon="-87.90100000000000" lat="90.00000000000">
+        <ele>250.0000000000000</ele>
+        <time>2014-10-19T13:17:20Z</time>
+      </trkpt>
+         <!-- Note: latitude out of range -90 to +90 -->
+      <trkpt lon="-87.90000000000000" lat="90.100000000000">
+        <ele>275.0000000000000</ele>
+        <time>2014-10-19T13:17:30Z</time>
+      </trkpt>
+      <trkpt lon="-87.90000000000000" lat="0.0000000000000">
+        <ele>200.0000000000000</ele>
+        <time>2014-10-19T13:17:40Z</time>
+      </trkpt>
+    </trkseg>
+  </trk>
+</gpx>

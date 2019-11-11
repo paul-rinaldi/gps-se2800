@@ -58,7 +58,7 @@ public class TracksHandler {
 	 *
 	 * @param name
 	 */
-	private Track getTrack(String name) {
+	public Track getTrack(String name) {
 		Track toReturn = null;
 		for (Track t : tracks) {
 			if (t.getName().equals(name)) {

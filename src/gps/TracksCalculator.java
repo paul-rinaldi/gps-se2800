@@ -25,12 +25,14 @@ public class TracksCalculator {
 	private double maxLong;
 	private double totalDistanceK;
 	private double totalDistanceM;
+	private double totalTime;
 
 	public TracksCalculator(){
 		avgSpeedK = 0;
 		avgSpeedM = 0;
 		totalDistanceK = 0;
 		totalDistanceM = 0;
+		totalTime = 0;
 		maxSpeedK = Double.MIN_VALUE;
 		maxSpeedM = Double.MIN_VALUE;
 		minElev = Double.MAX_VALUE;
@@ -38,7 +40,7 @@ public class TracksCalculator {
 		minLat = Double.MAX_VALUE;
 		maxLat = Double.MIN_VALUE;
 		minLong = Double.MAX_VALUE;
-		maxLong = Double.MIN_VALUE;
+		maxLong = Double.MAX_VALUE*-1;
 	}
 
 	/**
@@ -52,9 +54,6 @@ public class TracksCalculator {
 		double deltaX;
 		double deltaY;
 		double deltaZ;
-
-		avgSpeedK = 0;
-		avgSpeedM = 0;
 
 		int pointNum = track.getPointAmount();
 		if(pointNum < 1) {
@@ -75,24 +74,25 @@ public class TracksCalculator {
 				a = track.getTrackPoint(i);
 				b = track.getTrackPoint(i + 1);
 
-				deltaX = (RADIUS_OF_EARTH_M + (b.getElevation() + a.getElevation())/2) *
+				deltaX = (RADIUS_OF_EARTH_M + ((b.getElevation() + a.getElevation())/2)) *
 						(b.getLongitude()*DEG_TO_RAD - a.getLongitude()*DEG_TO_RAD) *
-						Math.cos((b.getLatitude()*DEG_TO_RAD-a.getLatitude()*DEG_TO_RAD)/2);
+						Math.cos((b.getLatitude()*DEG_TO_RAD + a.getLatitude()*DEG_TO_RAD)/2);
 				deltaY = (RADIUS_OF_EARTH_M + (b.getElevation() + a.getElevation())/2) *
 						(b.getLatitude()*DEG_TO_RAD - a.getLatitude()*DEG_TO_RAD);
 				deltaZ = b.getElevation() - a.getElevation();
 				double deltaT = (b.getTime().getTime() - a.getTime().getTime())*MILLI_SEC_TO_HOURS;
 				double distance = Math.sqrt(Math.pow(deltaX, 2) + Math.pow(deltaY, 2) + Math.pow(deltaZ, 2));
 
+				totalTime += deltaT;
 				calcTotalDistance(distance);
-				calcAvgMaxSpeed(deltaT, distance, pointNum, i);
+				calcMaxSpeed(deltaT, distance);
 				calcMinMaxElev(a);
 				calcMinMaxLat(a);
 				calcMinMaxLong(a);
 			} else {
 
-				avgSpeedK = avgSpeedK/pointNum-1;
-				avgSpeedM = avgSpeedM/pointNum-1;
+				avgSpeedK = totalDistanceK/totalTime;
+				avgSpeedM = totalDistanceM/totalTime;
 
 				a = track.getTrackPoint(i);
 
@@ -122,19 +122,14 @@ public class TracksCalculator {
 	 *
 	 * @param deltaT the change in time between the current two track points
 	 * @param distance the distance between the current two track points
-	 * @param pointNum the total number of track points
-	 * @param counter the current iteration of the loop
 	 */
 	//Don't execute anything if pointNum < 1
-	private void calcAvgMaxSpeed(double deltaT, double distance, int pointNum, int counter) {
+	private void calcMaxSpeed(double deltaT, double distance) {
 		double speedK = (distance*M_TO_KM)/deltaT;
 		double speedM = (distance*M_TO_MI)/deltaT;
-		avgSpeedK += speedK;
-		avgSpeedM += speedM;
-		/*if(counter == pointNum-1) {
-			avgSpeedK = avgSpeedK/pointNum-1;
-			avgSpeedM = avgSpeedM/pointNum-1;
-		}*/
+		System.out.println("SpeedK: " + speedK);
+		System.out.println();
+
 		if(speedK > maxSpeedK) {
 			maxSpeedK = speedK;
 		}
