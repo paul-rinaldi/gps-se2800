@@ -5,6 +5,7 @@ import gps.Parser;
 import org.junit.jupiter.api.Test;
 import org.xml.sax.SAXException;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class BadTimes {
@@ -14,11 +15,12 @@ public class BadTimes {
 
     @Test
     public void testSAXExceptionIsThrown() {
-        assertThrows(SAXException.class,
+        SAXException sax = assertThrows(SAXException.class,
                 ()-> {
                     handler.enableLogging(true);
                     Parser parser = new Parser(handler);
                     parser.parse(filename);
                 });
+        assertEquals("</time> attribute is formatted incorrectly!", sax.getMessage());
     }
 }

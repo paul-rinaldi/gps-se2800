@@ -52,31 +52,33 @@ public class GPSTest10 {
     @Test
     public void testAvgSpeedK() {
         calculations();
-        assertEquals(50.026730, ts.getAvgSpeedK(), DELTA);
+        assertEquals(48.6615, ts.getAvgSpeedK(), 48.6615*DELTA);
     }
     @Test
     public void testAvgSpeedM() {
         calculations();
-        assertEquals(50.026730, ts.getAvgSpeedM(), DELTA);
+        assertEquals(30.2368, ts.getAvgSpeedM(), 30.2368*DELTA);
     }
     @Test
     public void testMaxSpeedK() {
         calculations();
-        assertEquals(50.026730, ts.getMaxSpeedK(), DELTA);
+        assertEquals(48.668, ts.getMaxSpeedK(), 48.668*DELTA);
     }
     @Test
     public void testMaxSpeedM() {
         calculations();
-        assertEquals(50.026730, ts.getMaxSpeedK(), DELTA);
+        assertEquals(30.2410, ts.getMaxSpeedM(), 30.2410*DELTA);
     }
     @Test
     public void testDistK() {
         calculations();
+        System.out.println(ts.getDistK());
         assertEquals(73.9, ts.getDistK(), 73.9*DELTA);
     }
     @Test
     public void testDistM() {
         calculations();
+        System.out.println(ts.getDistM());
         assertEquals(45.91933, ts.getDistM(), DELTA*45.91933);
     }
 

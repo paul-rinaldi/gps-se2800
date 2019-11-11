@@ -123,8 +123,6 @@ public class TracksCalculator {
 	private void calcMaxSpeed(double deltaT, double distance) {
 		double speedK = (distance*M_TO_KM)/deltaT;
 		double speedM = (distance*M_TO_MI)/deltaT;
-		System.out.println("SpeedK: " + speedK);
-		System.out.println();
 
 		if(speedK > maxSpeedK) {
 			maxSpeedK = speedK;
