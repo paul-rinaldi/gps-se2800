@@ -123,6 +123,7 @@ public class GPSController {
 	/**
 	 * Sets distances and speeds of the Track stats depending on their value
 	 * Stats > 0 will be displayed, otherwise it displays N/A
+	 * However, max speeds that equal the minimum double value will be displayed with N/A as well
 	 * @param stats
 	 */
 	private void displayTrackDistancesSpeeds(TrackStats stats){

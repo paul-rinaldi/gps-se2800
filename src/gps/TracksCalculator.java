@@ -56,11 +56,20 @@ public class TracksCalculator {
 		double deltaZ;
 
 		int pointNum = track.getPointAmount();
-		if(pointNum < 1) {
+		if(pointNum == 1) {
 			a = track.getTrackPoint(0);
 			calcMinMaxLat(a);
 			calcMinMaxLong(a);
 			calcMinMaxElev(a);
+
+			TrackStats trackStats = track.getTrackStats();
+			trackStats.setMaxLat(maxLat);
+			trackStats.setMinLat(minLat);
+			trackStats.setMaxLong(maxLong);
+			trackStats.setMinLong(minLong);
+			trackStats.setMaxElev(maxElev);
+			trackStats.setMinElev(minElev);
+
 			throw new UnsupportedOperationException("Track only has one point");
 
 		}
