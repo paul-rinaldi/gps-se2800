@@ -41,9 +41,13 @@ public class TracksHandler {
 	 *
 	 * @param name
 	 */
-	public void calculateTrackStats(String name) {
+	public void calculateTrackStats(String name) throws UnsupportedOperationException {
 		tc = new TracksCalculator();
-		tc.calculateMetrics(getTrack(name));
+		try {
+			tc.calculateMetrics(getTrack(name));
+		} catch(UnsupportedOperationException uoe) {
+			throw new UnsupportedOperationException();
+		}
 	}
 
 	/**

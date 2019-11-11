@@ -47,7 +47,7 @@ public class TracksCalculator {
 	 * Calculates the 12 desired metrics for the specified track
 	 * @param track the track whose metrics are being calculated
 	 */
-	public void calculateMetrics(Track track){
+	public void calculateMetrics(Track track) throws UnsupportedOperationException{
 		track.setStats(new TrackStats());
 		TrackPoint a;
 		TrackPoint b;
