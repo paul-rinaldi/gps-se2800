@@ -83,15 +83,21 @@ public class GPSController {
 	 */
 	public void calcTrackStats(){
 
-		if(tracksHandler != null) {
+		try {
+			if (tracksHandler != null) {
 
-			String trackName = trackSpinner.getValue();
+				String trackName = trackSpinner.getValue();
 
-			//Only calculates stats if there are none already
-			if (tracksHandler.getTrack(trackName).getTrackStats() == null) {
-				tracksHandler.calculateTrackStats(trackSpinner.getValue());
-				displayTrackStats();
+				//Only calculates stats if there are none already
+				if (tracksHandler.getTrack(trackName).getTrackStats() == null) {
+					tracksHandler.calculateTrackStats(trackSpinner.getValue());
+					displayTrackStats();
+				}
 			}
+		} catch (UnsupportedOperationException e) {
+			createInfoDialog(e.getLocalizedMessage(), "Distance and Speed statistics" +
+					" couldn't be calculated because there is only one point in the track.");
+			displayTrackStats();
 		}
 	}
 
@@ -109,12 +115,62 @@ public class GPSController {
 		minLong.setText(Double.toString(stats.getMinLong()));
 		maxElev.setText(Double.toString(stats.getMaxElev()));
 		minElev.setText(Double.toString(stats.getMinElev()));
-		dMiles.setText(Double.toString(stats.getDistM()));
-		dKilometers.setText(Double.toString(stats.getDistK()));
-		avSpeedMPH.setText(Double.toString(stats.getAvgSpeedM()));
-		avSpeedKPH.setText(Double.toString(stats.getAvgSpeedK()));
-		maxSpeedMPH.setText(Double.toString(stats.getMaxSpeedM()));
-		maxSpeedKPH.setText(Double.toString(stats.getMaxSpeedK()));
+		//Decides how to display distances/ speeds
+		displayTrackDistancesSpeeds(stats);
+
+	}
+
+	/**
+	 * Sets distances and speeds of the Track stats depending on their value
+	 * Stats > 0 will be displayed, otherwise it displays N/A
+	 * However, max speeds that equal the minimum double value will be displayed with N/A as well
+	 * @param stats
+	 */
+	private void displayTrackDistancesSpeeds(TrackStats stats){
+
+		double distMiles = stats.getDistM();
+		double distKilo = stats.getDistK();
+		double avSpeedM = stats.getAvgSpeedM();
+		double avSpeedK = stats.getAvgSpeedK();
+		double maxSpeedM = stats.getMaxSpeedM();
+		double maxSpeedK = stats.getMaxSpeedK();
+
+		if(distMiles == 0) {
+			dMiles.setText("N/A");
+		} else{
+			dMiles.setText(Double.toString(stats.getDistM()));
+		}
+
+		if(distKilo == 0){
+			dKilometers.setText("N/A");
+		} else {
+			dKilometers.setText(Double.toString(stats.getDistK()));
+		}
+
+		if(avSpeedM == 0){
+			avSpeedMPH.setText("N/A");
+		} else {
+			avSpeedMPH.setText(Double.toString(stats.getAvgSpeedM()));
+		}
+
+		if(avSpeedK == 0){
+			avSpeedKPH.setText("N/A");
+		} else {
+			avSpeedKPH.setText(Double.toString(stats.getAvgSpeedK()));
+		}
+
+		if(maxSpeedM == 0){
+			maxSpeedMPH.setText("N/A");
+		} else {
+			maxSpeedMPH.setText(Double.toString(stats.getMaxSpeedM()));
+		}
+
+		if(maxSpeedK == 0){
+			maxSpeedKPH.setText("N/A");
+		} else {
+			maxSpeedKPH.setText(Double.toString(stats.getMaxSpeedK()));
+		}
+
 
 	}
 
@@ -217,7 +273,7 @@ public class GPSController {
 			createErrorDialog("Parsing Error", e.getLocalizedMessage() +
 					"\nThe error occurred near line " +
 						handler.getLine() + ", col "+ handler.getColumn());
-			
+
 			((GPXHandler)handler).resetAttributes();
 
 		} catch (UnsupportedOperationException uoe) {
@@ -258,18 +314,9 @@ public class GPSController {
 			}
 
 		} catch (SAXException e) {
-
-			System.out.println("ParserDemoApp: Parser threw SAXException: " + e.getMessage() );
-			System.out.println("The error occurred near line " + handler.getLine() + ", col "+ handler.getColumn());
-			throw e;
-
-			//createErrorDialog("Parsing Error", e.getLocalizedMessage() +
-			//"\nThe error occurred near line " + handler.getLine() + ", col "+ handler.getColumn());
+			throw e; //Throws sax
 		} catch (Exception e) {
-			System.out.println("ParserDemoApp: Parser threw Exception: " + e.getMessage() );
 			throw e;
-
-			//createErrorDialog("Parsing Error", e.getLocalizedMessage());
 		}
 
 

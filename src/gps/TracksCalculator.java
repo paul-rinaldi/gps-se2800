@@ -63,6 +63,15 @@ public class TracksCalculator {
 			calcMinMaxLat(a);
 			calcMinMaxLong(a);
 			calcMinMaxElev(a);
+
+			TrackStats trackStats = track.getTrackStats();
+			trackStats.setMaxLat(maxLat);
+			trackStats.setMinLat(minLat);
+			trackStats.setMaxLong(maxLong);
+			trackStats.setMinLong(minLong);
+			trackStats.setMaxElev(maxElev);
+			trackStats.setMinElev(minElev);
+
 			throw new UnsupportedOperationException("Track only has one point");
 		}
 
