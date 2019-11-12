@@ -1,7 +1,5 @@
 package gps;
 
-
-import javax.xml.crypto.dsig.Transform;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,53 +11,61 @@ import java.util.List;
 public class TracksHandler {
 
 	private List<Track> tracks;
+	private TracksCalculator tc;
 
-	public TracksHandler(){
+	public TracksHandler() {
 		this.tracks = new ArrayList<>();
 	}
 
 
 	/**
-	 * 
+	 *
 	 * @param track
 	 */
-	public void addTrack(Track track){
-		tracks.add(track);
+	public void addTrack(Track track) {
+		if(getTrack(track.getName()) == null) {
+			tracks.add(track);
+		} else {
+			throw new UnsupportedOperationException("Selected Track has already been loaded: " + track.getName());
+		}
 	}
 
 	/**
-	 * 
-	 * @param index
-	 */
-	public void calculateTrackStats(int index){
-
-	}
-
-	/**
-	 * 
+	 *
 	 * @param name
 	 */
-	public void calculateTrackStats(String name){
-
+	public void calculateTrackStats(String name) throws UnsupportedOperationException {
+		tc = new TracksCalculator();
+		try {
+			tc.calculateMetrics(getTrack(name));
+		} catch(UnsupportedOperationException uoe) {
+			throw new UnsupportedOperationException();
+		}
 	}
 
 	/**
-	 * 
+	 *
 	 * @param index
 	 */
-	public Track getTrack(int index){
+	public Track getTrack(int index) {
 		return tracks.get(index);
 	}
 
 	/**
-	 * 
+	 *
 	 * @param name
 	 */
-	public Track getTrack(String name){
-		return null;
+	public Track getTrack(String name) {
+		Track toReturn = null;
+		for (Track t : tracks) {
+			if (t.getName().equals(name)) {
+				toReturn = t;
+			}
+		}
+		return toReturn;
 	}
 
-	public int getTrackAmount(){
+	public int getTrackAmount() {
 		return tracks.size();
 	}
 

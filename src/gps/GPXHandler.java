@@ -12,7 +12,9 @@ import java.text.SimpleDateFormat;
 
 
 /**
- * @author demarsa
+ * handles the events that the parser encounters and creates track points and tracks from the information in the file.
+ *
+ * @author Hunter Hess
  * @version 1.0
  * @created 04-Nov-2019 9:32:33 AM
  */
@@ -34,7 +36,7 @@ public class GPXHandler extends AbstractParserEventHandler {
 		super();
 		tracksHandler = new TracksHandler();
 		TrackPointList = new ArrayList<>();
-		simpleDateFormat = new SimpleDateFormat("dd-MMM-yyyy'T'HH:mm:ss'Z'");
+		simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
 		latitude = 0;
 		longitude = 0;
 		elevation = -10000;
@@ -42,10 +44,24 @@ public class GPXHandler extends AbstractParserEventHandler {
 	}
 
 	/**
-	 * 
-	 * @param ch
-	 * @param start
-	 * @param length
+	 * Allows the this class to reset attributes if a track was loaded successfully or
+	 * allows the controller to call this to reset attributes if an error is thrown
+	 */
+	public void resetAttributes(){
+		TrackPointList = new ArrayList<>();
+		latitude = 0;
+		longitude = 0;
+		elevation = -10000;
+		time = null;
+		currentState = PossibleStates.INITIAL;
+	}
+
+	/**
+	 *  gets the characters between open and end tags
+	 *
+	 * @param ch an array of characters between the start and end tags
+	 * @param start the start index of the array
+	 * @param length the length of the array
 	 */
 	public void characters(char [] ch, int start, int length) throws SAXException{
 		// convert the char[] array to a String for convenience
@@ -60,6 +76,9 @@ public class GPXHandler extends AbstractParserEventHandler {
 		}
 
 		if( currentState == PossibleStates.NAME ) { // We're in the NAME state, so these are the chars found between <name> and </name>
+			if(s.isEmpty()){
+				throw new SAXException("</name> attribute is formatted incorrectly");
+			}
 			name = s;
 		}
 
@@ -77,26 +96,31 @@ public class GPXHandler extends AbstractParserEventHandler {
 		}
 	}
 
+	/**
+	 * called when the end of a document is reached
+	 *
+	 * @throws SAXException if final is not the last state of the document
+	 */
 	public void endDocument() throws SAXException {
 		if( currentState != PossibleStates.FINAL ){
 			throw new SAXException("Document structure error. Not in FINAL state at the end of the document!");
 		} else {
 
 			tracksHandler.addTrack(new Track(name, TrackPointList));
+			resetAttributes();
 		}
 	}
 
 	/**
-	 * 
-	 * @param uri
-	 * @param localName
-	 * @param qName
+	 * handles end element tags and makes sure that they are encountered in the correct order
+	 *
+	 * @param uri the name of the file being parsed
+	 * @param localName the state that the parser is in when it finds an end element
+	 * @throws SAXException if end element is encountered out of order
 	 */
 	public void endElement(String uri, String localName, String qName) throws SAXException{
 		int line = locator.getLineNumber(); // current line being parsed
 		int column = locator.getColumnNumber(); // current column being parsed
-
-		log("endElement found", "<"+localName+"> at line " + line + ", col " + column ); // debug logger
 
 		// localName contains the name of the element - e.g. gpx, name, trk, etc
 		if( localName.equalsIgnoreCase("time") ) {
@@ -165,16 +189,13 @@ public class GPXHandler extends AbstractParserEventHandler {
 		}
 	}
 
-	public TracksHandler getTrackHandler(){
-		return tracksHandler;
-	}
-
 	/**
-	 * 
+	 * handles start element tags
+	 *
 	 * @param uri the uri of the file to parse
 	 * @param localName the name to give the file
-	 * @param qName
 	 * @param atts the attributes being parsed
+	 * @throws SAXException if start element is encountered out of order
 	 */
 	public void startElement(String uri, String localName, String qName, Attributes atts) throws SAXException {
 		int line = locator.getLineNumber(); // current line being parsed
@@ -254,8 +275,8 @@ public class GPXHandler extends AbstractParserEventHandler {
 				throw new SAXException("Invalid value for latitude! Latitude cannot be between -90 and 90 degrees, " +
 						"it was found to be " + latitude);
 			} else if(-180>longitude || longitude>180){
-				throw new SAXException("Invalid value for latitude! Longitude cannot be between -180 and 180 degrees, " +
-						"it was found to be " + latitude);
+				throw new SAXException("Invalid value for longitude! Longitude must be between -180 and 180 degrees, " +
+						"it was found to be " + longitude);
 			} else {
 				// We can now set latitude and longitude values because we have valid attributes.
 				this.latitude = latitude;
@@ -279,4 +300,7 @@ public class GPXHandler extends AbstractParserEventHandler {
 		}
 	}
 
+	public TracksHandler getTrackHandler(){
+		return tracksHandler;
+	}
 }

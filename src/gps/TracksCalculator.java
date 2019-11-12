@@ -1,6 +1,8 @@
 package gps;
 
 
+import java.text.DecimalFormat;
+
 /**
  * @author demarsa and aleckm
  * @version 1.0
@@ -25,27 +27,29 @@ public class TracksCalculator {
 	private double maxLong;
 	private double totalDistanceK;
 	private double totalDistanceM;
+	private double totalTime;
 
 	public TracksCalculator(){
 		avgSpeedK = 0;
 		avgSpeedM = 0;
 		totalDistanceK = 0;
 		totalDistanceM = 0;
-		maxSpeedK = Integer.MIN_VALUE;
-		maxSpeedM = Integer.MIN_VALUE;
-		minElev = Integer.MAX_VALUE;
-		maxElev = Integer.MIN_VALUE;
-		minLat = Integer.MAX_VALUE;
-		maxLat = Integer.MIN_VALUE;
-		minLong = Integer.MAX_VALUE;
-		maxLong = Integer.MIN_VALUE;
+		totalTime = 0;
+		maxSpeedK = Double.MIN_VALUE;
+		maxSpeedM = Double.MIN_VALUE;
+		minElev = Double.MAX_VALUE;
+		maxElev = Double.MAX_VALUE*-1;
+		minLat = Double.MAX_VALUE;
+		maxLat = Double.MAX_VALUE*-1;
+		minLong = Double.MAX_VALUE;
+		maxLong = Double.MAX_VALUE*-1;
 	}
 
 	/**
 	 * Calculates the 12 desired metrics for the specified track
 	 * @param track the track whose metrics are being calculated
 	 */
-	public void calculateMetrics(Track track){
+	public void calculateMetrics(Track track) throws UnsupportedOperationException{
 		track.setStats(new TrackStats());
 		TrackPoint a;
 		TrackPoint b;
@@ -53,20 +57,22 @@ public class TracksCalculator {
 		double deltaY;
 		double deltaZ;
 
-		avgSpeedK = 0;
-		avgSpeedM = 0;
-
 		int pointNum = track.getPointAmount();
-		if(pointNum < 1) {
+		if(pointNum == 1) {
 			a = track.getTrackPoint(0);
 			calcMinMaxLat(a);
 			calcMinMaxLong(a);
 			calcMinMaxElev(a);
+
+			TrackStats trackStats = track.getTrackStats();
+			trackStats.setMaxLat(maxLat);
+			trackStats.setMinLat(minLat);
+			trackStats.setMaxLong(maxLong);
+			trackStats.setMinLong(minLong);
+			trackStats.setMaxElev(maxElev);
+			trackStats.setMinElev(minElev);
+
 			throw new UnsupportedOperationException("Track only has one point");
-			/*
-			Austin needs to display a message stating that the distance and speed can't be calculated
-			Calculate min/max for elevation, latitude, and longitude as normal
-			 */
 		}
 
 		for(int i = 0; i < pointNum; i++) {
@@ -74,21 +80,26 @@ public class TracksCalculator {
 				a = track.getTrackPoint(i);
 				b = track.getTrackPoint(i + 1);
 
-				deltaX = (RADIUS_OF_EARTH_M + (b.getElevation() + a.getElevation())/2) *
+				deltaX = (RADIUS_OF_EARTH_M + ((b.getElevation() + a.getElevation())/2)) *
 						(b.getLongitude()*DEG_TO_RAD - a.getLongitude()*DEG_TO_RAD) *
-						Math.cos((b.getLatitude()*DEG_TO_RAD-a.getLatitude()*DEG_TO_RAD)/2);
+						Math.cos((b.getLatitude()*DEG_TO_RAD + a.getLatitude()*DEG_TO_RAD)/2);
 				deltaY = (RADIUS_OF_EARTH_M + (b.getElevation() + a.getElevation())/2) *
 						(b.getLatitude()*DEG_TO_RAD - a.getLatitude()*DEG_TO_RAD);
 				deltaZ = b.getElevation() - a.getElevation();
 				double deltaT = (b.getTime().getTime() - a.getTime().getTime())*MILLI_SEC_TO_HOURS;
 				double distance = Math.sqrt(Math.pow(deltaX, 2) + Math.pow(deltaY, 2) + Math.pow(deltaZ, 2));
 
+				totalTime += deltaT;
 				calcTotalDistance(distance);
-				calcAvgMaxSpeed(deltaT, distance, pointNum, i);
+				calcMaxSpeed(deltaT, distance);
 				calcMinMaxElev(a);
 				calcMinMaxLat(a);
 				calcMinMaxLong(a);
 			} else {
+
+				avgSpeedK = totalDistanceK/totalTime;
+				avgSpeedM = totalDistanceM/totalTime;
+
 				a = track.getTrackPoint(i);
 
 				calcMinMaxElev(a);
@@ -97,19 +108,20 @@ public class TracksCalculator {
 			}
 		}
 
+		DecimalFormat format = new DecimalFormat("#.##");
 		TrackStats stats = track.getTrackStats();
-		stats.setAvgSpeedK(avgSpeedK);
-		stats.setAvgSpeedM(avgSpeedM);
-		stats.setMaxSpeedK(maxSpeedK);
-		stats.setMaxSpeedM(maxSpeedM);
-		stats.setDistK(totalDistanceK);
-		stats.setDistM(totalDistanceM);
-		stats.setMinElev(minElev);
-		stats.setMaxElev(maxElev);
-		stats.setMinLat(minLat);
-		stats.setMaxLat(maxLat);
-		stats.setMinLong(minLong);
-		stats.setMaxLong(maxLong);
+		stats.setAvgSpeedK(Double.parseDouble(format.format(avgSpeedK)));
+		stats.setAvgSpeedM(Double.parseDouble(format.format(avgSpeedM)));
+		stats.setMaxSpeedK(Double.parseDouble(format.format(maxSpeedK)));
+		stats.setMaxSpeedM(Double.parseDouble(format.format(maxSpeedM)));
+		stats.setDistK(Double.parseDouble(format.format(totalDistanceK)));
+		stats.setDistM(Double.parseDouble(format.format(totalDistanceM)));
+		stats.setMinElev(Double.parseDouble(format.format(minElev)));
+		stats.setMaxElev(Double.parseDouble(format.format(maxElev)));
+		stats.setMinLat(Double.parseDouble(format.format(minLat)));
+		stats.setMaxLat(Double.parseDouble(format.format(maxLat)));
+		stats.setMinLong(Double.parseDouble(format.format(minLong)));
+		stats.setMaxLong(Double.parseDouble(format.format(maxLong)));
 	}
 
 	/**
@@ -117,19 +129,12 @@ public class TracksCalculator {
 	 *
 	 * @param deltaT the change in time between the current two track points
 	 * @param distance the distance between the current two track points
-	 * @param pointNum the total number of track points
-	 * @param counter the current iteration of the loop
 	 */
 	//Don't execute anything if pointNum < 1
-	private void calcAvgMaxSpeed(double deltaT, double distance, int pointNum, int counter) {
-		double speedK = distance*M_TO_KM/deltaT;
-		double speedM = distance*M_TO_MI/deltaT;
-		avgSpeedK += speedK;
-		avgSpeedM += speedM;
-		if(counter == pointNum-1) {
-			avgSpeedK = avgSpeedK/pointNum-1;
-			avgSpeedM = avgSpeedM/pointNum-1;
-		}
+	private void calcMaxSpeed(double deltaT, double distance) {
+		double speedK = (distance*M_TO_KM)/deltaT;
+		double speedM = (distance*M_TO_MI)/deltaT;
+
 		if(speedK > maxSpeedK) {
 			maxSpeedK = speedK;
 		}
@@ -150,7 +155,7 @@ public class TracksCalculator {
 		if(elevation > maxElev) {
 			maxElev = elevation;
 		}
-		if(point.getElevation() < minElev) {
+		if(elevation < minElev) {
 			minElev = elevation;
 		}
 	}

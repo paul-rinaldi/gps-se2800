@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bad>
+<!-- missing gpx element; invalid file -->
+  <trk>
+    <name>Invalid GPX file - no gpx element</name>
+    <trkseg>
+      <trkpt lon="-87.90000000000000" lat="43.30000000000000">
+        <ele>200.0000000000000</ele>
+          <!-- bad year -->
+       <time>201-10-19T13:17:00Z</time>
+      </trkpt>
+      <trkpt lon="-87.90100000000000" lat="43.30000000000000">
+        <ele>250.0000000000000</ele>
+          <!-- bad month -->
+        <time>2014-1-19T13:17:10Z</time>
+      </trkpt>
+      <trkpt lon="-87.90100000000000" lat="43.30100000000000">
+        <ele>250.0000000000000</ele>
+          <!-- bad day -->
+        <time>2014-10-1T13:17:20Z</time>
+      </trkpt>
+       <trkpt lon="-87.90000000000000" lat="43.30100000000000">
+        <ele>275.0000000000000</ele>
+          <!-- bad format (X instead of T) -->
+        <time>2014-10-19X13:17:30Z</time>
+      </trkpt>
+      <trkpt lon="-87.90000000000000" lat="43.30000000000000">
+        <ele>200.0000000000000</ele>
+          <!-- bad hour -->
+        <time>2014-10-19T1:17:40Z</time>
+      </trkpt>
+      <trkpt lon="-87.90000000000000" lat="43.30000000000000">
+        <ele>200.0000000000000</ele>
+          <!-- bad minute -->
+        <time>2014-10-19T13:1:40Z</time>
+      </trkpt>
+      <trkpt lon="-87.90000000000000" lat="43.30000000000000">
+        <ele>200.0000000000000</ele>
+          <!-- bad second -->
+        <time>2014-10-19T13:17:4Z</time>
+      </trkpt>
+      <trkpt lon="-87.90000000000000" lat="43.30000000000000">
+        <ele>200.0000000000000</ele>
+          <!-- bad year -->
+        <time>2014-10-19T13:17:40.00Z</time>
+      </trkpt>
+      <trkpt lon="-87.90000000000000" lat="43.30000000000000">
+        <ele>200.0000000000000</ele>
+          <!-- bad format (X instead of Z) -->
+        <time>2014-10-19T13:17:40.00X</time>
+      </trkpt>
+       <trkpt lon="-87.90000000000000" lat="43.30000000000000">
+        <ele>200.0000000000000</ele>
+        <time>2014-10-19T13:17:00Z</time>
+      </trkpt>
+   </trkseg>
+  </trk>
+</bad>

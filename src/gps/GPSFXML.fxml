@@ -15,15 +15,14 @@
           <Menu mnemonicParsing="false" text="File">
             <items>
               <MenuItem mnemonicParsing="false" onAction="#loadTrack" text="Load" />
-                  <MenuItem mnemonicParsing="false" onAction="#calcTrackStats" text="Track Stats" />
+                  <MenuItem mnemonicParsing="false" onAction="#calcTrackStats" text="Calculate Metrics" />
                   <MenuItem mnemonicParsing="false" onAction="#exit" text="Exit" />
             </items>
           </Menu>
         </menus>
       </MenuBar>
-      <Label layoutX="168.0" layoutY="38.0" prefHeight="18.0" prefWidth="79.0" text="Track Selected:" />
-      <TextField fx:id="trackName" editable="false" layoutX="265.0" layoutY="34.0" />
-      <Spinner fx:id="trackSpinner" layoutX="414.0" layoutY="34.0" max="10" min="1" onMouseClicked="#changeTrackSelected" prefHeight="26.0" prefWidth="24.0" />
+      <Label layoutX="14.0" layoutY="38.0" prefHeight="18.0" prefWidth="79.0" text="Track Selected:" />
+      <Spinner fx:id="trackSpinner" layoutX="105.0" layoutY="34.0" onMouseClicked="#changeTrackStatDisplay" prefHeight="26.0" prefWidth="289.0" />
       <TextField fx:id="maxLat" editable="false" layoutX="168.0" layoutY="111.0" prefHeight="26.0" prefWidth="94.0" />
       <TextField fx:id="minLat" editable="false" layoutX="319.0" layoutY="111.0" prefHeight="26.0" prefWidth="94.0" />
       <TextField fx:id="maxElev" editable="false" layoutX="168.0" layoutY="193.0" prefHeight="26.0" prefWidth="94.0" />
@@ -48,5 +47,7 @@
       <Label layoutX="355.0" layoutY="321.0" text="KPH" />
       <Label layoutX="81.0" layoutY="346.0" text="Average Speed" />
       <Label layoutX="76.0" layoutY="394.0" text="Maximum Speed" />
+      <Label layoutX="429.0" layoutY="39.0" text="Tracks Remaining:" />
+      <TextField text="10" fx:id="tracksRemainingBox" editable="false" layoutX="532.0" layoutY="35.0" prefHeight="25.0" prefWidth="54.0" />
    </children>
 </AnchorPane>

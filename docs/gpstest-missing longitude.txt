@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gpx>
+  <trk>
+    <name>GPS Test: missing longitude in 3rd trkpt</name>
+    <trkseg>
+      <trkpt lon="-87.90000000000000" lat="43.30000000000000">
+        <ele>200.0000000000000</ele>
+        <time>2014-10-19T13:17:00Z</time>
+      </trkpt>
+      <trkpt lon="-87.90100000000000" lat="43.30000000000000">
+        <ele>250.0000000000000</ele>
+        <time>2014-10-19T13:17:10Z</time>
+      </trkpt>
+ 	  <!-- missing longitude -->
+     <trkpt  lat="43.30100000000000">
+        <ele>250.0000000000000</ele>
+        <time>2014-10-19T13:17:20Z</time>
+      </trkpt>
+       <trkpt lon="-87.90000000000000" lat="43.30100000000000">
+        <ele>275.0000000000000</ele>
+        <time>2014-10-19T13:17:30Z</time>
+      </trkpt>
+      <trkpt lon="-87.90000000000000" lat="43.30000000000000">
+        <ele>200.0000000000000</ele>
+        <time>2014-10-19T13:17:40Z</time>
+      </trkpt>
+    </trkseg>
+  </trk>
+</gpx>
