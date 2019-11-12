@@ -13,6 +13,9 @@ public class TracksHandler {
 	private List<Track> tracks;
 	private TracksCalculator tc;
 
+	/**
+	 * Initializes tracks as an array list
+	 */
 	public TracksHandler() {
 		this.tracks = new ArrayList<>();
 	}
