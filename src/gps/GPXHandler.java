@@ -201,8 +201,6 @@ public class GPXHandler extends AbstractParserEventHandler {
 		int line = locator.getLineNumber(); // current line being parsed
 		int column = locator.getColumnNumber(); // current column being parsed
 
-		log("startElement found", "<"+localName+"> at line " + line + ", col " + column ); // debug logger
-
 		if( currentState == PossibleStates.INITIAL ) {
 			if( !localName.equalsIgnoreCase("gpx") ) { // <gpx> should be the first element found
 				throw new SAXException("Expected <gpx> element at this location! line "+line + ", col "+column);
