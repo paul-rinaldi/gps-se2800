@@ -1,7 +1,5 @@
 package gps;
 
-
-import javax.xml.crypto.dsig.Transform;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,16 +23,11 @@ public class TracksHandler {
 	 * @param track
 	 */
 	public void addTrack(Track track) {
-		tracks.add(track);
-	}
-
-	/**
-	 *
-	 * @param index
-	 */
-	//To Do
-	public void calculateTrackStats(int index) {
-		tc.calculateMetrics(tracks.get(index));
+		if(getTrack(track.getName()) == null) {
+			tracks.add(track);
+		} else {
+			throw new UnsupportedOperationException("Selected Track has already been loaded: " + track.getName());
+		}
 	}
 
 	/**

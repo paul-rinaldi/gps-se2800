@@ -1,6 +1,8 @@
 package gps;
 
 
+import java.text.DecimalFormat;
+
 /**
  * @author demarsa and aleckm
  * @version 1.0
@@ -36,9 +38,9 @@ public class TracksCalculator {
 		maxSpeedK = Double.MIN_VALUE;
 		maxSpeedM = Double.MIN_VALUE;
 		minElev = Double.MAX_VALUE;
-		maxElev = Double.MIN_VALUE;
+		maxElev = Double.MAX_VALUE*-1;
 		minLat = Double.MAX_VALUE;
-		maxLat = Double.MIN_VALUE;
+		maxLat = Double.MAX_VALUE*-1;
 		minLong = Double.MAX_VALUE;
 		maxLong = Double.MAX_VALUE*-1;
 	}
@@ -56,17 +58,12 @@ public class TracksCalculator {
 		double deltaZ;
 
 		int pointNum = track.getPointAmount();
-		if(pointNum < 1) {
+		if(pointNum == 1) {
 			a = track.getTrackPoint(0);
 			calcMinMaxLat(a);
 			calcMinMaxLong(a);
 			calcMinMaxElev(a);
 			throw new UnsupportedOperationException("Track only has one point");
-			/*
-			Austin needs to display a message stating that the distance and speed can't be calculated
-			Calculate min/max for elevation, latitude, and longitude as normal
-			 */
-			//TODO
 		}
 
 		for(int i = 0; i < pointNum; i++) {
@@ -102,19 +99,20 @@ public class TracksCalculator {
 			}
 		}
 
+		DecimalFormat format = new DecimalFormat("#.##");
 		TrackStats stats = track.getTrackStats();
-		stats.setAvgSpeedK(avgSpeedK);
-		stats.setAvgSpeedM(avgSpeedM);
-		stats.setMaxSpeedK(maxSpeedK);
-		stats.setMaxSpeedM(maxSpeedM);
-		stats.setDistK(totalDistanceK);
-		stats.setDistM(totalDistanceM);
-		stats.setMinElev(minElev);
-		stats.setMaxElev(maxElev);
-		stats.setMinLat(minLat);
-		stats.setMaxLat(maxLat);
-		stats.setMinLong(minLong);
-		stats.setMaxLong(maxLong);
+		stats.setAvgSpeedK(Double.parseDouble(format.format(avgSpeedK)));
+		stats.setAvgSpeedM(Double.parseDouble(format.format(avgSpeedM)));
+		stats.setMaxSpeedK(Double.parseDouble(format.format(maxSpeedK)));
+		stats.setMaxSpeedM(Double.parseDouble(format.format(maxSpeedM)));
+		stats.setDistK(Double.parseDouble(format.format(totalDistanceK)));
+		stats.setDistM(Double.parseDouble(format.format(totalDistanceM)));
+		stats.setMinElev(Double.parseDouble(format.format(minElev)));
+		stats.setMaxElev(Double.parseDouble(format.format(maxElev)));
+		stats.setMinLat(Double.parseDouble(format.format(minLat)));
+		stats.setMaxLat(Double.parseDouble(format.format(maxLat)));
+		stats.setMinLong(Double.parseDouble(format.format(minLong)));
+		stats.setMaxLong(Double.parseDouble(format.format(maxLong)));
 	}
 
 	/**

@@ -212,12 +212,18 @@ public class GPSController {
 						"You have loaded the maximum allowable tracks");
 			}
 
-		} catch (SAXException e){
+		} catch (SAXException e) {
 
 			createErrorDialog("Parsing Error", e.getLocalizedMessage() +
 					"\nThe error occurred near line " +
 						handler.getLine() + ", col "+ handler.getColumn());
 			
+			((GPXHandler)handler).resetAttributes();
+
+		} catch (UnsupportedOperationException uoe) {
+
+			createInfoDialog("Track with name already exists", uoe.getLocalizedMessage());
+
 			((GPXHandler)handler).resetAttributes();
 
 		} catch (Exception e) {
