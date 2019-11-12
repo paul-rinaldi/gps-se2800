@@ -129,7 +129,7 @@ public class GPSController {
 		double maxEle = stats.getMaxElev();
 		double minEle = stats.getMinElev();
 
-		if(maxLati > Double.MIN_VALUE){
+		if(maxLati > Double.MAX_VALUE*-1){
 			maxLat.setText(Double.toString(maxLati));
 		} else {
 			maxLat.setText("N/A");
@@ -141,7 +141,7 @@ public class GPSController {
 			minLat.setText("N/A");
 		}
 
-		if(maxLongi > Double.MIN_VALUE){
+		if(maxLongi > Double.MAX_VALUE*-1){
 			maxLong.setText(Double.toString(maxLongi));
 		} else {
 			maxLong.setText("N/A");
@@ -153,7 +153,7 @@ public class GPSController {
 			minLong.setText("N/A");
 		}
 
-		if(maxEle > Double.MIN_VALUE) {
+		if(maxEle > Double.MAX_VALUE*-1) {
 			maxElev.setText(Double.toString(maxEle));
 		} else{
 			maxElev.setText("N/A");
@@ -350,7 +350,7 @@ public class GPSController {
 	 */
 	private void parseTrackFile(String filename) throws SAXException, Exception{
 
-		handler.enableLogging(true);
+		handler.enableLogging(false);
 
 		Parser parser;
 		try {

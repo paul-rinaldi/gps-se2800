@@ -72,7 +72,6 @@ public class GPXHandler extends AbstractParserEventHandler {
 		if( !s.isEmpty() ) { // ignore whitespace
 			int line = locator.getLineNumber(); // current line being parsed
 			int column = locator.getColumnNumber(); // current column being parsed
-			log("characters found", "'"+s + "' at line " + line + ", col " + column );
 		}
 
 		if( currentState == PossibleStates.NAME ) { // We're in the NAME state, so these are the chars found between <name> and </name>
@@ -270,7 +269,7 @@ public class GPXHandler extends AbstractParserEventHandler {
 
 			//checks to make sure that latitude and longitude are valid values
 			if(-90>latitude || latitude>90) {
-				throw new SAXException("Invalid value for latitude! Latitude cannot be between -90 and 90 degrees, " +
+				throw new SAXException("Invalid value for latitude! Latitude must be between -90 and 90 degrees, " +
 						"it was found to be " + latitude);
 			} else if(-180>longitude || longitude>180){
 				throw new SAXException("Invalid value for longitude! Longitude must be between -180 and 180 degrees, " +
