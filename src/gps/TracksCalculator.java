@@ -47,7 +47,9 @@ public class TracksCalculator {
 
 	/**
 	 * Calculates the 12 desired metrics for the specified track
-	 * @param track the track whose metrics are being calculated
+	 *
+	 * @param track the track for which the metrics are being calculated
+	 * @throws UnsupportedOperationException when the track only has one track point
 	 */
 	public void calculateMetrics(Track track) throws UnsupportedOperationException{
 		track.setStats(new TrackStats());
@@ -130,7 +132,6 @@ public class TracksCalculator {
 	 * @param deltaT the change in time between the current two track points
 	 * @param distance the distance between the current two track points
 	 */
-	//Don't execute anything if pointNum < 1
 	private void calcMaxSpeed(double deltaT, double distance) {
 		double speedK = (distance*M_TO_KM)/deltaT;
 		double speedM = (distance*M_TO_MI)/deltaT;
