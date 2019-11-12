@@ -16,9 +16,9 @@ public class Track {
 
 
 	/**
-	 * 
-	 * @param name
-	 * @param trackPoints
+	 * Creates a track object with String name and Array list Track points
+	 * @param name the name of the track
+	 * @param trackPoints the array list of track points
 	 */
 	public Track(String name, ArrayList<TrackPoint> trackPoints){
 		this.name = name;
@@ -36,10 +36,6 @@ public class Track {
 		return name;
 	}
 
-	/**
-	 * 
-	 * @param index
-	 */
 	public TrackPoint getTrackPoint(int index) {
 		return trackPoints.get(index);
 	}

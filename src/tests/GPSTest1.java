@@ -12,45 +12,81 @@ import java.util.ArrayList;
 import java.util.Date;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class GPSTest1 {
 
     private static final double DELTA = 0.03;
     private TrackStats ts;
+    private double maxLat;
+    private double minLat;
+    private double maxLong;
+    private double minLong;
+    private double maxElev;
+    private double minElev;
+    private Track t;
 
     @Test
     public void testMaxLat() {
         calculations();
-        assertEquals(43.3, ts.getMaxLat(), DELTA);
+        assertEquals(43.3, maxLat, DELTA);
     }
     @Test
     public void testMinLat() {
         calculations();
-        assertEquals(43.3, ts.getMinLat(), DELTA);
+        assertEquals(43.3, minLat, DELTA);
     }
     @Test
     public void testMaxElev() {
         calculations();
-        assertEquals(500.0, ts.getMaxElev(), DELTA);
+        assertEquals(500.0, maxElev, DELTA);
     }
     @Test
     public void testMinElev() {
         calculations();
-        assertEquals(500.0, ts.getMinElev(), DELTA);
+        assertEquals(500.0, minElev, DELTA);
 
     }
     @Test
     public void testMaxLong() {
         calculations();
-        assertEquals(-87.9, ts.getMaxLong(), DELTA);
+        assertEquals(-87.9, maxLong, DELTA);
 
     }
     @Test
     public void testMinLong() {
         calculations();
-        assertEquals(-87.9, ts.getMinLong(), DELTA);
+        assertEquals(-87.9, minLong, DELTA);
 
     }
+
+    @Test
+    public void testUnsupportedOperationExceptionThrown() {
+        UnsupportedOperationException uoe = assertThrows(UnsupportedOperationException.class, () -> {
+            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
+            String dateInString1 = "2016-02-10T13:00:00Z";
+            ArrayList<TrackPoint> pList = new ArrayList<>();
+            try {
+                Date time1 = formatter.parse(dateInString1.replaceAll("Z$", "+0000"));
+                TrackPoint p1 = new TrackPoint(43.3, -87.9, 500.0, time1);
+                pList.add(p1);
+                Track t = new Track("GPSTest2", pList);
+                TracksCalculator tc = new TracksCalculator();
+                tc.calculateMetrics(t);
+                ts = t.getTrackStats();
+                maxLat = ts.getMaxLat();
+                minLat = ts.getMinLat();
+                maxLong = ts.getMaxLong();
+                minLong = ts.getMinLong();
+                maxElev = ts.getMaxElev();
+                minElev = ts.getMinElev();
+            } catch (ParseException pe) {
+                pe.printStackTrace();
+            }
+        });
+        assertEquals("Track only has one point", uoe.getMessage());
+    }
+
     private void calculations() {
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
         String dateInString1 = "2016-02-10T13:00:00Z";
@@ -59,12 +95,19 @@ public class GPSTest1 {
             Date time1 = formatter.parse(dateInString1.replaceAll("Z$", "+0000"));
             TrackPoint p1 = new TrackPoint(43.3, -87.9, 500.0, time1);
             pList.add(p1);
-            Track t = new Track("GPSTest2", pList);
+            t = new Track("GPSTest2", pList);
             TracksCalculator tc = new TracksCalculator();
             tc.calculateMetrics(t);
-            ts = t.getTrackStats();
         } catch (ParseException pe) {
             pe.printStackTrace();
+        } catch (UnsupportedOperationException uoe) {
+            ts = t.getTrackStats();
+            maxLat = ts.getMaxLat();
+            minLat = ts.getMinLat();
+            maxLong = ts.getMaxLong();
+            minLong = ts.getMinLong();
+            maxElev = ts.getMaxElev();
+            minElev = ts.getMinElev();
         }
     }
 }

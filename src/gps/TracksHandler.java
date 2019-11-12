@@ -22,8 +22,9 @@ public class TracksHandler {
 
 
 	/**
+	 * Adds the desired track to the tracks array list
 	 *
-	 * @param track
+	 * @param track the track being added to the array list
 	 */
 	public void addTrack(Track track) {
 		if(getTrack(track.getName()) == null) {
@@ -34,8 +35,9 @@ public class TracksHandler {
 	}
 
 	/**
+	 * Creates a track calculator to calculate the track stats
 	 *
-	 * @param name
+	 * @param name the name of the track to calculate the stats for
 	 */
 	public void calculateTrackStats(String name) throws UnsupportedOperationException {
 		tc = new TracksCalculator();
@@ -47,16 +49,18 @@ public class TracksHandler {
 	}
 
 	/**
+	 * Returns the track at the index in tracks
 	 *
-	 * @param index
+	 * @param index the desired position of the list to return
 	 */
 	public Track getTrack(int index) {
 		return tracks.get(index);
 	}
 
 	/**
+	 * Returns the track with the desired name but returns null if not in tracks
 	 *
-	 * @param name
+	 * @param name the name of the desired track
 	 */
 	public Track getTrack(String name) {
 		Track toReturn = null;
@@ -68,6 +72,10 @@ public class TracksHandler {
 		return toReturn;
 	}
 
+	/**
+	 * Gets the number of track points in tracks
+	 * @return the number of track points in tracks
+	 */
 	public int getTrackAmount() {
 		return tracks.size();
 	}

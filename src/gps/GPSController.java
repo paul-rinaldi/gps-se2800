@@ -109,14 +109,61 @@ public class GPSController {
 		TrackStats stats = track.getTrackStats();
 
 		//Set stats in boxes
-		maxLat.setText(Double.toString(stats.getMaxLat()));
-		minLat.setText(Double.toString(stats.getMinLat()));
-		maxLong.setText(Double.toString(stats.getMaxLong()));
-		minLong.setText(Double.toString(stats.getMinLong()));
-		maxElev.setText(Double.toString(stats.getMaxElev()));
-		minElev.setText(Double.toString(stats.getMinElev()));
+		displayTrackMinMaxValues(stats);
 		//Decides how to display distances/ speeds
 		displayTrackDistancesSpeeds(stats);
+
+	}
+
+	/**
+	 * Determines how to display the stats based on value retreived
+	 *
+	 * @param stats TrackStats of Track selected
+	 */
+	private void displayTrackMinMaxValues(TrackStats stats){
+
+		double maxLati = stats.getMaxLat();
+		double minLati = stats.getMinLat();
+		double maxLongi = stats.getMaxLong();
+		double minLongi = stats.getMinLong();
+		double maxEle = stats.getMaxElev();
+		double minEle = stats.getMinElev();
+
+		if(maxLati > Double.MIN_VALUE){
+			maxLat.setText(Double.toString(maxLati));
+		} else {
+			maxLat.setText("N/A");
+		}
+
+		if(minLati < Double.MAX_VALUE){
+			minLat.setText(Double.toString(minLati));
+		} else{
+			minLat.setText("N/A");
+		}
+
+		if(maxLongi > Double.MIN_VALUE){
+			maxLong.setText(Double.toString(maxLongi));
+		} else {
+			maxLong.setText("N/A");
+		}
+
+		if(minLongi < Double.MAX_VALUE){
+			minLong.setText(Double.toString(minLongi));
+		} else {
+			minLong.setText("N/A");
+		}
+
+		if(maxEle > Double.MIN_VALUE) {
+			maxElev.setText(Double.toString(maxEle));
+		} else{
+			maxElev.setText("N/A");
+		}
+
+		if(minEle < Double.MAX_VALUE) {
+			minElev.setText(Double.toString(minEle));
+		} else {
+			minElev.setText("N/A");
+		}
 
 	}
 
@@ -124,7 +171,8 @@ public class GPSController {
 	 * Sets distances and speeds of the Track stats depending on their value
 	 * Stats > 0 will be displayed, otherwise it displays N/A
 	 * However, max speeds that equal the minimum double value will be displayed with N/A as well
-	 * @param stats
+	 *
+	 * @param stats Track Stats of calculator
 	 */
 	private void displayTrackDistancesSpeeds(TrackStats stats){
 

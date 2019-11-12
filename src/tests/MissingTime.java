@@ -11,7 +11,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 public class MissingTime {
 
     private GPXHandler handler = new GPXHandler();
-    private String filename = "gpstest-missing time.txt";
+    private String filename = "C:\\GPS\\docs\\gpstest-missing time.txt";
 
     @Test
     public void testSAXExceptionIsThrown() {

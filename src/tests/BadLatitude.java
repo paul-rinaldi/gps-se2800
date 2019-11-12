@@ -11,7 +11,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 public class BadLatitude {
 
     private GPXHandler handler = new GPXHandler();
-    private String filename = "gpstest-bad latitudes.txt";
+    private String filename = "C:\\GPS\\docs\\gpstest-bad latitudes.txt";
 
     @Test
     public void testSAXExceptionIsThrown() {

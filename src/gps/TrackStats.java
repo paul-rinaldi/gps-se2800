@@ -21,6 +21,9 @@ public class TrackStats {
 	private double minLat;
 	private double minLong;
 
+	/**
+	 * Creates a TrackStats with all values initialized to 0
+	 */
 	public TrackStats(){
 		this.avSpeedK = 0;
 		this.avSpeedM = 0;

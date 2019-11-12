@@ -11,7 +11,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 public class MissingElevation {
 
     private GPXHandler handler = new GPXHandler();
-    private String filename = "gpstest-missing elevation.txt";
+    private String filename = "C:\\GPS\\docs\\gpstest-missing elevation.txt";
 
     @Test
     public void testSAXExceptionIsThrown() {
