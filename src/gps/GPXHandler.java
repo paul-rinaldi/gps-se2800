@@ -171,10 +171,10 @@ public class GPXHandler extends AbstractParserEventHandler {
 
 	/**
 	 * 
-	 * @param uri
-	 * @param localName
+	 * @param uri the uri of the file to parse
+	 * @param localName the name to give the file
 	 * @param qName
-	 * @param atts
+	 * @param atts the attributes being parsed
 	 */
 	public void startElement(String uri, String localName, String qName, Attributes atts) throws SAXException {
 		int line = locator.getLineNumber(); // current line being parsed
@@ -250,10 +250,10 @@ public class GPXHandler extends AbstractParserEventHandler {
 				throw new SAXException("<trkpt> element has one or more illegal attributes: " + firstAtt + ":" + secondAtt );
 
 			//checks to make sure that latitude and longitude are valid values
-			if(-90>latitude && latitude>90) {
+			if(-90>latitude || latitude>90) {
 				throw new SAXException("Invalid value for latitude! Latitude cannot be between -90 and 90 degrees, " +
 						"it was found to be " + latitude);
-			} else if(-180>longitude && longitude>180){
+			} else if(-180>longitude || longitude>180){
 				throw new SAXException("Invalid value for latitude! Longitude cannot be between -180 and 180 degrees, " +
 						"it was found to be " + latitude);
 			} else {
