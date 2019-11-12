@@ -11,7 +11,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 public class BadTimes {
 
     private GPXHandler handler = new GPXHandler();
-    private String filename = "C:\\GPS\\docs\\gpstest-bad times.txt";
+    private String filename = System.getProperty("user.dir") + "\\docs\\gpstest-bad times.txt";
 
     @Test
     public void testSAXExceptionIsThrown() {

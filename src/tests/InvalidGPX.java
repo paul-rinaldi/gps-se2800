@@ -11,7 +11,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 public class InvalidGPX {
 
     private GPXHandler handler = new GPXHandler();
-    private String filename = "C:\\GPS\\docs\\InvalidGPX.txt";
+    private String filename = System.getProperty("user.dir") + "\\docs\\InvalidGPX.txt";
 
     @Test
     public void testSAXExceptionIsThrown() {

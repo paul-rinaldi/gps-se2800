@@ -11,7 +11,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 public class MissingLatitude {
 
     private GPXHandler handler = new GPXHandler();
-    private String filename = "C:\\GPS\\docs\\gpstest-missing latiitude.txt";
+    private String filename = System.getProperty("user.dir") + "\\docs\\gpstest-missing latiitude.txt";
 
     @Test
     public void testSAXExceptionIsThrown() {
