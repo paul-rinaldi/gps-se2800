@@ -81,7 +81,8 @@ public class GPSTest1 {
                 maxElev = ts.getMaxElev();
                 minElev = ts.getMinElev();
             } catch (ParseException pe) {
-                pe.printStackTrace();
+                // fail() should be called here; if an exception is thrown, something is wrong and the test should fail
+            	pe.printStackTrace();
             }
         });
         assertEquals("Track only has one point", uoe.getMessage());
@@ -92,6 +93,7 @@ public class GPSTest1 {
         String dateInString1 = "2016-02-10T13:00:00Z";
         ArrayList<TrackPoint> pList = new ArrayList<>();
         try {
+        	// if your data format was "yyyy-MM-dd'T'HH:mm:ss'Z'", then you wouldn't have to replace the Z
             Date time1 = formatter.parse(dateInString1.replaceAll("Z$", "+0000"));
             TrackPoint p1 = new TrackPoint(43.3, -87.9, 500.0, time1);
             pList.add(p1);
@@ -100,7 +102,9 @@ public class GPSTest1 {
             tc.calculateMetrics(t);
         } catch (ParseException pe) {
             pe.printStackTrace();
+            // fail() should be called here; if an exception is thrown, something is wrong and the test should fail
         } catch (UnsupportedOperationException uoe) {
+        	// this exception is expected due to 1 point?
             ts = t.getTrackStats();
             maxLat = ts.getMaxLat();
             minLat = ts.getMinLat();

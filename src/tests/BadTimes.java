@@ -22,5 +22,6 @@ public class BadTimes {
                     parser.parse(filename);
                 });
         assertEquals("</time> attribute is formatted incorrectly!", sax.getMessage());
-    }
+        // the line and column numbers should be validated as well.
+        }
 }

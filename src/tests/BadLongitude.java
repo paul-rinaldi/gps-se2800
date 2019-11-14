@@ -23,5 +23,6 @@ public class BadLongitude {
                 });
         assertEquals("Invalid value for longitude! Longitude must be between -180 and 180 degrees, " +
                 "it was found to be -180.1", sax.getMessage());
-    }
+        // the line and column numbers should be validated as well.   
+        }
 }

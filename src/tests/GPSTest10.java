@@ -96,6 +96,7 @@ public class GPSTest10 {
         String dateInString10 = "2016-02-10T14:40:00Z";
         ArrayList<TrackPoint> pList = new ArrayList<>();
         try {
+        	// if your data format was "yyyy-MM-dd'T'HH:mm:ss'Z'", then you wouldn't have to replace the Z
             Date time1 = formatter.parse(dateInString1.replaceAll("Z$", "+0000"));
             Date time2 = formatter.parse(dateInString2.replaceAll("Z$", "+0000"));
             Date time3 = formatter.parse(dateInString3.replaceAll("Z$", "+0000"));
@@ -131,6 +132,7 @@ public class GPSTest10 {
             tc.calculateMetrics(t);
             ts = t.getTrackStats();
         } catch (ParseException pe) {
+            // fail() should be called here; if an exception is thrown, something is wrong and the test should fail
             pe.printStackTrace();
         }
     }
