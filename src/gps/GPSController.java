@@ -1,4 +1,3 @@
-// modified by Hunter
 package gps;
 
 
