@@ -1,6 +1,6 @@
 package gps;
 
-
+//Modified by Austin
 import java.util.Date;
 
 /**
