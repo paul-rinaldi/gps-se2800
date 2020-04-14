@@ -15,7 +15,6 @@
           <Menu mnemonicParsing="false" text="File">
             <items>
               <MenuItem mnemonicParsing="false" onAction="#loadTrack" text="Load" />
-                  <MenuItem mnemonicParsing="false" onAction="#calcTrackStats" text="Calculate Metrics" />
                   <MenuItem mnemonicParsing="false" onAction="#exit" text="Exit" />
             </items>
           </Menu>
