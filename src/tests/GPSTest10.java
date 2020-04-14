@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.Date;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.fail;
 
 
 public class GPSTest10 {
@@ -83,7 +84,7 @@ public class GPSTest10 {
     }
 
     private void calculations() {
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
         String dateInString1 = "2016-02-10T13:10:00Z";
         String dateInString2 = "2016-02-10T13:20:00Z";
         String dateInString3 = "2016-02-10T13:30:00Z";
@@ -97,16 +98,16 @@ public class GPSTest10 {
         ArrayList<TrackPoint> pList = new ArrayList<>();
         try {
         	// if your data format was "yyyy-MM-dd'T'HH:mm:ss'Z'", then you wouldn't have to replace the Z
-            Date time1 = formatter.parse(dateInString1.replaceAll("Z$", "+0000"));
-            Date time2 = formatter.parse(dateInString2.replaceAll("Z$", "+0000"));
-            Date time3 = formatter.parse(dateInString3.replaceAll("Z$", "+0000"));
-            Date time4 = formatter.parse(dateInString4.replaceAll("Z$", "+0000"));
-            Date time5 = formatter.parse(dateInString5.replaceAll("Z$", "+0000"));
-            Date time6 = formatter.parse(dateInString6.replaceAll("Z$", "+0000"));
-            Date time7 = formatter.parse(dateInString7.replaceAll("Z$", "+0000"));
-            Date time8 = formatter.parse(dateInString8.replaceAll("Z$", "+0000"));
-            Date time9 = formatter.parse(dateInString9.replaceAll("Z$", "+0000"));
-            Date time10 = formatter.parse(dateInString10.replaceAll("Z$", "+0000"));
+            Date time1 = formatter.parse(dateInString1);
+            Date time2 = formatter.parse(dateInString2);
+            Date time3 = formatter.parse(dateInString3);
+            Date time4 = formatter.parse(dateInString4);
+            Date time5 = formatter.parse(dateInString5);
+            Date time6 = formatter.parse(dateInString6);
+            Date time7 = formatter.parse(dateInString7);
+            Date time8 = formatter.parse(dateInString8);
+            Date time9 = formatter.parse(dateInString9);
+            Date time10 = formatter.parse(dateInString10);
             TrackPoint p1 = new TrackPoint(43.3, -88.0, 1000.0, time1);
             TrackPoint p2 = new TrackPoint(43.3, -88.1, 1500.0, time2);
             TrackPoint p3 = new TrackPoint(43.3, -88.2, 2000.0, time3);
@@ -132,7 +133,7 @@ public class GPSTest10 {
             tc.calculateMetrics(t);
             ts = t.getTrackStats();
         } catch (ParseException pe) {
-            // fail() should be called here; if an exception is thrown, something is wrong and the test should fail
+            fail(pe);
             pe.printStackTrace();
         }
     }

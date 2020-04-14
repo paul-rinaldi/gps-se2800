@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.Date;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.fail;
 
 public class GPSTest5Center {
 
@@ -83,7 +84,7 @@ public class GPSTest5Center {
     }
 
     private void calculations() {
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
         String dateInString1 = "2010-10-19T13:00:00Z";
         String dateInString2 = "2010-10-19T13:10:00Z";
         String dateInString3 = "2010-10-19T13:20:00Z";
@@ -92,11 +93,11 @@ public class GPSTest5Center {
         ArrayList<TrackPoint> pList = new ArrayList<>();
         try {
         	// if your data format was "yyyy-MM-dd'T'HH:mm:ss'Z'", then you wouldn't have to replace the Z
-            Date time1 = formatter.parse(dateInString1.replaceAll("Z$", "+0000"));
-            Date time2 = formatter.parse(dateInString2.replaceAll("Z$", "+0000"));
-            Date time3 = formatter.parse(dateInString3.replaceAll("Z$", "+0000"));
-            Date time4 = formatter.parse(dateInString4.replaceAll("Z$", "+0000"));
-            Date time5 = formatter.parse(dateInString5.replaceAll("Z$", "+0000"));
+            Date time1 = formatter.parse(dateInString1);
+            Date time2 = formatter.parse(dateInString2);
+            Date time3 = formatter.parse(dateInString3);
+            Date time4 = formatter.parse(dateInString4);
+            Date time5 = formatter.parse(dateInString5);
             TrackPoint p1 = new TrackPoint(43.3, -87.9, 500.0, time1);
             TrackPoint p2 = new TrackPoint(43.3, -88.0, 500.0, time2);
             TrackPoint p3 = new TrackPoint(43.4, -88.0, 500.0, time3);
@@ -114,7 +115,7 @@ public class GPSTest5Center {
             // is correctly generating the correct ArrayList<TrackPoint>
             ts = t.getTrackStats();
         } catch (ParseException pe) {
-            // fail() should be called here; if an exception is thrown, something is wrong and the test should fail
+            fail(pe);
             pe.printStackTrace();
         }
     }

@@ -24,5 +24,7 @@ public class BadLatitude {
         assertEquals("Invalid value for latitude! Latitude must be between -90 and 90 degrees, " +
                 "it was found to be -90.1", sax.getMessage());
         // the line and column numbers should be validated as well.
+        assertEquals(1, handler.getLine()); //Checks line
+        assertEquals(1, handler.getColumn()); //Checks column
     }
 }
