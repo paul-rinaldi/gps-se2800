@@ -1,3 +1,4 @@
+// paul rinaldi branch -- 
 package gps;
 
 
@@ -81,7 +82,7 @@ public class GPSController {
 	 * Calculates metrics of selected Track in the Spinner
 	 * Won't calculate stats if stats have been calculated
 	 */
-	public void calcTrackStats(){
+	private void calcTrackStats(){
 
 		try {
 			if (tracksHandler != null) {
@@ -307,6 +308,8 @@ public class GPSController {
 					SpinnerValueFactory<String> valueFactory =
 							new SpinnerValueFactory.ListSpinnerValueFactory<>(trackNames);
 					trackSpinner.setValueFactory(valueFactory);
+
+					calcTrackStats();
 
 				}
 
