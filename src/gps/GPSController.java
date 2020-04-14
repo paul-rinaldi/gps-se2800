@@ -42,9 +42,13 @@ public class GPSController {
 	@FXML
 	private TextField minLong;
 	@FXML
-	private TextField maxElev;
+	private TextField maxElevMet;
 	@FXML
-	private TextField minElev;
+	private TextField minElevMet;
+	@FXML
+	private TextField maxElevFeet;
+	@FXML
+	private TextField minElevFeet;
 	@FXML
 	private TextField dMiles;
 	@FXML
@@ -127,8 +131,10 @@ public class GPSController {
 		double minLati = stats.getMinLat();
 		double maxLongi = stats.getMaxLong();
 		double minLongi = stats.getMinLong();
-		double maxEle = stats.getMaxElev();
-		double minEle = stats.getMinElev();
+		double maxElevM = stats.getMaxElevM();
+		double minElevM = stats.getMinElevM();
+		double maxElevFt = stats.getMaxElevFt();
+		double minElevFt = stats.getMinElevFt();
 
 		if(maxLati > Double.MAX_VALUE*-1){
 			maxLat.setText(Double.toString(maxLati));
@@ -154,17 +160,30 @@ public class GPSController {
 			minLong.setText("N/A");
 		}
 
-		if(maxEle > Double.MAX_VALUE*-1) {
-			maxElev.setText(Double.toString(maxEle));
+		if(maxElevM > Double.MAX_VALUE*-1) {
+			maxElevMet.setText(Double.toString(maxElevM));
 		} else{
-			maxElev.setText("N/A");
+			maxElevMet.setText("N/A");
 		}
 
-		if(minEle < Double.MAX_VALUE) {
-			minElev.setText(Double.toString(minEle));
+		if(minElevM < Double.MAX_VALUE) {
+			minElevMet.setText(Double.toString(minElevM));
 		} else {
-			minElev.setText("N/A");
+			minElevMet.setText("N/A");
 		}
+
+		if(maxElevFt > Double.MAX_VALUE*-1) {
+			maxElevFeet.setText(Double.toString(maxElevFt));
+		} else{
+			maxElevFeet.setText("N/A");
+		}
+
+		if(minElevFt < Double.MAX_VALUE) {
+			minElevFeet.setText(Double.toString(minElevFt));
+		} else {
+			minElevFeet.setText("N/A");
+		}
+
 
 	}
 
@@ -231,8 +250,10 @@ public class GPSController {
 		minLat.setText("");
 		maxLong.setText("");
 		minLong.setText("");
-		maxElev.setText("");
-		minElev.setText("");
+		maxElevMet.setText("");
+		minElevMet.setText("");
+		maxElevFeet.setText("");
+		minElevFeet.setText("");
 		dMiles.setText("");
 		dKilometers.setText("");
 		avSpeedMPH.setText("");
@@ -308,6 +329,8 @@ public class GPSController {
 					SpinnerValueFactory<String> valueFactory =
 							new SpinnerValueFactory.ListSpinnerValueFactory<>(trackNames);
 					trackSpinner.setValueFactory(valueFactory);
+
+					trackSpinner.getValueFactory().setValue(trackLoaded.getName());
 
 					calcTrackStats();
 

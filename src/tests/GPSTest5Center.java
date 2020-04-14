@@ -31,12 +31,12 @@ public class GPSTest5Center {
     @Test
     public void testMaxElev() {
         calculations();
-        assertEquals(500.0, ts.getMaxElev(), DELTA);
+        assertEquals(500.0, ts.getMaxElevM(), DELTA);
     }
     @Test
     public void testMinElev() {
         calculations();
-        assertEquals(500.0, ts.getMinElev(), DELTA);
+        assertEquals(500.0, ts.getMinElevM(), DELTA);
     }
     @Test
     public void testMaxLong() {

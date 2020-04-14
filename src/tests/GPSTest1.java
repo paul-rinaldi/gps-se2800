@@ -78,8 +78,8 @@ public class GPSTest1 {
                 minLat = ts.getMinLat();
                 maxLong = ts.getMaxLong();
                 minLong = ts.getMinLong();
-                maxElev = ts.getMaxElev();
-                minElev = ts.getMinElev();
+                maxElev = ts.getMaxElevM();
+                minElev = ts.getMinElevM();
             } catch (ParseException pe) {
                 // fail() should be called here; if an exception is thrown, something is wrong and the test should fail
             	pe.printStackTrace();
@@ -110,8 +110,8 @@ public class GPSTest1 {
             minLat = ts.getMinLat();
             maxLong = ts.getMaxLong();
             minLong = ts.getMinLong();
-            maxElev = ts.getMaxElev();
-            minElev = ts.getMinElev();
+            maxElev = ts.getMaxElevM();
+            minElev = ts.getMinElevM();
         }
     }
 }
