@@ -107,7 +107,7 @@ public class GPSTest5Center {
             pList.add(p5);
             Track t = new Track("GPSTest2", pList);
             TracksCalculator tc = new TracksCalculator();
-
+            tc.calculateMetrics(t);
             ts = t.getTrackStats();
         } catch (ParseException pe) {
             fail(pe.getMessage());
