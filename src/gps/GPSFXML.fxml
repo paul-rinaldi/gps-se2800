@@ -24,10 +24,10 @@
       <Spinner fx:id="trackSpinner" layoutX="105.0" layoutY="34.0" onMouseClicked="#changeTrackStatDisplay" prefHeight="26.0" prefWidth="289.0" />
       <TextField fx:id="maxLat" editable="false" layoutX="168.0" layoutY="111.0" prefHeight="26.0" prefWidth="94.0" />
       <TextField fx:id="minLat" editable="false" layoutX="319.0" layoutY="111.0" prefHeight="26.0" prefWidth="94.0" />
-      <TextField fx:id="maxElev" editable="false" layoutX="168.0" layoutY="193.0" prefHeight="26.0" prefWidth="94.0" />
-      <TextField fx:id="minElev" editable="false" layoutX="319.0" layoutY="193.0" prefHeight="26.0" prefWidth="94.0" />
-      <TextField fx:id="dMiles" editable="false" layoutX="168.0" layoutY="262.0" prefHeight="26.0" prefWidth="94.0" />
-      <TextField fx:id="dKilometers" editable="false" layoutX="319.0" layoutY="262.0" prefHeight="26.0" prefWidth="94.0" />
+      <TextField fx:id="maxElevMet" editable="false" layoutX="168.0" layoutY="199.0" prefHeight="26.0" prefWidth="94.0" />
+      <TextField fx:id="minElevMet" editable="false" layoutX="319.0" layoutY="199.0" prefHeight="26.0" prefWidth="94.0" />
+      <TextField fx:id="dMiles" editable="false" layoutX="168.0" layoutY="288.0" prefHeight="26.0" prefWidth="94.0" />
+      <TextField fx:id="dKilometers" editable="false" layoutX="319.0" layoutY="288.0" prefHeight="26.0" prefWidth="94.0" />
       <TextField fx:id="avSpeedKPH" editable="false" layoutX="319.0" layoutY="342.0" prefHeight="26.0" prefWidth="94.0" />
       <TextField fx:id="avSpeedMPH" editable="false" layoutX="168.0" layoutY="342.0" prefHeight="26.0" prefWidth="94.0" />
       <TextField fx:id="maxSpeedMPH" editable="false" layoutX="168.0" layoutY="390.0" prefHeight="26.0" prefWidth="94.0" />
@@ -38,15 +38,19 @@
       <TextField fx:id="maxLong" editable="false" layoutX="168.0" layoutY="150.0" prefHeight="26.0" prefWidth="94.0" />
       <Label layoutX="110.0" layoutY="115.0" text="Latitude" />
       <Label layoutX="105.0" layoutY="154.0" text="Longitude" />
-      <Label layoutX="108.0" layoutY="197.0" text="Elevation" />
-      <Label layoutX="201.0" layoutY="236.0" text="Miles" />
-      <Label layoutX="338.0" layoutY="236.0" text="Kilometers" />
-      <Label layoutX="83.0" layoutY="266.0" text="Total Distance" />
+      <Label layoutX="108.0" layoutY="217.0" text="Elevation" />
+      <Label layoutX="201.0" layoutY="267.0" text="Miles" />
+      <Label layoutX="338.0" layoutY="267.0" text="Kilometers" />
+      <Label layoutX="84.0" layoutY="293.0" text="Total Distance" />
       <Label layoutX="202.0" layoutY="321.0" text="MPH" />
       <Label layoutX="355.0" layoutY="321.0" text="KPH" />
       <Label layoutX="81.0" layoutY="346.0" text="Average Speed" />
       <Label layoutX="76.0" layoutY="394.0" text="Maximum Speed" />
       <Label layoutX="429.0" layoutY="39.0" text="Tracks Remaining:" />
-      <TextField text="10" fx:id="tracksRemainingBox" editable="false" layoutX="532.0" layoutY="35.0" prefHeight="25.0" prefWidth="54.0" />
+      <TextField fx:id="tracksRemainingBox" editable="false" layoutX="532.0" layoutY="35.0" prefHeight="25.0" prefWidth="54.0" text="10" />
+      <TextField fx:id="maxElevFeet" editable="false" layoutX="168.0" layoutY="229.0" prefHeight="26.0" prefWidth="94.0" />
+      <TextField fx:id="minElevFeet" editable="false" layoutX="319.0" layoutY="229.0" prefHeight="26.0" prefWidth="94.0" />
+      <Label layoutX="429.0" layoutY="204.0" text="Meters" />
+      <Label layoutX="429.0" layoutY="234.0" text="Feet" />
    </children>
 </AnchorPane>
