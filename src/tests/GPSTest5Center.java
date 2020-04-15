@@ -1,9 +1,6 @@
 package tests;
 
-import gps.Track;
-import gps.TrackPoint;
-import gps.TrackStats;
-import gps.TracksCalculator;
+import gps.*;
 import org.junit.jupiter.api.Test;
 
 import java.text.ParseException;
@@ -110,12 +107,10 @@ public class GPSTest5Center {
             pList.add(p5);
             Track t = new Track("GPSTest2", pList);
             TracksCalculator tc = new TracksCalculator();
-            tc.calculateMetrics(t);
-         // you should have at least one test that validates the data structure itself - in order to make sure that the parser
-            // is correctly generating the correct ArrayList<TrackPoint>
+
             ts = t.getTrackStats();
         } catch (ParseException pe) {
-            fail(pe);
+            fail(pe.getMessage());
             pe.printStackTrace();
         }
     }

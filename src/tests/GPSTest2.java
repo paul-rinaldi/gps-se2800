@@ -106,7 +106,7 @@ public class GPSTest2 {
             tc.calculateMetrics(t);
             ts = t.getTrackStats();
         } catch (ParseException pe) {
-            fail(pe);
+            fail(pe.getMessage());
             pe.printStackTrace();
         }
     }

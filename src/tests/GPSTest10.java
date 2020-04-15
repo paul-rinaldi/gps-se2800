@@ -1,10 +1,8 @@
 package tests;
 
-import gps.Track;
-import gps.TrackPoint;
-import gps.TrackStats;
-import gps.TracksCalculator;
+import gps.*;
 import org.junit.jupiter.api.Test;
+import org.xml.sax.SAXException;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -82,8 +80,47 @@ public class GPSTest10 {
         System.out.println(ts.getDistM());
         assertEquals(45.91933, ts.getDistM(), DELTA*45.91933);
     }
+    
+    @Test
+    public void testValidPoints(){
+        GPXHandler handler = new GPXHandler();
 
-    private void calculations() {
+        handler.enableLogging(false);
+
+        Parser parser;
+        try {
+            parser = new Parser( handler );
+            parser.parse("docs\\GPSTest10.gpx");
+
+            TracksHandler tracksHandler = handler.getTrackHandler();
+            Track track = tracksHandler.getTrack(0);
+
+            ArrayList<TrackPoint> manual_ponits = calculations(); //Manual made list of points
+            if(manual_ponits == null){
+                fail("Calculation method didn't work properly");
+            }
+
+            assertEquals(manual_ponits.size(), track.getPointAmount());
+
+            for(int i = 0; i < 10; i++){
+                TrackPoint expected = manual_ponits.get(i);
+                TrackPoint actual = track.getTrackPoint(i);
+
+                assertEquals(expected.getElevation(), actual.getElevation());
+                assertEquals(expected.getLatitude(), actual.getLatitude());
+                assertEquals(expected.getLongitude(), actual.getLongitude());
+                assertEquals(expected.getTime(), actual.getTime());
+            }
+
+
+        } catch (SAXException e) {
+            fail(e.getMessage());
+        } catch (Exception e) {
+            fail(e.getMessage());
+        }
+    }
+
+    private ArrayList<TrackPoint> calculations() {
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
         String dateInString1 = "2016-02-10T13:10:00Z";
         String dateInString2 = "2016-02-10T13:20:00Z";
@@ -132,9 +169,11 @@ public class GPSTest10 {
             TracksCalculator tc = new TracksCalculator();
             tc.calculateMetrics(t);
             ts = t.getTrackStats();
+            return pList;
         } catch (ParseException pe) {
             fail(pe);
             pe.printStackTrace();
         }
+        return null;
     }
 }
