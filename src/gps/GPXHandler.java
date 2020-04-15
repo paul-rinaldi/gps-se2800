@@ -31,6 +31,8 @@ public class GPXHandler extends AbstractParserEventHandler {
 	private Date time;
 	private double elevation;
 	private SimpleDateFormat simpleDateFormat;
+	private int line = 0;
+	private int column = 0;
 
 	public GPXHandler(){
 		super();
@@ -70,8 +72,8 @@ public class GPXHandler extends AbstractParserEventHandler {
 		s = s.trim(); // remove leading and trailing whitespace
 
 		if( !s.isEmpty() ) { // ignore whitespace
-			int line = locator.getLineNumber(); // current line being parsed
-			int column = locator.getColumnNumber(); // current column being parsed
+			line = locator.getLineNumber(); // current line being parsed
+			line = locator.getColumnNumber(); // current column being parsed
 		}
 
 		if( currentState == PossibleStates.NAME ) { // We're in the NAME state, so these are the chars found between <name> and </name>
@@ -118,8 +120,8 @@ public class GPXHandler extends AbstractParserEventHandler {
 	 * @throws SAXException if end element is encountered out of order
 	 */
 	public void endElement(String uri, String localName, String qName) throws SAXException{
-		int line = locator.getLineNumber(); // current line being parsed
-		int column = locator.getColumnNumber(); // current column being parsed
+		line = locator.getLineNumber(); // current line being parsed
+		column = locator.getColumnNumber(); // current column being parsed
 
 		// localName contains the name of the element - e.g. gpx, name, trk, etc
 		if( localName.equalsIgnoreCase("time") ) {
@@ -197,8 +199,8 @@ public class GPXHandler extends AbstractParserEventHandler {
 	 * @throws SAXException if start element is encountered out of order
 	 */
 	public void startElement(String uri, String localName, String qName, Attributes atts) throws SAXException {
-		int line = locator.getLineNumber(); // current line being parsed
-		int column = locator.getColumnNumber(); // current column being parsed
+		line = locator.getLineNumber(); // current line being parsed
+		column = locator.getColumnNumber(); // current column being parsed
 
 		if( currentState == PossibleStates.INITIAL ) {
 			if( !localName.equalsIgnoreCase("gpx") ) { // <gpx> should be the first element found
@@ -300,4 +302,8 @@ public class GPXHandler extends AbstractParserEventHandler {
 	public TracksHandler getTrackHandler(){
 		return tracksHandler;
 	}
+
+	public int getLine(){return this.line;}
+	public int getColumn(){return this.column;}
+
 }

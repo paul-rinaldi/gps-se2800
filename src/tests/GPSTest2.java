@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.Date;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.fail;
 
 public class GPSTest2 {
 
@@ -88,14 +89,14 @@ public class GPSTest2 {
     }
 
     private void calculations() {
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
         String dateInString1 = "2016-02-10T13:00:00Z";
         String dateInString2 = "2016-02-10T13:10:00Z";
         ArrayList<TrackPoint> pList = new ArrayList<>();
         try {
         	// if your data format was "yyyy-MM-dd'T'HH:mm:ss'Z'", then you wouldn't have to replace the Z
-           Date time1 = formatter.parse(dateInString1.replaceAll("Z$", "+0000"));
-            Date time2 = formatter.parse(dateInString2.replaceAll("Z$", "+0000"));
+           Date time1 = formatter.parse(dateInString1);
+            Date time2 = formatter.parse(dateInString2);
             TrackPoint p1 = new TrackPoint(43.3, -87.9, 500.0, time1);
             TrackPoint p2 = new TrackPoint(43.3, -88.0, 2500.0, time2);
             pList.add(p1);
@@ -105,7 +106,7 @@ public class GPSTest2 {
             tc.calculateMetrics(t);
             ts = t.getTrackStats();
         } catch (ParseException pe) {
-            // fail() should be called here; if an exception is thrown, something is wrong and the test should fail
+            fail(pe.getMessage());
             pe.printStackTrace();
         }
     }

@@ -1,10 +1,8 @@
 package tests;
 
-import gps.Track;
-import gps.TrackPoint;
-import gps.TrackStats;
-import gps.TracksCalculator;
+import gps.*;
 import org.junit.jupiter.api.Test;
+import org.xml.sax.SAXException;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -12,6 +10,7 @@ import java.util.ArrayList;
 import java.util.Date;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.fail;
 
 
 public class GPSTest10 {
@@ -81,9 +80,48 @@ public class GPSTest10 {
         System.out.println(ts.getDistM());
         assertEquals(45.91933, ts.getDistM(), DELTA*45.91933);
     }
+    
+    @Test
+    public void testValidPoints(){
+        GPXHandler handler = new GPXHandler();
 
-    private void calculations() {
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
+        handler.enableLogging(false);
+
+        Parser parser;
+        try {
+            parser = new Parser( handler );
+            parser.parse("docs\\GPSTest10.gpx");
+
+            TracksHandler tracksHandler = handler.getTrackHandler();
+            Track track = tracksHandler.getTrack(0);
+
+            ArrayList<TrackPoint> manual_ponits = calculations(); //Manual made list of points
+            if(manual_ponits == null){
+                fail("Calculation method didn't work properly");
+            }
+
+            assertEquals(manual_ponits.size(), track.getPointAmount());
+
+            for(int i = 0; i < 10; i++){
+                TrackPoint expected = manual_ponits.get(i);
+                TrackPoint actual = track.getTrackPoint(i);
+
+                assertEquals(expected.getElevation(), actual.getElevation());
+                assertEquals(expected.getLatitude(), actual.getLatitude());
+                assertEquals(expected.getLongitude(), actual.getLongitude());
+                assertEquals(expected.getTime(), actual.getTime());
+            }
+
+
+        } catch (SAXException e) {
+            fail(e.getMessage());
+        } catch (Exception e) {
+            fail(e.getMessage());
+        }
+    }
+
+    private ArrayList<TrackPoint> calculations() {
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
         String dateInString1 = "2016-02-10T13:10:00Z";
         String dateInString2 = "2016-02-10T13:20:00Z";
         String dateInString3 = "2016-02-10T13:30:00Z";
@@ -97,16 +135,16 @@ public class GPSTest10 {
         ArrayList<TrackPoint> pList = new ArrayList<>();
         try {
         	// if your data format was "yyyy-MM-dd'T'HH:mm:ss'Z'", then you wouldn't have to replace the Z
-            Date time1 = formatter.parse(dateInString1.replaceAll("Z$", "+0000"));
-            Date time2 = formatter.parse(dateInString2.replaceAll("Z$", "+0000"));
-            Date time3 = formatter.parse(dateInString3.replaceAll("Z$", "+0000"));
-            Date time4 = formatter.parse(dateInString4.replaceAll("Z$", "+0000"));
-            Date time5 = formatter.parse(dateInString5.replaceAll("Z$", "+0000"));
-            Date time6 = formatter.parse(dateInString6.replaceAll("Z$", "+0000"));
-            Date time7 = formatter.parse(dateInString7.replaceAll("Z$", "+0000"));
-            Date time8 = formatter.parse(dateInString8.replaceAll("Z$", "+0000"));
-            Date time9 = formatter.parse(dateInString9.replaceAll("Z$", "+0000"));
-            Date time10 = formatter.parse(dateInString10.replaceAll("Z$", "+0000"));
+            Date time1 = formatter.parse(dateInString1);
+            Date time2 = formatter.parse(dateInString2);
+            Date time3 = formatter.parse(dateInString3);
+            Date time4 = formatter.parse(dateInString4);
+            Date time5 = formatter.parse(dateInString5);
+            Date time6 = formatter.parse(dateInString6);
+            Date time7 = formatter.parse(dateInString7);
+            Date time8 = formatter.parse(dateInString8);
+            Date time9 = formatter.parse(dateInString9);
+            Date time10 = formatter.parse(dateInString10);
             TrackPoint p1 = new TrackPoint(43.3, -88.0, 1000.0, time1);
             TrackPoint p2 = new TrackPoint(43.3, -88.1, 1500.0, time2);
             TrackPoint p3 = new TrackPoint(43.3, -88.2, 2000.0, time3);
@@ -131,9 +169,11 @@ public class GPSTest10 {
             TracksCalculator tc = new TracksCalculator();
             tc.calculateMetrics(t);
             ts = t.getTrackStats();
+            return pList;
         } catch (ParseException pe) {
-            // fail() should be called here; if an exception is thrown, something is wrong and the test should fail
+            fail(pe);
             pe.printStackTrace();
         }
+        return null;
     }
 }
