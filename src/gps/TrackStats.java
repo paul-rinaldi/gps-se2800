@@ -12,14 +12,16 @@ public class TrackStats {
 	private double avSpeedM;
 	private double distK;
 	private double distM;
-	private double maxElev;
+	private double maxElevM;
 	private double maxLat;
 	private double maxLong;
 	private double maxSpeedK;
 	private double maxSpeedM;
-	private double minElev;
+	private double minElevM;
 	private double minLat;
 	private double minLong;
+	private double maxElevFt;
+	private double minElevFt;
 
 	/**
 	 * Creates a TrackStats with all values initialized to 0
@@ -29,14 +31,16 @@ public class TrackStats {
 		this.avSpeedM = 0;
 		this.distK = 0;
 		this.distM = 0;
-		this.minElev = 0;
-		this.maxElev = 0;
+		this.minElevM = 0;
+		this.maxElevM = 0;
 		this.minLat = 0;
 		this.maxLat = 0;
 		this.minLong = 0;
 		this.maxLong = 0;
 		this.maxSpeedK = 0;
 		this.maxSpeedM = 0;
+		this.minElevFt = 0;
+		this.maxElevFt = 0;
 	}
 
 	public double getAvgSpeedK() {
@@ -71,12 +75,28 @@ public class TrackStats {
 		this.distM = distM;
 	}
 
-	public double getMaxElev() {
-		return maxElev;
+	public double getMaxElevM() {
+		return maxElevM;
 	}
 
-	public void setMaxElev(double maxElev) {
-		this.maxElev = maxElev;
+	public void setMaxElevM(double maxElevM) {
+		this.maxElevM = maxElevM;
+	}
+
+	public double getMaxElevFt() {
+		return maxElevFt;
+	}
+
+	public void setMaxElevFt(double maxElevFt) {
+		this.maxElevFt = maxElevFt;
+	}
+
+	public double getMinElevFt() {
+		return minElevFt;
+	}
+
+	public void setMinElevFt(double minElevFt) {
+		this.minElevFt = minElevFt;
 	}
 
 	public double getMaxLat() {
@@ -111,12 +131,12 @@ public class TrackStats {
 		this.maxSpeedM = maxSpeedM;
 	}
 
-	public double getMinElev() {
-		return minElev;
+	public double getMinElevM() {
+		return minElevM;
 	}
 
-	public void setMinElev(double minElev) {
-		this.minElev = minElev;
+	public void setMinElevM(double minElevM) {
+		this.minElevM = minElevM;
 	}
 
 	public double getMinLat() {
@@ -134,4 +154,7 @@ public class TrackStats {
 	public void setMinLong(double minLong) {
 		this.minLong = minLong;
 	}
+
+
+
 }
