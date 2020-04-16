@@ -1,14 +1,47 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.scene.chart.CategoryAxis?>
+<?import javafx.scene.chart.LineChart?>
+<?import javafx.scene.chart.NumberAxis?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.Spinner?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-            fx:controller="$CONTROLLER_NAME$"
-            prefHeight="400.0" prefWidth="600.0">
 
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="465.0" prefWidth="882.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <MenuBar layoutY="2.0" prefHeight="25.0" prefWidth="882.0">
+        <menus>
+          <Menu mnemonicParsing="false" text="Operation">
+            <items>
+              <MenuItem mnemonicParsing="false" text="Close" />
+                  <MenuItem mnemonicParsing="false" text="View 2D Plot" />
+            </items>
+          </Menu>
+        </menus>
+      </MenuBar>
+      <LineChart layoutX="308.0" layoutY="77.0" prefHeight="355.0" prefWidth="568.0">
+        <xAxis>
+          <CategoryAxis label="Longitude" side="BOTTOM" />
+        </xAxis>
+        <yAxis>
+          <NumberAxis label="Latitude" side="LEFT" />
+        </yAxis>
+      </LineChart>
+      <Spinner layoutX="14.0" layoutY="64.0" prefHeight="25.0" prefWidth="286.0" />
+      <Label layoutX="121.0" layoutY="47.0" text="Track to View" />
+      <TableView layoutX="14.0" layoutY="95.0" prefHeight="346.0" prefWidth="286.0">
+        <columns>
+          <TableColumn prefWidth="75.0" text="point" />
+          <TableColumn prefWidth="104.0" text="Latitude" />
+            <TableColumn prefWidth="106.0" text="Longitude" />
+        </columns>
+      </TableView>
+      <Label layoutX="535.0" layoutY="56.0" text="Latitude vs Longitude" />
+   </children>
 </AnchorPane>

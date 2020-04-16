@@ -1,0 +1,54 @@
+package gps;
+
+public class Plotter {
+
+    /**
+     * takes a list of longitudes and converts them into a list of doubles representing the
+     * X coordinate of cartesian points
+     * @param longitude the list of double to convert to cartesian points
+     * @return a list of doubles representing X coordinates of cartesian points
+     */
+    public double[] convertLongToCart(double[] longitude){
+        double cartesianX[] = new double[longitude.length];
+        double startingLongitude = longitude[0];
+        double maxLongitude;
+        cartesianX[0] = 0; //sets the first coordinate to 0
+        maxLongitude = getMaxValue(longitude);
+        //TODO figure out how to scale graph using maxLong and startingLongitude
+        for (int i = 0; i < longitude.length; i++){
+            cartesianX[i] = longitude[i] - startingLongitude;
+        }
+        return cartesianX;
+    }
+
+    /**
+     * takes a list of latitudes and converts them into a list of doubles representing the
+     * Y coordinate of cartesian points
+     * @param latitude the list of double to convert to cartesian points
+     * @return a list of doubles representing Y coordinates of cartesian points
+     */
+    public double[] convertLatToCart(double[] latitude){
+        double cartesianY[] = new double[latitude.length];
+        double startingLatitude = latitude[0];
+        double maxLatitude;
+        cartesianY[0] = 0; //sets the first coordinate to 0
+        maxLatitude = getMaxValue(latitude);
+        //TODO figure out how to scale graph using maxLong and startingLatitude
+        for (int i = 0; i < latitude.length; i++){
+            cartesianY[i] = latitude[i] - startingLatitude;
+        }
+        return cartesianY;
+    }
+
+    private double getMaxValue(double[] array) throws NullPointerException{
+        double maxValue;
+        maxValue = array[0];
+        //starts at 1 because the first value was already set as the max value;
+        for (int i = 1; i < array.length-1; i++) {
+            if(array[i] > maxValue){
+                maxValue = array[i];
+            }
+        }
+        return maxValue;
+    }
+}
