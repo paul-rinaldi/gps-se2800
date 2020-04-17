@@ -396,6 +396,14 @@ public class GPSController {
 
 	}
 
+	public TracksHandler getTracksHandler(){
+		return this.tracksHandler;
+	}
+
+	public Spinner<String>getSpinner(){
+		return this.trackSpinner;
+	}
+
 	/**
 	 * @author Austin Demars
 	 *

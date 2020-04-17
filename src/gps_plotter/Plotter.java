@@ -1,8 +1,16 @@
 package gps_plotter;
 
+
+import gps.*;
+
 import javafx.scene.chart.LineChart;
 
+import java.util.Date;
+
 public class Plotter {
+
+    private static double MS_IN_MIN = 60000;
+    private static double DBL_EPSILON = 1E+6;
 
     private LineChart<Double, Double> chart;
 
@@ -15,15 +23,38 @@ public class Plotter {
         this.chart = chart;
     }
 
-    public void plotElevationGain(){
-        //TODO
+    public void plotElevationGain(Track track){
+
+        double lastElevation = track.getTrackPoint(0).getElevation();
+        double elevationPoint = 0;
+        Date firstDate = null;
+        Date currentDate;
+
+        for(int i = 0; i < track.getPointAmount(); i++){
+
+            double currentElevation = track.getTrackPoint(i).getElevation();
+
+            if(i == 0){
+                currentElevation = 0;
+                firstDate = track.getTrackPoint(i).getTime();
+            }
+
+            currentDate = track.getTrackPoint(i).getTime();
+            double timePoint = timePassedInMin(currentDate, firstDate);
+
+            elevationPoint += calculateElevationGain(currentElevation, lastElevation);
+
+            plotPoint(timePoint, elevationPoint);
+
+            lastElevation = track.getTrackPoint(i).getElevation();
+        }
     }
 
     private double calculateElevationGain(double current, double last){
 
         double result = current - last;
 
-        return result > 0 ? current : last;
+        return (result-result) > DBL_EPSILON ? result : 0;
 
     }
 
@@ -37,6 +68,13 @@ public class Plotter {
 
     private void plotPoint(double x, double y){
         //TODO
+    }
+
+    private double timePassedInMin(Date current, Date first){
+        long differenceMs = current.getTime() - first.getTime();
+        double timeInMin = differenceMs/MS_IN_MIN;
+        return timeInMin;
+
     }
 
 
