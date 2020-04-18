@@ -10,7 +10,7 @@ import java.util.Date;
 public class Plotter {
 
     private static double MS_IN_MIN = 60000;
-    private static double DBL_EPSILON = 1E+6;
+    //private static double DBL_EPSILON = 1E+6;
 
     private LineChart<Double, Double> chart;
 
@@ -36,7 +36,7 @@ public class Plotter {
             return; //TODO - Must throw an exception for controller
         }
 
-        double lastElevation = track.getTrackPoint(0).getElevation();
+        double highestElevation = track.getTrackPoint(0).getElevation();
         double elevationPoint = 0;
         Date firstDate = null;
         Date currentDate;
@@ -47,21 +47,25 @@ public class Plotter {
 
         for(int i = 0; i < track.getPointAmount(); i++){
 
-            double currentElevation = track.getTrackPoint(i).getElevation();
+            TrackPoint currentTrackPoint = track.getTrackPoint(i);
+
+            double currentElevation = currentTrackPoint.getElevation();
 
             //Set first date to calculate time passed
             if(i == 0){
-                firstDate = track.getTrackPoint(i).getTime();
+                firstDate = currentTrackPoint.getTime();
             }
 
-            currentDate = track.getTrackPoint(i).getTime();
+            currentDate = currentTrackPoint.getTime();
             double timePoint = timePassedInMin(currentDate, firstDate);
 
-            elevationPoint += calculateElevationGain(currentElevation, lastElevation); //Add the change in elevation to total change
+            elevationPoint += calculateElevationGain(currentElevation, highestElevation); //Add the change in elevation to total change
 
             plotPoint(timePoint, elevationPoint); //Plot point on LineChart
 
-            lastElevation = track.getTrackPoint(i).getElevation();
+            if(elevationPoint > 0) { //Only set highest elevation if gain is above 0
+                highestElevation = currentTrackPoint.getElevation();
+            }
 
             //Used to set min/max x and y to scale graph
             if(i == 0){
@@ -82,14 +86,18 @@ public class Plotter {
      * Returns the gain in elevation from the previous elevation
      *
      * @param current current elevation
-     * @param last previous elevation
+     * @param highest highest elevation read
      * @return difference between them; 0 if difference is < 0
      */
-    private double calculateElevationGain(double current, double last){
+   public double calculateElevationGain(double current, double highest){
 
-        double result = current - last;
+       if(current < 0 || highest < 0){ //Values below zero will not be expected (below sea level)
+           return 0;
+       }
 
-        return (result-result) > DBL_EPSILON ? result : 0;
+        double result = current - highest;
+
+        return result > 0 ? result : 0;
 
     }
 
@@ -112,13 +120,11 @@ public class Plotter {
      * @param first first Date object from which time has passed
      * @return time passed in minutes
      */
-    private double timePassedInMin(Date current, Date first){
+    public double timePassedInMin(Date current, Date first){
         long differenceMs = current.getTime() - first.getTime();
         double timeInMin = differenceMs/MS_IN_MIN;
         return timeInMin;
 
     }
-
-
 
 }
