@@ -38,7 +38,4 @@ public class Plotter {
     private void plotPoint(double x, double y){
         //TODO
     }
-
-
-
 }
