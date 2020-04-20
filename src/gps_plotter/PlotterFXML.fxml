@@ -11,24 +11,25 @@
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="465.0" prefWidth="882.0" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gps_plotter.PlotterController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="465.0" prefWidth="882.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gps_plotter.PlotterController">
     <children>
         <MenuBar layoutY="2.0" prefHeight="25.0" prefWidth="882.0">
             <menus>
                 <Menu mnemonicParsing="false" text="Operation">
                     <items>
-                        <MenuItem mnemonicParsing="false" text="Close" />
+                        <MenuItem onAction="#exit" mnemonicParsing="false" text="Close" />
                         <MenuItem mnemonicParsing="false" text="View 2D Plot" />
+                        <MenuItem onAction="#graphElevationGainVsTime" mnemonicParsing="false" text="Elevation Gain vs Time" />
                     </items>
                 </Menu>
             </menus>
         </MenuBar>
         <LineChart fx:id="lineChart" layoutX="308.0" layoutY="77.0" prefHeight="355.0" prefWidth="568.0">
             <xAxis>
-                <CategoryAxis label="Meters(east and west)" side="BOTTOM" />
+                <NumberAxis fx:id="xAxis" label="Meters(east and west)" side="BOTTOM" />
             </xAxis>
             <yAxis>
-                <NumberAxis label="Meters(north and south)" side="LEFT" />
+                <NumberAxis fx:id="yAxis" label="Meters(north and south)" side="LEFT" />
             </yAxis>
         </LineChart>
         <Spinner layoutX="14.0" layoutY="64.0" prefHeight="25.0" prefWidth="286.0" />

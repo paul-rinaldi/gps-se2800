@@ -45,55 +45,67 @@ public class Plotter {
      */
     public void plotElevationGain(Track track){
 
-        clearChart(); //TODO - Change this?
-
-        if(track.getPointAmount() < 2){
-            return; //TODO - Must throw an exception for controller
+        if(this.chart.getData() != null && this.chart.getData().size() != 0){ //Clears graph when window is opened only if series exists
+            clearChart();
         }
 
-        double highestElevation = track.getTrackPoint(0).getElevation();
-        double elevationPoint = 0;
-        Date firstDate = null;
-        Date currentDate;
-        double xMax = 0;
-        double xMin = 0;
-        double yMax = 0;
-        double yMin = 0;
+        if(plotterController.getTracksHandler() != null) {
 
-        for(int i = 0; i < track.getPointAmount(); i++){
-
-            TrackPoint currentTrackPoint = track.getTrackPoint(i);
-
-            double currentElevation = currentTrackPoint.getElevation();
-
-            //Set first date to calculate time passed
-            if(i == 0){
-                firstDate = currentTrackPoint.getTime();
+            if (track.getPointAmount() < 2) {
+                return; //TODO - Must throw an exception for controller
             }
 
-            currentDate = currentTrackPoint.getTime();
-            double timePoint = timePassedInMin(currentDate, firstDate);
+            XYChart.Series series = new XYChart.Series();
+            series.setName(track.getName());
+            setChartAxisLabels("Time Passed (min)", "Elevation Gain (m)");
 
-            elevationPoint += calculateElevationGain(currentElevation, highestElevation); //Add the change in elevation to total change
+            double highestElevation = track.getTrackPoint(0).getElevation();
+            double elevationPoint = 0;
+            Date firstDate = null;
+            Date currentDate;
+            double xMax = 0;
+            double xMin = 0;
+            double yMax = 0;
+            double yMin = 0;
 
-            plotPoint(timePoint, elevationPoint); //Plot point on LineChart
+            for (int i = 0; i < track.getPointAmount(); i++) {
 
-            if(elevationPoint > 0) { //Only set highest elevation if gain is above 0
-                highestElevation = currentTrackPoint.getElevation();
+                TrackPoint currentTrackPoint = track.getTrackPoint(i);
+
+                double currentElevation = currentTrackPoint.getElevation();
+
+                //Set first date to calculate time passed
+                if (i == 0) {
+                    firstDate = currentTrackPoint.getTime();
+                }
+
+                currentDate = currentTrackPoint.getTime();
+                double timePoint = timePassedInMin(currentDate, firstDate);
+
+                elevationPoint += calculateElevationGain(currentElevation, highestElevation); //Add the change in elevation to total change
+
+                plotPoint(series, timePoint, elevationPoint); //Plot point on LineChart
+
+                if (elevationPoint > 0) { //Only set highest elevation if gain is above 0
+                    highestElevation = currentTrackPoint.getElevation();
+                }
+
+                //Used to set min/max x and y to scale graph
+                if (i == 0) {
+                    xMin = timePoint;
+                    yMin = elevationPoint;
+                } else if (i == track.getPointAmount()) {
+                    xMax = timePoint;
+                    yMax = elevationPoint;
+                }
+
             }
 
-            //Used to set min/max x and y to scale graph
-            if(i == 0){
-                xMin = timePoint;
-                yMin = elevationPoint;
-            } else if(i == track.getPointAmount()){
-                xMax = timePoint;
-                yMax = elevationPoint;
-            }
+            this.chart.getData().add(series);
 
+        } else{
+            //TODO - Send exception
         }
-
-        scaleChart(xMax, xMin, yMax, yMin); //TODO - Change this?
 
     }
 
@@ -116,16 +128,33 @@ public class Plotter {
 
    }
 
+    /**
+     * Clears current data series for chart
+     */
    private void clearChart(){
-        //TODO
+        this.chart.getData().clear();
    }
 
-    private void scaleChart(double xMax, double xMin, double yMax, double yMin){
-        //TODO
-    }
+    /**
+     * Sets axis labels for chart
+     *
+     * @param x axis label
+     * @param y axis label
+     */
+   private void setChartAxisLabels(String x, String y){
+        this.plotterController.getXAxis().setLabel(x);
+        this.plotterController.getYAxis().setLabel(y);
+   }
 
-    private void plotPoint(double x, double y){
-        //TODO
+    /**
+     * Adds points to data series for LineChart
+     *
+     * @param series XYSeries to add data to
+     * @param x x point
+     * @param y y point
+     */
+    private void plotPoint(XYChart.Series series, double x, double y){
+        series.getData().add(new XYChart.Data(x, y));
     }
 
     /**
@@ -143,24 +172,33 @@ public class Plotter {
     }
 
     public void convertToCartesian(){
+
+        if(this.chart.getData() != null && this.chart.getData().size() != 0){ //Clears graph when window is opened only if series exists
+            clearChart();
+        }
+
         TracksHandler tracksHandler = plotterController.getTracksHandler();
-        TrackPoint trackZero = tracksHandler.getTrack(0).getTrackPoint(0);
-        for (int i = 0; i < tracksHandler.getTrackAmount(); i++){
-            Track track = tracksHandler.getTrack(i);
-            XYChart.Series series = new XYChart.Series();
-            series.setName(track.getName());
-            for(int z = 0; z < track.getPointAmount(); z++) {
-                TrackPoint currentTrackPoint = track.getTrackPoint(z);
-                double x = (RADIUS_OF_EARTH_M + ((trackZero.getElevation() + currentTrackPoint.getElevation())/2)) *
-                        (trackZero.getLongitude()*DEG_TO_RAD - currentTrackPoint.getLongitude()*DEG_TO_RAD) *
-                        Math.cos((trackZero.getLatitude()*DEG_TO_RAD + currentTrackPoint.getLatitude()*DEG_TO_RAD)/2);
-                double y = (RADIUS_OF_EARTH_M + (trackZero.getElevation() + currentTrackPoint.getElevation())/2) *
-                        (trackZero.getLatitude()*DEG_TO_RAD - currentTrackPoint.getLatitude()*DEG_TO_RAD);
-                series.getData().add(new XYChart.Data(decimalFormat.format(x), y));
+        if(tracksHandler != null) {
+            TrackPoint trackZero = tracksHandler.getTrack(0).getTrackPoint(0);
+            for (int i = 0; i < tracksHandler.getTrackAmount(); i++) {
+                Track track = tracksHandler.getTrack(i);
+                XYChart.Series series = new XYChart.Series();
+                series.setName(track.getName());
+                for (int z = 0; z < track.getPointAmount(); z++) {
+                    TrackPoint currentTrackPoint = track.getTrackPoint(z);
+                    double x = (RADIUS_OF_EARTH_M + ((trackZero.getElevation() + currentTrackPoint.getElevation()) / 2)) *
+                            (trackZero.getLongitude() * DEG_TO_RAD - currentTrackPoint.getLongitude() * DEG_TO_RAD) *
+                            Math.cos((trackZero.getLatitude() * DEG_TO_RAD + currentTrackPoint.getLatitude() * DEG_TO_RAD) / 2);
+                    double y = (RADIUS_OF_EARTH_M + (trackZero.getElevation() + currentTrackPoint.getElevation()) / 2) *
+                            (trackZero.getLatitude() * DEG_TO_RAD - currentTrackPoint.getLatitude() * DEG_TO_RAD);
+                    series.getData().add(new XYChart.Data(x, y));
+                }
+                seriesArrayList.add(series);
+                plotterController.graphTwoDPlot(series);
+                plotterController.addTable(track.getTrackStats());
             }
-            seriesArrayList.add(series);
-            plotterController.graphTwoDPlot(series);
-            plotterController.addTable(track.getTrackStats());
+        } else{
+            //TODO - send exception to controller to print message
         }
     }
 }
