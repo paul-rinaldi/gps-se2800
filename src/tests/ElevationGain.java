@@ -8,11 +8,11 @@ import java.util.ArrayList;
 import java.util.Date;
 
 public class ElevationGain {
-/*
+
     @Test
     public void  testCalculateElevationGain(){
 
-        Plotter plotter = new Plotter(null);
+        Plotter plotter = new Plotter(null, null);
 
         double[] elevations = {300.20, 302.20, 302.20, 300.10, 310.2, 400.2, 399, 401.2};
         double[] gains = {0, 2.0, 0, 0, 8, 90, 0, 1};
@@ -36,7 +36,7 @@ public class ElevationGain {
     @Test
     public void  testCalculateElevationGain2() {
 
-        Plotter plotter = new Plotter(null);
+        Plotter plotter = new Plotter(null, null);
 
         double[] elevations = {62, 28, 47, 89, 94, 94, 103, 102, 102, 104};
         double[] gains = {0, 0, 0, 27, 5, 0, 9, 0, 0, 1};
@@ -58,7 +58,7 @@ public class ElevationGain {
 
     @Test
     public void testTimePassed(){
-        Plotter plotter = new Plotter(null);
+        Plotter plotter = new Plotter(null, null);
 
         ArrayList<Date> dates = new ArrayList<>();
         dates.add(new Date(0));
@@ -81,7 +81,7 @@ public class ElevationGain {
 
     @Test
     public void testTimePassed2(){
-        Plotter plotter = new Plotter(null);
+        Plotter plotter = new Plotter(null, null);
 
         ArrayList<Date> dates = new ArrayList<>();
         dates.add(new Date(0));
@@ -101,5 +101,5 @@ public class ElevationGain {
         }
 
     }
-*/
+
 }
