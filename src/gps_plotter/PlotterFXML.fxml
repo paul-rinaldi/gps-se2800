@@ -1,14 +1,38 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.scene.chart.CategoryAxis?>
+<?import javafx.scene.chart.LineChart?>
+<?import javafx.scene.chart.NumberAxis?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.Spinner?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-            fx:controller="gps_plotter.PlotterController"
-            prefHeight="400.0" prefWidth="600.0">
-
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="465.0" prefWidth="882.0" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gps_plotter.PlotterController">
+    <children>
+        <MenuBar layoutY="2.0" prefHeight="25.0" prefWidth="882.0">
+            <menus>
+                <Menu mnemonicParsing="false" text="Operation">
+                    <items>
+                        <MenuItem mnemonicParsing="false" text="Close" />
+                        <MenuItem mnemonicParsing="false" text="View 2D Plot" />
+                    </items>
+                </Menu>
+            </menus>
+        </MenuBar>
+        <LineChart fx:id="lineChart" layoutX="308.0" layoutY="77.0" prefHeight="355.0" prefWidth="568.0">
+            <xAxis>
+                <CategoryAxis label="Meters(east and west)" side="BOTTOM" />
+            </xAxis>
+            <yAxis>
+                <NumberAxis label="Meters(north and south)" side="LEFT" />
+            </yAxis>
+        </LineChart>
+        <Spinner layoutX="14.0" layoutY="64.0" prefHeight="25.0" prefWidth="286.0" />
+        <Label layoutX="121.0" layoutY="47.0" text="Track to View" />
+        <TableView fx:id="tableView" layoutX="8.0" layoutY="95.0" prefHeight="346.0" prefWidth="304.0" />
+    </children>
 </AnchorPane>

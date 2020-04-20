@@ -2,6 +2,7 @@
 package gps;
 
 
+import gps_plotter.PlotterController;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -11,6 +12,7 @@ import javafx.scene.control.Spinner;
 import javafx.scene.control.SpinnerValueFactory;
 import javafx.scene.control.TextField;
 import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 import org.xml.sax.SAXException;
 
 import java.io.File;
@@ -61,6 +63,8 @@ public class GPSController {
 	private TextField maxSpeedMPH;
 	@FXML
 	private TextField maxSpeedKPH;
+	private PlotterController plotterController;
+	private Stage plotterStage;
 
 	public GPSController(){
 		trackNames = FXCollections.observableArrayList();
@@ -394,6 +398,28 @@ public class GPSController {
 		}
 
 
+	}
+
+	public TracksHandler getTracksHandler(){
+		return this.tracksHandler;
+	}
+
+	public Spinner<String>getSpinner(){
+		return this.trackSpinner;
+	}
+
+	public void setPlotterController(PlotterController plotterController){
+		this.plotterController = plotterController;
+	}
+
+	public void setPlotterStage(Stage stage){
+		this.plotterStage = stage;
+	}
+
+	public void showPlotter(){
+		plotterController.setTracksHandler(tracksHandler);
+		plotterStage.show();
+		plotterController.getPlotter().convertToCartesian();
 	}
 
 	/**

@@ -1,6 +1,7 @@
 package gps;
 
 
+import gps_plotter.PlotterController;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -14,12 +15,31 @@ import javafx.stage.Stage;
 public class GPSMain extends Application {
 
 	@Override
-	public void start(Stage primaryStage) throws Exception{
-		Parent root = FXMLLoader.load(getClass().getResource("GPSFXML.fxml"));
-		primaryStage.setTitle("GPS App");
-		primaryStage.setScene(new Scene(root));
-		primaryStage.show();
+	public void start(Stage stage) throws Exception{
+		Parent rootGPS;
+		FXMLLoader gpsLoader = new FXMLLoader(getClass().getResource("GPSFXML.fxml"));
+		rootGPS = gpsLoader.load();
+		Stage gpsWindow = new Stage();
+		gpsWindow.setTitle("GPS App");
+		gpsWindow.setScene(new Scene(rootGPS));
+		gpsWindow.show();
+		GPSController gpsController = gpsLoader.getController();
+
+		Parent rootPlotter;
+		FXMLLoader plotterLoader = new FXMLLoader(getClass().getResource("../gps_plotter/PlotterFXML.fxml"));
+		rootPlotter = plotterLoader.load();
+		Stage plotterWindow = new Stage();
+		PlotterController plotterController = plotterLoader.getController();
+		plotterWindow.setTitle("Plotter");
+		plotterWindow.setScene(new Scene(rootPlotter));
+		plotterWindow.hide();
+
+		gpsController.setPlotterController(plotterController);
+		gpsController.setPlotterStage(plotterWindow);
+
+		plotterController.setMainController(gpsController);
 	}
+
 
 
 	public static void main(String[] args) {

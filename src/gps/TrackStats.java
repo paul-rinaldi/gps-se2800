@@ -22,6 +22,7 @@ public class TrackStats {
 	private double minLong;
 	private double maxElevFt;
 	private double minElevFt;
+	private String name;
 
 	/**
 	 * Creates a TrackStats with all values initialized to 0
@@ -41,6 +42,7 @@ public class TrackStats {
 		this.maxSpeedM = 0;
 		this.minElevFt = 0;
 		this.maxElevFt = 0;
+		this.name = "";
 	}
 
 	public double getAvgSpeedK() {
@@ -155,6 +157,13 @@ public class TrackStats {
 		this.minLong = minLong;
 	}
 
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
 
 
 }
