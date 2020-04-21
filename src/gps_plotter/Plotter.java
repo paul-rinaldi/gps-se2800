@@ -149,34 +149,51 @@ public class Plotter {
     }
 
     public void convertToCartesian(){
-
         if(this.chart.getData() != null && this.chart.getData().size() != 0){ //Clears graph when window is opened only if series exists
             clearChart();
             plotterController.clearTable();
         }
-
         TracksHandler tracksHandler = plotterController.getTracksHandler();
         if(tracksHandler != null) {
             setChartAxisLabels("Meters(east and west)", "Meters(north and south)");
-            TrackPoint trackZero = tracksHandler.getTrack(0).getTrackPoint(0);
-            for (int i = 0; i < tracksHandler.getTrackAmount(); i++) {
-                Track track = tracksHandler.getTrack(i);
-                XYChart.Series series = new XYChart.Series();
-                series.setName(track.getName());
-                for (int z = 0; z < track.getPointAmount(); z++) {
-                    TrackPoint currentTrackPoint = track.getTrackPoint(z);
-                    double x = (RADIUS_OF_EARTH_M + ((trackZero.getElevation() + currentTrackPoint.getElevation()) / 2)) *
-                            (trackZero.getLongitude() * DEG_TO_RAD - currentTrackPoint.getLongitude() * DEG_TO_RAD) *
-                            Math.cos((trackZero.getLatitude() * DEG_TO_RAD + currentTrackPoint.getLatitude() * DEG_TO_RAD) / 2);
-                    double y = (RADIUS_OF_EARTH_M + (trackZero.getElevation() + currentTrackPoint.getElevation()) / 2) *
-                            (trackZero.getLatitude() * DEG_TO_RAD - currentTrackPoint.getLatitude() * DEG_TO_RAD);
-                    plotPoint(series, x, y);
+            int index = getFirstLoadedIndex();
+            boolean[] showOnGraph = plotterController.getshowOnGraph();
+            if (index != -1) {
+                TrackPoint trackZero = tracksHandler.getTrack(index).getTrackPoint(0);
+                for (int i = 0; i < tracksHandler.getTrackAmount(); i++) {
+                    if (showOnGraph[i]) {
+                        Track track = tracksHandler.getTrack(i);
+                        XYChart.Series series = new XYChart.Series();
+                        series.setName(track.getName());
+                        for (int z = 0; z < track.getPointAmount(); z++) {
+                            TrackPoint currentTrackPoint = track.getTrackPoint(z);
+                            double x = (RADIUS_OF_EARTH_M + ((trackZero.getElevation() + currentTrackPoint.getElevation()) / 2)) *
+                                    (trackZero.getLongitude() * DEG_TO_RAD - currentTrackPoint.getLongitude() * DEG_TO_RAD) *
+                                    Math.cos((trackZero.getLatitude() * DEG_TO_RAD + currentTrackPoint.getLatitude() * DEG_TO_RAD) / 2);
+                            double y = (RADIUS_OF_EARTH_M + (trackZero.getElevation() + currentTrackPoint.getElevation()) / 2) *
+                                    (trackZero.getLatitude() * DEG_TO_RAD - currentTrackPoint.getLatitude() * DEG_TO_RAD);
+                            plotPoint(series, x, y);
+                        }
+                        this.chart.getData().add(series);
+                        plotterController.addTable(track.getTrackStats());
+                    }
                 }
-                this.chart.getData().add(series);
-                plotterController.addTable(track.getTrackStats());
             }
         } else{
             throw new NullPointerException("No Tracks are Loaded!");
         }
+    }
+
+    private int getFirstLoadedIndex(){
+        int returnValue = -1;
+        boolean[] temp = plotterController.getshowOnGraph();
+        TracksHandler tracksHandler = plotterController.getTracksHandler();
+        for(int i = 0; i < tracksHandler.getTrackAmount(); i++){
+            if(temp[i]){
+                returnValue = i;
+                i = 10; //breaks the loop
+            }
+        }
+        return returnValue;
     }
 }

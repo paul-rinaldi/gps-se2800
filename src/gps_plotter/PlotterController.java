@@ -179,4 +179,8 @@ public class PlotterController {
             }
         });
     }
+
+    public boolean[] getshowOnGraph(){
+        return showOnGraph;
+    }
 }
