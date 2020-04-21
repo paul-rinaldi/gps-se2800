@@ -175,6 +175,7 @@ public class Plotter {
 
         if(this.chart.getData() != null && this.chart.getData().size() != 0){ //Clears graph when window is opened only if series exists
             clearChart();
+            plotterController.clearTable();
         }
 
         TracksHandler tracksHandler = plotterController.getTracksHandler();

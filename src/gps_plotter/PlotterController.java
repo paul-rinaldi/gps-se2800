@@ -81,6 +81,10 @@ public class PlotterController {
         return this.yAxis;
     }
 
+    public void clearTable(){
+        tableView.getItems().clear();
+    }
+
     /**
      * @author Austin Demars
      *
