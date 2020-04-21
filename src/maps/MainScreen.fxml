@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+ - Course: SE 2800 - 041
+ - Spring 2020
+ - Names: Paul Rinaldi
+ - Created 20 April 2020
+ - Unlicensed.
+
+ The design is based on the master controller created by Joseph Skubal,
+ Paul Rinaldi, Jesse Sierra, and Alexander Neuwirth in SE2030 Fall 2019.
+ -->
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<GridPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="maps.MasterController"
+            prefHeight="800.0" prefWidth="800.0">
+    <rowConstraints>
+        <RowConstraints vgrow="NEVER" /> <!-- For the menu bar -->
+        <RowConstraints prefHeight="400" vgrow="ALWAYS"/> <!-- For the main content area -->
+    </rowConstraints>
+    <columnConstraints>
+        <ColumnConstraints hgrow="ALWAYS" halignment="CENTER"/> <!-- for the map display -->
+    </columnConstraints>
+    <children>
+        <!-- This menu bar contains map and eventually plotting functionality -->
+        <MenuBar GridPane.rowIndex="0" GridPane.columnSpan="100" GridPane.columnIndex="0">
+            <Menu mnemonicParsing="false" text="File">
+                <!-- subject to change
+                <MenuItem mnemonicParsing="false" onAction="#loadTrack" text="Load" />
+                <MenuItem mnemonicParsing="false" onAction="#calcTrackStats" text="Calculate Metrics" />
+                <MenuItem mnemonicParsing="false" onAction="#exit" text="Exit" />
+                -->
+            </Menu>
+            <Menu mnemonicParsing="false" text="View">
+                <MenuItem mnemonicParsing="false" text="Google API JSON" onAction="#openJSONCapture"/>
+                <SeparatorMenuItem/>
+                <RadioMenuItem text="Satellite" onAction="#onMapChange">
+                    <toggleGroup>
+                        <ToggleGroup fx:id="mapTypeSelect"/>
+                    </toggleGroup>
+                </RadioMenuItem>
+                <RadioMenuItem text="Road View" toggleGroup="$mapTypeSelect" onAction="#onMapChange"/>
+                <SeparatorMenuItem/>
+                <RadioMenuItem text="Zoom 1" onAction="#onMapChange">
+                    <toggleGroup>
+                        <ToggleGroup fx:id="zoomSelect"/>
+                    </toggleGroup>
+                </RadioMenuItem>
+                <RadioMenuItem text="Zoom 2" toggleGroup="$zoomSelect" onAction="#onMapChange"/>
+                <RadioMenuItem text="Zoom 3" selected="true" toggleGroup="$zoomSelect" onAction="#onMapChange"/>
+                <RadioMenuItem text="Zoom 4" toggleGroup="$zoomSelect" onAction="#onMapChange"/>
+                <RadioMenuItem text="Zoom 5" toggleGroup="$zoomSelect" onAction="#onMapChange"/>
+            </Menu>
+        </MenuBar>
+    </children>
+</GridPane>
