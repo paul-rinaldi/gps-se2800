@@ -73,6 +73,22 @@ public class TracksHandler {
 	}
 
 	/**
+	 * Returns the index that the given track is located at
+	 *
+	 * @param name the index of the desired track or -1 if it is not in the tracks handler
+	 */
+	public int getTrackIndex(String name) {
+		int toReturn = -1;
+		for (int t = 0; t < tracks.size(); t++) {
+			if (tracks.get(t).getName().equals(name)) {
+				toReturn = t;
+			}
+		}
+		return toReturn;
+	}
+
+
+	/**
 	 * Gets the number of track points in tracks
 	 * @return the number of track points in tracks
 	 */

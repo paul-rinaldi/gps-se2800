@@ -336,6 +336,9 @@ public class GPSController {
 
 					trackSpinner.getValueFactory().setValue(trackLoaded.getName());
 
+					plotterController.updateSpinner(new SpinnerValueFactory.ListSpinnerValueFactory<>(trackNames),
+							trackLoaded.getName());
+
 					calcTrackStats();
 
 				}
@@ -361,7 +364,6 @@ public class GPSController {
 			((GPXHandler)handler).resetAttributes();
 
 		} catch (Exception e) {
-
 			createErrorDialog("Parsing Error", e.getLocalizedMessage());
 			((GPXHandler)handler).resetAttributes();
 		}

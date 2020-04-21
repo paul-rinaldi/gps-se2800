@@ -2,13 +2,12 @@ package gps_plotter;
 
 import gps.*;
 import javafx.application.Platform;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
-import javafx.scene.control.Alert;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 import javafx.stage.Window;
@@ -24,12 +23,18 @@ public class PlotterController {
     private NumberAxis xAxis;
     @FXML
     private NumberAxis yAxis;
+    @FXML
+    private CheckBox showHideButton;
+    @FXML
+    private Spinner<String> trackSpinner;
 
     private GPSController gpsController;
     private Plotter plotter;
     private TracksHandler tracksHandler;
 
     private Stage plotterStage;
+
+    private boolean[] showOnGraph = {false, false, false, false, false, false, false, false, false, false};
 
     @FXML
     public void initialize(){
@@ -80,10 +85,6 @@ public class PlotterController {
         }
     }
 
-    public void addPointToGraph(XYChart.Series series){
-        lineChart.getData().add(series);
-    }
-
     public void addTable(TrackStats trackStats){
         tableView.getItems().add(trackStats);
     }
@@ -103,7 +104,7 @@ public class PlotterController {
     public void clearTable() {
         tableView.getItems().clear();
     }
-    
+
     public void setStage(Stage stage){
         this.plotterStage = stage;
     }
@@ -132,5 +133,20 @@ public class PlotterController {
      */
     public void exit() {
         this.plotterStage.hide();
+    }
+
+    public void showOrHide(ActionEvent actionEvent) {
+        int index = tracksHandler.getTrackIndex(trackSpinner.getValue());
+        if(index == -1){
+            createErrorDialog("Track not loaded", "The track that is to be shown is not loaded!");
+        } else {
+            showOnGraph[index] = !showOnGraph[index];
+            //TODO updateGraph
+        }
+    }
+
+    public void updateSpinner(SpinnerValueFactory<String> valueFactory, String trackName){
+        trackSpinner.setValueFactory(valueFactory);
+        trackSpinner.getValueFactory().setValue(trackName);
     }
 }

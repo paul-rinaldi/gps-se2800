@@ -2,6 +2,7 @@
 
 <?import javafx.scene.chart.LineChart?>
 <?import javafx.scene.chart.NumberAxis?>
+<?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
@@ -16,23 +17,25 @@
             <menus>
                 <Menu mnemonicParsing="false" text="Operation">
                     <items>
-                        <MenuItem onAction="#exit" mnemonicParsing="false" text="Close" />
-                        <MenuItem onAction="#graphTwoDPlot" mnemonicParsing="false" text="View 2D Plot" />
-                        <MenuItem onAction="#graphElevationGainVsTime" mnemonicParsing="false" text="Elevation Gain vs Time" />
+                        <MenuItem mnemonicParsing="false" onAction="#exit" text="Close" />
+                        <MenuItem mnemonicParsing="false" onAction="#graphTwoDPlot" text="View 2D Plot" />
+                        <MenuItem mnemonicParsing="false" onAction="#graphElevationGainVsTime" text="Elevation Gain vs Time" />
                     </items>
                 </Menu>
             </menus>
         </MenuBar>
         <LineChart fx:id="lineChart" layoutX="308.0" layoutY="77.0" prefHeight="355.0" prefWidth="568.0">
             <xAxis>
-                <NumberAxis fx:id="xAxis" label="Meters(east and west)" side="BOTTOM" />
+                <NumberAxis label="Meters(east and west)" side="BOTTOM" fx:id="xAxis" />
             </xAxis>
             <yAxis>
                 <NumberAxis fx:id="yAxis" label="Meters(north and south)" side="LEFT" />
             </yAxis>
         </LineChart>
-        <Spinner layoutX="14.0" layoutY="64.0" prefHeight="25.0" prefWidth="286.0" />
-        <Label layoutX="121.0" layoutY="47.0" text="Track to View" />
+        <Spinner fx:id="trackSpinner" layoutX="58.0" layoutY="65.0" prefHeight="25.0" prefWidth="252.0" />
+        <Label layoutX="124.0" layoutY="48.0" text="Track to View" />
         <TableView fx:id="tableView" layoutX="8.0" layoutY="95.0" prefHeight="346.0" prefWidth="304.0" />
+      <CheckBox fx:id="showHideButton" layoutX="23.0" layoutY="69.0" mnemonicParsing="false" onAction="#showOrHide" />
+      <Label layoutX="2.0" layoutY="48.0" text="Show/Hide" />
     </children>
 </AnchorPane>
