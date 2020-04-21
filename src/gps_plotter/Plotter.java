@@ -40,10 +40,6 @@ public class Plotter {
      */
     public void plotElevationGain(Track track){
 
-        if (track.getPointAmount() < 2) {
-            throw new IllegalArgumentException("There must be at least 2 points in the track to plot Elevation Gain vs Time.");
-        }
-
         XYChart.Series series = new XYChart.Series();
         series.setName(track.getName());
         setChartAxisLabels("Time Passed (min)", "Elevation Gain (m)");

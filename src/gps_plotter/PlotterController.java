@@ -36,7 +36,7 @@ public class PlotterController {
 
     private Stage plotterStage;
 
-    private boolean[] showOnGraph = {false, false, false, false, false, false, false, false, false, false};
+    private boolean[] showOnGraph = {true, true, true, true, true, true, true, true, true, true};
 
     @FXML
     public void initialize(){
@@ -67,17 +67,20 @@ public class PlotterController {
                 this.plotter.clearChart();
             }
 
-            for(int i = 0; i < showOnGraph.length; i++){
+            for(int i = 0; i < this.tracksHandler.getTrackAmount(); i++){
                 if(showOnGraph[i]){
                     Track t = this.tracksHandler.getTrack(i);
-                    this.plotter.plotElevationGain(t);
+
+                    if(t.getPointAmount() > 1) {
+                        this.plotter.plotElevationGain(t);
+                    } else{
+                        createErrorDialog("Elevation Gain vs Time Plotting Error", "Track: " + t.getName() + " doesn't have enough points to graph Elevation Gain vs Time");
+                    }
                 }
             }
 
         } catch(NullPointerException n){
             createErrorDialog("Elevation Gain vs Time Plotting Error", "No tracks are loaded.");
-        } catch(IllegalArgumentException e){
-            createErrorDialog("Elevation Gain vs Time Plotting Error", e.getLocalizedMessage());
         }
     }
 
