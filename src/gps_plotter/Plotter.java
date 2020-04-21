@@ -48,64 +48,59 @@ public class Plotter {
         if(this.chart.getData() != null && this.chart.getData().size() != 0){ //Clears graph when window is opened only if series exists
             clearChart();
         }
-
-        if(plotterController.getTracksHandler() != null) {
-
-            if (track.getPointAmount() < 2) {
-                return; //TODO - Must throw an exception for controller
-            }
-
-            XYChart.Series series = new XYChart.Series();
-            series.setName(track.getName());
-            setChartAxisLabels("Time Passed (min)", "Elevation Gain (m)");
-
-            double highestElevation = track.getTrackPoint(0).getElevation();
-            double elevationPoint = 0;
-            Date firstDate = null;
-            Date currentDate;
-            double xMax = 0;
-            double xMin = 0;
-            double yMax = 0;
-            double yMin = 0;
-
-            for (int i = 0; i < track.getPointAmount(); i++) {
-
-                TrackPoint currentTrackPoint = track.getTrackPoint(i);
-
-                double currentElevation = currentTrackPoint.getElevation();
-
-                //Set first date to calculate time passed
-                if (i == 0) {
-                    firstDate = currentTrackPoint.getTime();
-                }
-
-                currentDate = currentTrackPoint.getTime();
-                double timePoint = timePassedInMin(currentDate, firstDate);
-
-                elevationPoint += calculateElevationGain(currentElevation, highestElevation); //Add the change in elevation to total change
-
-                plotPoint(series, timePoint, elevationPoint); //Plot point on LineChart
-
-                if (elevationPoint > 0) { //Only set highest elevation if gain is above 0
-                    highestElevation = currentTrackPoint.getElevation();
-                }
-
-                //Used to set min/max x and y to scale graph
-                if (i == 0) {
-                    xMin = timePoint;
-                    yMin = elevationPoint;
-                } else if (i == track.getPointAmount()) {
-                    xMax = timePoint;
-                    yMax = elevationPoint;
-                }
-
-            }
-
-            this.chart.getData().add(series);
-
-        } else{
-            //TODO - Send exception
+        
+        if (track.getPointAmount() < 2) {
+            throw new IllegalArgumentException("There must be at least 2 points in the track to plot Elevation Gain vs Time.");
         }
+
+        XYChart.Series series = new XYChart.Series();
+        series.setName(track.getName());
+        setChartAxisLabels("Time Passed (min)", "Elevation Gain (m)");
+
+        double highestElevation = track.getTrackPoint(0).getElevation();
+        double elevationPoint = 0;
+        Date firstDate = null;
+        Date currentDate;
+        double xMax = 0;
+        double xMin = 0;
+        double yMax = 0;
+        double yMin = 0;
+
+        for (int i = 0; i < track.getPointAmount(); i++) {
+
+            TrackPoint currentTrackPoint = track.getTrackPoint(i);
+
+            double currentElevation = currentTrackPoint.getElevation();
+
+            //Set first date to calculate time passed
+            if (i == 0) {
+                firstDate = currentTrackPoint.getTime();
+            }
+
+            currentDate = currentTrackPoint.getTime();
+            double timePoint = timePassedInMin(currentDate, firstDate);
+
+            elevationPoint += calculateElevationGain(currentElevation, highestElevation); //Add the change in elevation to total change
+
+            plotPoint(series, timePoint, elevationPoint); //Plot point on LineChart
+
+            if (elevationPoint > 0) { //Only set highest elevation if gain is above 0
+                highestElevation = currentTrackPoint.getElevation();
+            }
+
+            //Used to set min/max x and y to scale graph
+            if (i == 0) {
+                xMin = timePoint;
+                yMin = elevationPoint;
+            } else if (i == track.getPointAmount()) {
+                xMax = timePoint;
+                yMax = elevationPoint;
+            }
+
+        }
+
+        this.chart.getData().add(series);
+
 
     }
 
@@ -116,24 +111,24 @@ public class Plotter {
      * @param highest highest elevation read
      * @return difference between them; 0 if difference is < 0
      */
-   public double calculateElevationGain(double current, double highest){
+    public double calculateElevationGain(double current, double highest){
 
-       if(current < 0 || highest < 0){ //Values below zero will not be expected (below sea level)
-           return 0;
-       }
+        if(current < 0 || highest < 0){ //Values below zero will not be expected (below sea level)
+            return 0;
+        }
 
         double result = current - highest;
 
         return result > 0 ? result : 0;
 
-   }
+    }
 
     /**
      * Clears current data series for chart
      */
-   private void clearChart(){
+    private void clearChart(){
         this.chart.getData().clear();
-   }
+    }
 
     /**
      * Sets axis labels for chart
@@ -141,10 +136,10 @@ public class Plotter {
      * @param x axis label
      * @param y axis label
      */
-   private void setChartAxisLabels(String x, String y){
+    private void setChartAxisLabels(String x, String y){
         this.plotterController.getXAxis().setLabel(x);
         this.plotterController.getYAxis().setLabel(y);
-   }
+    }
 
     /**
      * Adds points to data series for LineChart

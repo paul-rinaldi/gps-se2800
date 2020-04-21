@@ -21,6 +21,7 @@
             <Menu mnemonicParsing="false" text="Graph">
               <items>
                 <MenuItem mnemonicParsing="false" onAction="#showPlotter" text="2D Plot" />
+                  <MenuItem mnemonicParsing="false" onAction="#showElevationGainVsTime" text="Elevation Gain Vs Time"/>
               </items>
             </Menu>
         </menus>
