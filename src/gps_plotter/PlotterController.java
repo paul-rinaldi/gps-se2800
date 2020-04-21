@@ -60,8 +60,18 @@ public class PlotterController {
     public void graphElevationGainVsTime(){
 
         try {
-            Track t = gpsController.getTracksHandler().getTrack(gpsController.getSpinner().getValue());
-            this.plotter.plotElevationGain(t);
+
+            if(this.lineChart.getData() != null && this.lineChart.getData().size() != 0){ //Clears graph when window is opened only if series exists
+                this.plotter.clearChart();
+            }
+
+            for(int i = 0; i < showOnGraph.length; i++){
+                if(showOnGraph[i]){
+                    Track t = this.tracksHandler.getTrack(i);
+                    this.plotter.plotElevationGain(t);
+                }
+            }
+
         } catch(NullPointerException n){
             createErrorDialog("Elevation Gain vs Time Plotting Error", "No tracks are loaded.");
         } catch(IllegalArgumentException e){
@@ -141,7 +151,6 @@ public class PlotterController {
             createErrorDialog("Track not loaded", "The track that is to be shown is not loaded!");
         } else {
             showOnGraph[index] = !showOnGraph[index];
-            //TODO updateGraph
         }
     }
 

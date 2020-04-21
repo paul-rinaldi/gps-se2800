@@ -40,10 +40,6 @@ public class Plotter {
      */
     public void plotElevationGain(Track track){
 
-        if(this.chart.getData() != null && this.chart.getData().size() != 0){ //Clears graph when window is opened only if series exists
-            clearChart();
-        }
-        
         if (track.getPointAmount() < 2) {
             throw new IllegalArgumentException("There must be at least 2 points in the track to plot Elevation Gain vs Time.");
         }
@@ -112,7 +108,7 @@ public class Plotter {
     /**
      * Clears current data series for chart
      */
-    private void clearChart(){
+    public void clearChart(){
         this.chart.getData().clear();
     }
 
