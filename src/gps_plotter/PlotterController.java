@@ -2,6 +2,7 @@ package gps_plotter;
 
 import gps.*;
 import javafx.application.Platform;
+import javafx.beans.InvalidationListener;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.chart.LineChart;
@@ -31,6 +32,7 @@ public class PlotterController {
     private GPSController gpsController;
     private Plotter plotter;
     private TracksHandler tracksHandler;
+    private boolean spinnerHasEventListener = false;
 
     private Stage plotterStage;
 
@@ -148,5 +150,24 @@ public class PlotterController {
     public void updateSpinner(SpinnerValueFactory<String> valueFactory, String trackName){
         trackSpinner.setValueFactory(valueFactory);
         trackSpinner.getValueFactory().setValue(trackName);
+        if (!spinnerHasEventListener){
+            setSpinnerEventListener();
+            spinnerHasEventListener = true;
+        }
+    }
+
+    private void setSpinnerEventListener() {
+        trackSpinner.valueProperty().addListener((obs, oldValue, newValue) -> {
+            try {
+                int index = tracksHandler.getTrackIndex(newValue);
+                if (!showOnGraph[index]) {
+                    showHideButton.selectedProperty().setValue(false);
+                } else {
+                    showHideButton.selectedProperty().setValue(true);
+                }
+            } catch (NullPointerException e){
+                //this is thrown when a new track is loaded but doesn't affect anything
+            }
+        });
     }
 }
