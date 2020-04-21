@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.chart.CategoryAxis?>
 <?import javafx.scene.chart.LineChart?>
 <?import javafx.scene.chart.NumberAxis?>
 <?import javafx.scene.control.Label?>
@@ -18,7 +17,7 @@
                 <Menu mnemonicParsing="false" text="Operation">
                     <items>
                         <MenuItem onAction="#exit" mnemonicParsing="false" text="Close" />
-                        <MenuItem mnemonicParsing="false" text="View 2D Plot" />
+                        <MenuItem onAction="#graphTwoDPlot" mnemonicParsing="false" text="View 2D Plot" />
                         <MenuItem onAction="#graphElevationGainVsTime" mnemonicParsing="false" text="Elevation Gain vs Time" />
                     </items>
                 </Menu>

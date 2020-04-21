@@ -68,7 +68,15 @@ public class PlotterController {
         return tracksHandler;
     }
 
-    public void graphTwoDPlot(XYChart.Series series){
+    public void graphTwoDPlot(){
+        try {
+            plotter.convertToCartesian();
+        } catch(NullPointerException n){
+            createErrorDialog("2D Graph Plotting Error", "No tracks are loaded.");
+        }
+    }
+
+    public void addPointToGraph(XYChart.Series series){
         lineChart.getData().add(series);
     }
 

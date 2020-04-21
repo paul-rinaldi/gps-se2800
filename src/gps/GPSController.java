@@ -419,7 +419,7 @@ public class GPSController {
 	public void showPlotter(){
 		plotterController.setTracksHandler(tracksHandler);
 		plotterStage.show();
-		plotterController.getPlotter().convertToCartesian();
+		plotterController.graphTwoDPlot();
 	}
 
 	public void showElevationGainVsTime(){

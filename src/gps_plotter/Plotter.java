@@ -190,11 +190,11 @@ public class Plotter {
                     series.getData().add(new XYChart.Data(x, y));
                 }
                 seriesArrayList.add(series);
-                plotterController.graphTwoDPlot(series);
+                plotterController.addPointToGraph(series);
                 plotterController.addTable(track.getTrackStats());
             }
         } else{
-            //TODO - send exception to controller to print message
+            throw new NullPointerException("No Tracks are Loaded!");
         }
     }
 }
