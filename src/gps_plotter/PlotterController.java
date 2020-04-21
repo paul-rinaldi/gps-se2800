@@ -10,6 +10,8 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.stage.Stage;
+import javafx.stage.Window;
 
 public class PlotterController {
 
@@ -26,6 +28,8 @@ public class PlotterController {
     private GPSController gpsController;
     private Plotter plotter;
     private TracksHandler tracksHandler;
+
+    private Stage plotterStage;
 
     @FXML
     public void initialize(){
@@ -88,6 +92,10 @@ public class PlotterController {
         return this.yAxis;
     }
 
+    public void setStage(Stage stage){
+        this.plotterStage = stage;
+    }
+
     /**
      * Creates an error dialog from a type and message
      *
@@ -110,7 +118,7 @@ public class PlotterController {
      * Called when 'File/Exit' is pressed
      * Closes (exits) the application
      */
-    public void exit() { //Austin
-        Platform.exit(); //TODO - Needs to only close window
+    public void exit() {
+        this.plotterStage.hide();
     }
 }

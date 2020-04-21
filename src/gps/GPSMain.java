@@ -33,6 +33,7 @@ public class GPSMain extends Application {
 		plotterWindow.setTitle("Plotter");
 		plotterWindow.setScene(new Scene(rootPlotter));
 		plotterWindow.hide();
+		plotterController.setStage(plotterWindow);
 
 		gpsController.setPlotterController(plotterController);
 		gpsController.setPlotterStage(plotterWindow);
