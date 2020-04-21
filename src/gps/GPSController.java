@@ -422,6 +422,12 @@ public class GPSController {
 		plotterController.getPlotter().convertToCartesian();
 	}
 
+	public void showElevationGainVsTime(){
+		plotterController.setTracksHandler(tracksHandler);
+		plotterStage.show();
+		plotterController.graphElevationGainVsTime();
+	}
+
 	/**
 	 * @author Austin Demars
 	 *

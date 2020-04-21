@@ -6,6 +6,7 @@ import javafx.fxml.FXML;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
+import javafx.scene.control.Alert;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -49,8 +50,14 @@ public class PlotterController {
 
     public void graphElevationGainVsTime(){
 
-        Track t = gpsController.getTracksHandler().getTrack(gpsController.getSpinner().getValue());
-        this.plotter.plotElevationGain(t);
+        try {
+            Track t = gpsController.getTracksHandler().getTrack(gpsController.getSpinner().getValue());
+            this.plotter.plotElevationGain(t);
+        } catch(NullPointerException n){
+            createErrorDialog("Elevation Gain vs Time Plotting Error", "No tracks are loaded.");
+        } catch(IllegalArgumentException e){
+            createErrorDialog("Elevation Gain vs Time Plotting Error", e.getLocalizedMessage());
+        }
     }
 
     public void setTracksHandler(TracksHandler tracksHandler){
@@ -83,6 +90,22 @@ public class PlotterController {
 
     public void clearTable(){
         tableView.getItems().clear();
+    }
+
+    /**
+     * Creates an error dialog from a type and message
+     *
+     * @param errorType type of error
+     * @param errorMsg message error provides
+     */
+    private void createErrorDialog(String errorType, String errorMsg){
+
+        Alert headerError = new Alert(Alert.AlertType.ERROR);
+        headerError.setTitle("Error Dialog");
+        headerError.setHeaderText(errorType);
+        headerError.setContentText(errorMsg);
+        headerError.showAndWait();
+
     }
 
     /**
