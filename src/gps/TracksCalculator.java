@@ -130,6 +130,7 @@ public class TracksCalculator {
 		stats.setMaxLat(Double.parseDouble(format.format(maxLat)));
 		stats.setMinLong(Double.parseDouble(format.format(minLong)));
 		stats.setMaxLong(Double.parseDouble(format.format(maxLong)));
+		stats.setName(track.getName());
 	}
 
 	/**

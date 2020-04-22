@@ -2,6 +2,7 @@
 package gps;
 
 
+import gps_plotter.PlotterController;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -11,6 +12,7 @@ import javafx.scene.control.Spinner;
 import javafx.scene.control.SpinnerValueFactory;
 import javafx.scene.control.TextField;
 import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 import org.xml.sax.SAXException;
 
 import java.io.File;
@@ -61,6 +63,8 @@ public class GPSController {
 	private TextField maxSpeedMPH;
 	@FXML
 	private TextField maxSpeedKPH;
+	private PlotterController plotterController;
+	private Stage plotterStage;
 
 	public GPSController(){
 		trackNames = FXCollections.observableArrayList();
@@ -332,6 +336,9 @@ public class GPSController {
 
 					trackSpinner.getValueFactory().setValue(trackLoaded.getName());
 
+					plotterController.updateSpinner(new SpinnerValueFactory.ListSpinnerValueFactory<>(trackNames),
+							trackLoaded.getName());
+
 					calcTrackStats();
 
 				}
@@ -357,7 +364,6 @@ public class GPSController {
 			((GPXHandler)handler).resetAttributes();
 
 		} catch (Exception e) {
-
 			createErrorDialog("Parsing Error", e.getLocalizedMessage());
 			((GPXHandler)handler).resetAttributes();
 		}
@@ -394,6 +400,38 @@ public class GPSController {
 		}
 
 
+	}
+
+	public TracksHandler getTracksHandler(){
+		return this.tracksHandler;
+	}
+
+	public void setPlotterController(PlotterController plotterController){
+		this.plotterController = plotterController;
+	}
+
+	public void setPlotterStage(Stage stage){
+		this.plotterStage = stage;
+	}
+
+	/**
+	 * Opens plotter window and immediately graphs all loaded tracks with 2D Plotter in cartesian coordinates
+	 * Only graphs selected tracks if window was already modified (saves state)
+	 */
+	public void showPlotter(){
+		plotterController.setTracksHandler(tracksHandler);
+		plotterStage.show();
+		plotterController.graphTwoDPlot();
+	}
+
+	/**
+	 * Opens plotter window and immediately graphs all loaded tracks with ElevationGain vs Time
+	 * Only graphs selected tracks if window was already modified (saves state)
+	 */
+	public void showElevationGainVsTime(){
+		plotterController.setTracksHandler(tracksHandler);
+		plotterStage.show();
+		plotterController.graphElevationGainVsTime();
 	}
 
 	/**
