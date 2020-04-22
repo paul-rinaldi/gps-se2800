@@ -40,6 +40,9 @@ public class PlotterController {
 
     private boolean[] showOnGraph = {true, true, true, true, true, true, true, true, true, true};
 
+    /**
+     * Initializes JavaFX table element
+     */
     @FXML
     public void initialize(){
         //sets up the table so it can be populated

@@ -66,7 +66,7 @@ public class Plotter {
 
             plotPoint(series, timePoint, elevationPoint); //Plot point on LineChart
 
-            if (elevationPoint > 0) { //Only set highest elevation if gain is above 0
+            if (elevationPoint > 0.0) { //Only set highest elevation if gain is above 0
                 highestElevation = currentTrackPoint.getElevation();
             }
 
@@ -86,8 +86,8 @@ public class Plotter {
      */
     public double calculateElevationGain(double current, double highest){
 
-        if(current < 0 || highest < 0){ //Values below zero will not be expected (below sea level)
-            return 0;
+        if(current < 0.0 || highest < 0.0){ //Values below zero will not be expected (below sea level)
+            return 0.0;
         }
 
         double result = current - highest;
