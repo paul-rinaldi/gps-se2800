@@ -4,7 +4,7 @@ import gps.GPXHandler;
 import gps.Parser;
 import org.junit.jupiter.api.Test;
 
-public class Graph2DPlotTest {
+public class MHP1_11Tests {
 
     @Test
     public void testTwoPoints(){
