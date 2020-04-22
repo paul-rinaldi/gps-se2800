@@ -32,7 +32,6 @@ public class PlotterController {
     private GPSController gpsController;
     private Plotter plotter;
     private TracksHandler tracksHandler;
-    private boolean spinnerHasEventListener = false;
 
     private Stage plotterStage;
 
@@ -53,6 +52,18 @@ public class PlotterController {
         distKColumn.setCellValueFactory(new PropertyValueFactory<>("distK"));
 
         tableView.getColumns().addAll(nameColumn, distKColumn, distMColumn);
+
+        trackSpinner.valueProperty().addListener((obs, oldValue, newValue) -> {
+            if(showHideButton.isDisable()){
+                showHideButton.disableProperty().setValue(false);
+            }
+            try {
+                int index = tracksHandler.getTrackIndex(newValue);
+                showHideButton.selectedProperty().setValue(showOnGraph[index]);
+            } catch (NullPointerException e){
+                //this is thrown when a new track is loaded but doesn't affect anything
+            }
+        });
     }
 
     public void setMainController(GPSController gpsController){
@@ -61,6 +72,8 @@ public class PlotterController {
 
     public void graphElevationGainVsTime(){
         showHideButton.disableProperty().setValue(false);
+
+        this.tracksHandler = gpsController.getTracksHandler();
 
         try {
 
@@ -96,6 +109,7 @@ public class PlotterController {
 
     public void graphTwoDPlot(){
         showHideButton.disableProperty().setValue(false);
+        this.tracksHandler = gpsController.getTracksHandler();
         try {
             plotter.convertToCartesian();
         } catch(NullPointerException n){
@@ -166,26 +180,8 @@ public class PlotterController {
     public void updateSpinner(SpinnerValueFactory<String> valueFactory, String trackName){
         trackSpinner.setValueFactory(valueFactory);
         trackSpinner.getValueFactory().setValue(trackName);
-        if (!spinnerHasEventListener){
-            setSpinnerEventListener();
-            spinnerHasEventListener = true;
-        }
     }
 
-    private void setSpinnerEventListener() {
-        trackSpinner.valueProperty().addListener((obs, oldValue, newValue) -> {
-            try {
-                int index = tracksHandler.getTrackIndex(newValue);
-                if (!showOnGraph[index]) {
-                    showHideButton.selectedProperty().setValue(false);
-                } else {
-                    showHideButton.selectedProperty().setValue(true);
-                }
-            } catch (NullPointerException e){
-                //this is thrown when a new track is loaded but doesn't affect anything
-            }
-        });
-    }
 
     public boolean[] getshowOnGraph(){
         return showOnGraph;

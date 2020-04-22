@@ -406,10 +406,6 @@ public class GPSController {
 		return this.tracksHandler;
 	}
 
-	public Spinner<String>getSpinner(){
-		return this.trackSpinner;
-	}
-
 	public void setPlotterController(PlotterController plotterController){
 		this.plotterController = plotterController;
 	}
