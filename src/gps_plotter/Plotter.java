@@ -10,6 +10,9 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
+/**
+ * Handles plotting tasks for the PlotterController
+ */
 public class Plotter {
 
     private static DecimalFormat decimalFormat = new DecimalFormat("#.##");
@@ -48,10 +51,6 @@ public class Plotter {
         double elevationPoint = 0;
         Date firstDate = null;
         Date currentDate;
-        double xMax = 0;
-        double xMin = 0;
-        double yMax = 0;
-        double yMin = 0;
 
         for (int i = 0; i < track.getPointAmount(); i++) {
 

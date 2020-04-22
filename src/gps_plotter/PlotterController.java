@@ -13,6 +13,9 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 import javafx.stage.Window;
 
+/**
+ * Controller in charge of plotting window
+ */
 public class PlotterController {
 
 
@@ -70,6 +73,9 @@ public class PlotterController {
         this.gpsController = gpsController;
     }
 
+    /**
+     * Plots all selected Tracks' elevation gains vs time
+     */
     public void graphElevationGainVsTime(){
         showHideButton.disableProperty().setValue(false);
 
@@ -120,10 +126,6 @@ public class PlotterController {
 
     public void addTable(TrackStats trackStats){
         tableView.getItems().add(trackStats);
-    }
-
-    public Plotter getPlotter(){
-        return plotter;
     }
 
     public NumberAxis getXAxis(){
