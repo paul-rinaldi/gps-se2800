@@ -56,6 +56,7 @@ public class PlotterController {
 
         tableView.getColumns().addAll(nameColumn, distKColumn, distMColumn);
 
+        //Adds event listener to spinner when the track gets changed to update state of select button
         trackSpinner.valueProperty().addListener((obs, oldValue, newValue) -> {
             if(showHideButton.isDisable()){
                 showHideButton.disableProperty().setValue(false);
@@ -67,10 +68,6 @@ public class PlotterController {
                 //this is thrown when a new track is loaded but doesn't affect anything
             }
         });
-    }
-
-    public void setMainController(GPSController gpsController){
-        this.gpsController = gpsController;
     }
 
     /**
@@ -105,14 +102,9 @@ public class PlotterController {
         }
     }
 
-    public void setTracksHandler(TracksHandler tracksHandler){
-        this.tracksHandler = tracksHandler;
-    }
-
-    public TracksHandler getTracksHandler(){
-        return tracksHandler;
-    }
-
+    /**
+     * graphs all selected tracks on a 2D plot
+     */
     public void graphTwoDPlot(){
         showHideButton.disableProperty().setValue(false);
         this.tracksHandler = gpsController.getTracksHandler();
@@ -124,24 +116,35 @@ public class PlotterController {
         }
     }
 
+    /**
+     * adds the tracks passed in to the spinner to allow it to be graphed
+     * @param valueFactory the value factory for the spinner to add to the spinner
+     * @param trackName the name of the track to display on the spinner
+     */
+    public void updateSpinner(SpinnerValueFactory<String> valueFactory, String trackName){
+        trackSpinner.setValueFactory(valueFactory);
+        trackSpinner.getValueFactory().setValue(trackName);
+    }
+
+    /**
+     * takes the track passed in gets the name of the track and the distance in kilometers and miles to display on the table
+     * @param trackStats the track to get the information from to display
+     */
     public void addTable(TrackStats trackStats){
         tableView.getItems().add(trackStats);
     }
 
-    public NumberAxis getXAxis(){
-        return this.xAxis;
-    }
-
-    public NumberAxis getYAxis(){
-        return this.yAxis;
-    }
-
-    public void clearTable() {
-        tableView.getItems().clear();
-    }
-
-    public void setStage(Stage stage){
-        this.plotterStage = stage;
+    /**
+     * event that occurs when the show/Hide button is selected or unselected
+     * @param actionEvent the event that caused this to be called
+     */
+    public void showOrHide(ActionEvent actionEvent) {
+        int index = tracksHandler.getTrackIndex(trackSpinner.getValue());
+        if(index == -1){
+            createErrorDialog("Track not loaded", "The track that is to be shown is not loaded!");
+        } else {
+            showOnGraph[index] = !showOnGraph[index];
+        }
     }
 
     /**
@@ -170,22 +173,36 @@ public class PlotterController {
         this.plotterStage.hide();
     }
 
-    public void showOrHide(ActionEvent actionEvent) {
-        int index = tracksHandler.getTrackIndex(trackSpinner.getValue());
-        if(index == -1){
-            createErrorDialog("Track not loaded", "The track that is to be shown is not loaded!");
-        } else {
-            showOnGraph[index] = !showOnGraph[index];
-        }
+    public NumberAxis getXAxis(){
+        return this.xAxis;
     }
 
-    public void updateSpinner(SpinnerValueFactory<String> valueFactory, String trackName){
-        trackSpinner.setValueFactory(valueFactory);
-        trackSpinner.getValueFactory().setValue(trackName);
+    public NumberAxis getYAxis(){
+        return this.yAxis;
     }
 
+    public void clearTable() {
+        tableView.getItems().clear();
+    }
 
-    public boolean[] getshowOnGraph(){
+    public void setStage(Stage stage){
+        this.plotterStage = stage;
+    }
+
+    public void setMainController(GPSController gpsController){
+        this.gpsController = gpsController;
+    }
+
+    public boolean[] getShowOnGraph(){
         return showOnGraph;
     }
+
+    public void setTracksHandler(TracksHandler tracksHandler){
+        this.tracksHandler = tracksHandler;
+    }
+
+    public TracksHandler getTracksHandler(){
+        return tracksHandler;
+    }
+
 }

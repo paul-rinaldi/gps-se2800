@@ -6,16 +6,12 @@ import gps.*;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.XYChart;
 
-import java.text.DecimalFormat;
-import java.util.ArrayList;
 import java.util.Date;
 
 /**
  * Handles plotting tasks for the PlotterController
  */
 public class Plotter {
-
-    private static DecimalFormat decimalFormat = new DecimalFormat("#.##");
 
     private static final double DEG_TO_RAD = 0.0174533;
     private static final double RADIUS_OF_EARTH_M = 6371000;
@@ -143,7 +139,12 @@ public class Plotter {
 
     }
 
-    public void convertToCartesian(){
+    /**
+     * converts all selected tracks to cartesian coordinates to be displayed on the graph and on the chart
+     * when the graph 2D plot button is pressed
+     * @throws throws a null pointer exception when this is called and no tracks have been loaded
+     */
+    public void convertToCartesian() throws NullPointerException{
         if(this.chart.getData() != null && this.chart.getData().size() != 0){ //Clears graph when window is opened only if series exists
             clearChart();
             plotterController.clearTable();
@@ -152,7 +153,7 @@ public class Plotter {
         if(tracksHandler != null) {
             setChartAxisLabels("Meters(east and west)", "Meters(north and south)");
             int index = getFirstLoadedIndex();
-            boolean[] showOnGraph = plotterController.getshowOnGraph();
+            boolean[] showOnGraph = plotterController.getShowOnGraph();
             if (index != -1) {
                 TrackPoint trackZero = tracksHandler.getTrack(index).getTrackPoint(0);
                 for (int i = 0; i < tracksHandler.getTrackAmount(); i++) {
@@ -181,7 +182,7 @@ public class Plotter {
 
     private int getFirstLoadedIndex(){
         int returnValue = -1;
-        boolean[] temp = plotterController.getshowOnGraph();
+        boolean[] temp = plotterController.getShowOnGraph();
         TracksHandler tracksHandler = plotterController.getTracksHandler();
         for(int i = 0; i < tracksHandler.getTrackAmount(); i++){
             if(temp[i]){
