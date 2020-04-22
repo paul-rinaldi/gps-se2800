@@ -61,6 +61,8 @@ public class PlotterController {
 
     public void graphElevationGainVsTime(){
 
+        this.tracksHandler = gpsController.getTracksHandler();
+
         try {
 
             if(this.lineChart.getData() != null && this.lineChart.getData().size() != 0){ //Clears graph when window is opened only if series exists
@@ -93,6 +95,7 @@ public class PlotterController {
     }
 
     public void graphTwoDPlot(){
+        this.tracksHandler = gpsController.getTracksHandler();
         try {
             plotter.convertToCartesian();
         } catch(NullPointerException n){
