@@ -60,6 +60,7 @@ public class PlotterController {
     }
 
     public void graphElevationGainVsTime(){
+        showHideButton.disableProperty().setValue(false);
 
         try {
 
@@ -80,6 +81,7 @@ public class PlotterController {
             }
 
         } catch(NullPointerException n){
+            showHideButton.disableProperty().setValue(true);
             createErrorDialog("Elevation Gain vs Time Plotting Error", "No tracks are loaded.");
         }
     }
@@ -93,9 +95,11 @@ public class PlotterController {
     }
 
     public void graphTwoDPlot(){
+        showHideButton.disableProperty().setValue(false);
         try {
             plotter.convertToCartesian();
         } catch(NullPointerException n){
+            showHideButton.disableProperty().setValue(true);
             createErrorDialog("2D Graph Plotting Error", "No tracks are loaded.");
         }
     }
