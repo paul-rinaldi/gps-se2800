@@ -34,7 +34,6 @@ public class PlotterController {
 
     private GPSController gpsController;
     private Plotter plotter;
-    private ColorLinePlotter colorPlotter;
     private TracksHandler tracksHandler;
     private String lastGraphLoaded;
 
