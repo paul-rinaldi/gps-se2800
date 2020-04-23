@@ -7,6 +7,10 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import java.util.ArrayList;
 import java.util.Date;
 
+/**
+ * This test class tests both calculation for elevation gain for various elevations
+ * and tests time passed for various Date objects
+ */
 public class ElevationGain {
 
     @Test
@@ -14,6 +18,7 @@ public class ElevationGain {
 
         Plotter plotter = new Plotter(null, null);
 
+        //elevations are random and vary in a way that makes sure method works
         double[] elevations = {300.20, 302.20, 302.20, 300.10, 310.2, 400.2, 399, 401.2};
         double[] gains = {0, 2.0, 0, 0, 8, 90, 0, 1};
 
@@ -38,6 +43,7 @@ public class ElevationGain {
 
         Plotter plotter = new Plotter(null, null);
 
+        //elevations are random and vary in a way that makes sure method works; go up over time
         double[] elevations = {62, 28, 47, 89, 94, 94, 103, 102, 102, 104};
         double[] gains = {0, 0, 0, 27, 5, 0, 9, 0, 0, 1};
 
@@ -61,6 +67,8 @@ public class ElevationGain {
         Plotter plotter = new Plotter(null, null);
 
         ArrayList<Date> dates = new ArrayList<>();
+        //These dates are created from milliseconds from a date in the library
+        //They are used to ensure the timePassedInMin function works properly
         dates.add(new Date(0));
         dates.add(new Date(300000));
         dates.add(new Date(600000));
@@ -84,6 +92,8 @@ public class ElevationGain {
         Plotter plotter = new Plotter(null, null);
 
         ArrayList<Date> dates = new ArrayList<>();
+        //These dates are created from milliseconds from a date in the library
+        //They are used to ensure the timePassedInMin function works properly
         dates.add(new Date(0));
         dates.add(new Date(150000));
         dates.add(new Date(300000));

@@ -414,12 +414,20 @@ public class GPSController {
 		this.plotterStage = stage;
 	}
 
+	/**
+	 * Opens plotter window and immediately graphs all loaded tracks with 2D Plotter in cartesian coordinates
+	 * Only graphs selected tracks if window was already modified (saves state)
+	 */
 	public void showPlotter(){
 		plotterController.setTracksHandler(tracksHandler);
 		plotterStage.show();
 		plotterController.graphTwoDPlot();
 	}
 
+	/**
+	 * Opens plotter window and immediately graphs all loaded tracks with ElevationGain vs Time
+	 * Only graphs selected tracks if window was already modified (saves state)
+	 */
 	public void showElevationGainVsTime(){
 		plotterController.setTracksHandler(tracksHandler);
 		plotterStage.show();
