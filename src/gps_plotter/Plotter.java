@@ -41,9 +41,7 @@ public class Plotter {
      *
      * @param track track from which points will be plotted
      */
-
     public void plotElevationGain(Track track){
-
         XYChart.Series series = new XYChart.Series();
         series.setName(track.getName());
         setChartAxisLabels("Time Passed (min)", "Elevation Gain (m)");
@@ -143,6 +141,7 @@ public class Plotter {
     }
 
     /**
+<<<<<<< HEAD
      * converts all selected tracks to different colored lines representing
      * instantaneous speeds at that point when the graph 2D plot button is pressed
      *
@@ -210,7 +209,6 @@ public class Plotter {
             throw new NullPointerException("No Tracks are Loaded!");
         }
     }
-
 
     /**
      * converts all selected tracks to cartesian coordinates to be displayed on the graph and on the chart
