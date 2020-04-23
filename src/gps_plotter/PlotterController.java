@@ -35,6 +35,7 @@ public class PlotterController {
     private GPSController gpsController;
     private Plotter plotter;
     private TracksHandler tracksHandler;
+    private String lastGraphLoaded;
 
     private Stage plotterStage;
 
@@ -77,6 +78,7 @@ public class PlotterController {
      * Plots all selected Tracks' elevation gains vs time
      */
     public void graphElevationGainVsTime(){
+        lastGraphLoaded = "Elevation Gain Vs Time";
         showHideButton.disableProperty().setValue(false);
 
         this.tracksHandler = gpsController.getTracksHandler();
@@ -109,6 +111,7 @@ public class PlotterController {
      * graphs all selected tracks on a 2D plot
      */
     public void graphTwoDPlot(){
+        lastGraphLoaded = "2DPlot";
         showHideButton.disableProperty().setValue(false);
         this.tracksHandler = gpsController.getTracksHandler();
         try {
@@ -147,6 +150,12 @@ public class PlotterController {
             createErrorDialog("Track not loaded", "The track that is to be shown is not loaded!");
         } else {
             showOnGraph[index] = !showOnGraph[index];
+        }
+        switch (lastGraphLoaded) {
+            case "2DPlot": graphTwoDPlot();
+            break;
+            case "Elevation Gain Vs Time": graphElevationGainVsTime();
+            break;
         }
     }
 
@@ -207,5 +216,6 @@ public class PlotterController {
     public TracksHandler getTracksHandler(){
         return tracksHandler;
     }
-
 }
+
+
