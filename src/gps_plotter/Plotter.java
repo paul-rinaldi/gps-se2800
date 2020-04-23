@@ -156,7 +156,7 @@ public class Plotter {
         for (int x = 0; x < speeds.size() - 1; x++) {
 
             XYChart.Series series = new XYChart.Series();
-            series.setName();
+            series.setName(track.getName() + " " + x);
 
             //Gets the node property for the line
             Node line = series.getNode().lookup(".chart-series-line");
