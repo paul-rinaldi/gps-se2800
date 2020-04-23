@@ -151,23 +151,33 @@ public class Plotter {
         //Gets the instantaneous speed of the
         ArrayList<Double> speeds = track.getTrackStats().getSpeeds();
 
-        for (int x = 0; x < speeds.size() - 1; x++) {
+        for (int x = 0; x < speeds.size(); x++) {
 
             XYChart.Series series = new XYChart.Series();
             series.setName(track.getName() + " " + x);
 
+
             //Gets the node property for the line
             Node line = series.getNode().lookup(".chart-series-line");
+
+
+            //Skeleton for deciding which color the line should be based on speed.
+            //Dark blue
             if (speeds.get(x) < 3) {
 
+                //Light blue
             } else if (speeds.get(x) >= 3 && speeds.get(x) < 7) {
 
+                //Green
             } else if (speeds.get(x) >= 7 && speeds.get(x) < 10) {
 
+                //Yellow
             } else if (speeds.get(x) >= 10 && speeds.get(x) < 15) {
 
-            } else if (speeds.get(x) >= 15 && speeds.get(x) < 20) {
+                //Orange
+            } else if (speeds.get(x) >= 15 && speeds.get(x) <= 20) {
 
+                //Red
             } else {
 
             }
