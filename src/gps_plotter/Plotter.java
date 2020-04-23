@@ -164,7 +164,6 @@ public class Plotter {
             setChartAxisLabels("Meters(east and west)", "Meters(north and south)");
             int index = getFirstLoadedIndex();
             boolean[] showOnGraph = plotterController.getShowOnGraph();
-
             //If there is a track selected...
             if (index != -1) {
                 //Loads the first track's first point.
