@@ -62,11 +62,12 @@ public class Plotter {
             currentDate = currentTrackPoint.getTime();
             double timePoint = timePassedInMin(currentDate, firstDate);
 
-            elevationPoint += calculateElevationGain(currentElevation, highestElevation); //Add the change in elevation to total change
+            double elevationGain = calculateElevationGain(currentElevation, highestElevation);
+            elevationPoint += elevationGain; //Add the change in elevation to total change
 
             plotPoint(series, timePoint, elevationPoint); //Plot point on LineChart
 
-            if (elevationPoint > 0.0) { //Only set highest elevation if gain is above 0
+            if (elevationGain > 0.0) { //Only set highest elevation if gain is above 0
                 highestElevation = currentTrackPoint.getElevation();
             }
 
