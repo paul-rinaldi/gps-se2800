@@ -3,9 +3,11 @@ package gps_plotter;
 
 import gps.*;
 
+import javafx.scene.Node;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.XYChart;
 
+import java.util.ArrayList;
 import java.util.Date;
 
 /**
@@ -27,7 +29,7 @@ public class Plotter {
      *
      * @param chart LineChart to modify
      */
-    public Plotter(LineChart<Double, Double> chart, PlotterController plotterController){
+    public Plotter(LineChart<Double, Double> chart, PlotterController plotterController) {
         this.chart = chart;
         this.plotterController = plotterController;
     }
@@ -37,7 +39,7 @@ public class Plotter {
      *
      * @param track track from which points will be plotted
      */
-    public void plotElevationGain(Track track){
+    public void plotElevationGain(Track track) {
 
         XYChart.Series series = new XYChart.Series();
         series.setName(track.getName());
@@ -84,9 +86,9 @@ public class Plotter {
      * @param highest highest elevation read
      * @return difference between them; 0 if difference is < 0
      */
-    public double calculateElevationGain(double current, double highest){
+    public double calculateElevationGain(double current, double highest) {
 
-        if(current < 0.0 || highest < 0.0){ //Values below zero will not be expected (below sea level)
+        if (current < 0.0 || highest < 0.0) { //Values below zero will not be expected (below sea level)
             return 0.0;
         }
 
@@ -96,10 +98,11 @@ public class Plotter {
 
     }
 
+
     /**
      * Clears current data series for chart
      */
-    public void clearChart(){
+    public void clearChart() {
         this.chart.getData().clear();
     }
 
@@ -109,7 +112,7 @@ public class Plotter {
      * @param x axis label
      * @param y axis label
      */
-    private void setChartAxisLabels(String x, String y){
+    private void setChartAxisLabels(String x, String y) {
         this.plotterController.getXAxis().setLabel(x);
         this.plotterController.getYAxis().setLabel(y);
     }
@@ -118,10 +121,10 @@ public class Plotter {
      * Adds points to data series for LineChart
      *
      * @param series XYSeries to add data to
-     * @param x x point
-     * @param y y point
+     * @param x      x point
+     * @param y      y point
      */
-    private void plotPoint(XYChart.Series series, double x, double y){
+    private void plotPoint(XYChart.Series series, double x, double y) {
         series.getData().add(new XYChart.Data(x, y));
     }
 
@@ -129,28 +132,61 @@ public class Plotter {
      * Takes two Date objects and calculates the minutes passed between them
      *
      * @param current current Date object
-     * @param first first Date object from which time has passed
+     * @param first   first Date object from which time has passed
      * @return time passed in minutes
      */
-    public double timePassedInMin(Date current, Date first){
+    public double timePassedInMin(Date current, Date first) {
         long differenceMs = current.getTime() - first.getTime();
-        double timeInMin = differenceMs/MS_IN_MIN;
+        double timeInMin = differenceMs / MS_IN_MIN;
         return timeInMin;
 
     }
 
     /**
+     * Plots elevation gain at each TrackPoint's date along the graph
+     *
+     * @param track track from which points will be plotted
+     */
+    public void plotSpeedOverPath(Track track) {
+        //Gets the instantaneous speed of the
+        ArrayList<Double> speeds = track.getTrackStats().getSpeeds();
+
+        for (int x = 0; x < speeds.size() - 1; x++) {
+
+            XYChart.Series series = new XYChart.Series();
+            series.setName();
+
+            //Gets the node property for the line
+            Node line = series.getNode().lookup(".chart-series-line");
+            if (speeds.get(x) < 3) {
+
+            } else if (speeds.get(x) >= 3 && speeds.get(x) < 7) {
+
+            } else if (speeds.get(x) >= 7 && speeds.get(x) < 10) {
+
+            } else if (speeds.get(x) >= 10 && speeds.get(x) < 15) {
+
+            } else if (speeds.get(x) >= 15 && speeds.get(x) < 20) {
+
+            } else {
+
+            }
+        }
+    }
+
+    /**
      * converts all selected tracks to cartesian coordinates to be displayed on the graph and on the chart
      * when the graph 2D plot button is pressed
+     *
      * @throws throws a null pointer exception when this is called and no tracks have been loaded
      */
-    public void convertToCartesian() throws NullPointerException{
-        if(this.chart.getData() != null && this.chart.getData().size() != 0){ //Clears graph when window is opened only if series exists
+    public void convertToCartesian() throws NullPointerException {
+        if (this.chart.getData() != null && this.chart.getData().size() != 0) { //Clears graph when window is opened only if series exists
             clearChart();
             plotterController.clearTable();
         }
         TracksHandler tracksHandler = plotterController.getTracksHandler();
-        if(tracksHandler != null) {
+        if (tracksHandler != null) {
             setChartAxisLabels("Meters(east and west)", "Meters(north and south)");
             int index = getFirstLoadedIndex();
             boolean[] showOnGraph = plotterController.getShowOnGraph();
@@ -175,21 +211,23 @@ public class Plotter {
                     }
                 }
             }
-        } else{
+        } else {
             throw new NullPointerException("No Tracks are Loaded!");
         }
     }
 
-    private int getFirstLoadedIndex(){
+    private int getFirstLoadedIndex() {
         int returnValue = -1;
         boolean[] temp = plotterController.getShowOnGraph();
         TracksHandler tracksHandler = plotterController.getTracksHandler();
-        for(int i = 0; i < tracksHandler.getTrackAmount(); i++){
-            if(temp[i]){
+        for (int i = 0; i < tracksHandler.getTrackAmount(); i++) {
+            if (temp[i]) {
                 returnValue = i;
                 i = 10; //breaks the loop
             }
         }
         return returnValue;
     }
+
+
 }
