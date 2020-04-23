@@ -34,6 +34,7 @@ public class PlotterController {
 
     private GPSController gpsController;
     private Plotter plotter;
+    private ColorLinePlotter colorPlotter;
     private TracksHandler tracksHandler;
     private String lastGraphLoaded;
 
@@ -112,6 +113,20 @@ public class PlotterController {
      */
     public void graphTwoDPlot(){
         lastGraphLoaded = "2DPlot";
+        showHideButton.disableProperty().setValue(false);
+        this.tracksHandler = gpsController.getTracksHandler();
+        try {
+            plotter.convertToCartesian();
+        } catch(NullPointerException n){
+            showHideButton.disableProperty().setValue(true);
+            createErrorDialog("2D Graph Plotting Error", "No tracks are loaded.");
+        }
+    }
+
+     /**
+     * graphs all selected tracks on a 2D plot
+     */
+    public void graphPlotSpeedAlongPath(){
         showHideButton.disableProperty().setValue(false);
         this.tracksHandler = gpsController.getTracksHandler();
         try {

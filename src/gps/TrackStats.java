@@ -1,6 +1,8 @@
 package gps;
 
 
+import java.util.ArrayList;
+
 /**
  * @author demarsa and aleckm
  * @version 1.0
@@ -23,6 +25,7 @@ public class TrackStats {
 	private double maxElevFt;
 	private double minElevFt;
 	private String name;
+	private ArrayList<Double> speeds;
 
 	/**
 	 * Creates a TrackStats with all values initialized to 0
@@ -165,5 +168,11 @@ public class TrackStats {
 		this.name = name;
 	}
 
+	public ArrayList<Double> getSpeeds() {
+		return speeds;
+	}
 
+	public void setSpeeds(ArrayList<Double> speeds) {
+		this.speeds = speeds;
+	}
 }
