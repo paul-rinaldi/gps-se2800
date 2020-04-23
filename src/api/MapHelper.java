@@ -29,7 +29,9 @@ public class MapHelper {
                 "&zoom=" + zoom + "&maptype=" + mapType + "&center=" +centerLatitude + "," + centerLongitude +
                 "&key=" + GOOGLE_MAPS_STATIC_API_KEY;
 
-        // google documentation on api https://developers.google.com/maps/documentation/maps-static/intro?hl=en_US
+        // decided on not using static as https://openjfx.io/javadoc/11/javafx.web/javafx/scene/web/WebEngine.html
+        // along with js, css, and html knowledge from SE2040, we should be able to do a lot more now faster and just have
+        // to learn how to get the html up and running
     }
 
     // Use
