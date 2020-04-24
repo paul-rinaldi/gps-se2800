@@ -9,9 +9,12 @@
 package maps;
 
 import gps.GPSController;
+import gps.TrackPoint;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
+
+import java.util.Date;
 
 /**
  * This class queries map api for static map images
@@ -27,11 +30,20 @@ public class CaptureController {
     private GPSController gpsController; //Main GPS program controller
 
     @FXML
-    public void sendGET() {
-        // todo send get
-        // todo update output
+    private Browser browser;
 
-        // todo separate into methods
+    @FXML
+    public void sendGET() {
+        // load set of tracks
+        TrackPoint[] trackPoints = new TrackPoint[10];
+        for (int i = 0; i < 10; i++) {
+            double nextLat = 43.041070 + i * 50;
+            double nextLon = -87.909420 + i * 50;
+            double nextElev = 597.1;
+            long nextDate = 32492307;
+            trackPoints[i] = new TrackPoint(nextLat, nextLon, nextElev, new Date(nextDate));
+        }
+        browser.loadTrack(trackPoints);
     }
 
 
