@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gpx>
+  <trk>
+    <name>MHP1-4_OnePoint</name>
+    <trkseg>
+      <trkpt lat="43.30000000000000" lon="-88.00000000000000">
+        <ele>1000.0000000000000</ele>
+        <time>2016-02-10T13:10:00Z</time>
+      </trkpt>    </trkseg>
+  </trk>
+</gpx>

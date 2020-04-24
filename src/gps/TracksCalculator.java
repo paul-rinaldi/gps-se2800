@@ -15,6 +15,7 @@ public class TracksCalculator {
 	private static final double M_TO_MI = 0.000621371;
 	private static final double RADIUS_OF_EARTH_M = 6371000;
 	private static final double MILLI_SEC_TO_HOURS = 2.77778e-7;
+	private static final double FEET_PER_M = 3.2808;
 	private double avgSpeedK;
 	private double avgSpeedM;
 	private double maxSpeedK;
@@ -71,8 +72,11 @@ public class TracksCalculator {
 			trackStats.setMinLat(minLat);
 			trackStats.setMaxLong(maxLong);
 			trackStats.setMinLong(minLong);
-			trackStats.setMaxElev(maxElev);
-			trackStats.setMinElev(minElev);
+			trackStats.setMaxElevM(maxElev);
+			trackStats.setMinElevM(minElev);
+			DecimalFormat format = new DecimalFormat("#.##");
+			trackStats.setMinElevFt(Double.parseDouble(format.format(minElev*FEET_PER_M)));
+			trackStats.setMaxElevFt(Double.parseDouble(format.format(maxElev*FEET_PER_M)));
 
 			throw new UnsupportedOperationException("Track only has one point");
 		}
@@ -118,12 +122,15 @@ public class TracksCalculator {
 		stats.setMaxSpeedM(Double.parseDouble(format.format(maxSpeedM)));
 		stats.setDistK(Double.parseDouble(format.format(totalDistanceK)));
 		stats.setDistM(Double.parseDouble(format.format(totalDistanceM)));
-		stats.setMinElev(Double.parseDouble(format.format(minElev)));
-		stats.setMaxElev(Double.parseDouble(format.format(maxElev)));
+		stats.setMinElevM(Double.parseDouble(format.format(minElev)));
+		stats.setMaxElevM(Double.parseDouble(format.format(maxElev)));
+		stats.setMinElevFt(Double.parseDouble(format.format(minElev*FEET_PER_M)));
+		stats.setMaxElevFt(Double.parseDouble(format.format(maxElev*FEET_PER_M)));
 		stats.setMinLat(Double.parseDouble(format.format(minLat)));
 		stats.setMaxLat(Double.parseDouble(format.format(maxLat)));
 		stats.setMinLong(Double.parseDouble(format.format(minLong)));
 		stats.setMaxLong(Double.parseDouble(format.format(maxLong)));
+		stats.setName(track.getName());
 	}
 
 	/**

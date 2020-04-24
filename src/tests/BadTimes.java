@@ -23,5 +23,7 @@ public class BadTimes {
                 });
         assertEquals("</time> attribute is formatted incorrectly!", sax.getMessage());
         // the line and column numbers should be validated as well.
-        }
+        assertEquals(37, handler.getLine()); //Checks line
+        assertEquals(15, handler.getColumn()); //Checks column
+    }
 }

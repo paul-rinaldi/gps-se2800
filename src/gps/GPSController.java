@@ -2,6 +2,7 @@
 package gps;
 
 
+import gps_plotter.PlotterController;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -11,6 +12,7 @@ import javafx.scene.control.Spinner;
 import javafx.scene.control.SpinnerValueFactory;
 import javafx.scene.control.TextField;
 import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 import org.xml.sax.SAXException;
 
 import java.io.File;
@@ -42,9 +44,13 @@ public class GPSController {
 	@FXML
 	private TextField minLong;
 	@FXML
-	private TextField maxElev;
+	private TextField maxElevMet;
 	@FXML
-	private TextField minElev;
+	private TextField minElevMet;
+	@FXML
+	private TextField maxElevFeet;
+	@FXML
+	private TextField minElevFeet;
 	@FXML
 	private TextField dMiles;
 	@FXML
@@ -57,6 +63,8 @@ public class GPSController {
 	private TextField maxSpeedMPH;
 	@FXML
 	private TextField maxSpeedKPH;
+	private PlotterController plotterController;
+	private Stage plotterStage;
 
 	public GPSController(){
 		trackNames = FXCollections.observableArrayList();
@@ -82,7 +90,7 @@ public class GPSController {
 	 * Calculates metrics of selected Track in the Spinner
 	 * Won't calculate stats if stats have been calculated
 	 */
-	public void calcTrackStats(){
+	private void calcTrackStats(){
 
 		try {
 			if (tracksHandler != null) {
@@ -127,8 +135,10 @@ public class GPSController {
 		double minLati = stats.getMinLat();
 		double maxLongi = stats.getMaxLong();
 		double minLongi = stats.getMinLong();
-		double maxEle = stats.getMaxElev();
-		double minEle = stats.getMinElev();
+		double maxElevM = stats.getMaxElevM();
+		double minElevM = stats.getMinElevM();
+		double maxElevFt = stats.getMaxElevFt();
+		double minElevFt = stats.getMinElevFt();
 
 		if(maxLati > Double.MAX_VALUE*-1){
 			maxLat.setText(Double.toString(maxLati));
@@ -154,17 +164,30 @@ public class GPSController {
 			minLong.setText("N/A");
 		}
 
-		if(maxEle > Double.MAX_VALUE*-1) {
-			maxElev.setText(Double.toString(maxEle));
+		if(maxElevM > Double.MAX_VALUE*-1) {
+			maxElevMet.setText(Double.toString(maxElevM));
 		} else{
-			maxElev.setText("N/A");
+			maxElevMet.setText("N/A");
 		}
 
-		if(minEle < Double.MAX_VALUE) {
-			minElev.setText(Double.toString(minEle));
+		if(minElevM < Double.MAX_VALUE) {
+			minElevMet.setText(Double.toString(minElevM));
 		} else {
-			minElev.setText("N/A");
+			minElevMet.setText("N/A");
 		}
+
+		if(maxElevFt > Double.MAX_VALUE*-1) {
+			maxElevFeet.setText(Double.toString(maxElevFt));
+		} else{
+			maxElevFeet.setText("N/A");
+		}
+
+		if(minElevFt < Double.MAX_VALUE) {
+			minElevFeet.setText(Double.toString(minElevFt));
+		} else {
+			minElevFeet.setText("N/A");
+		}
+
 
 	}
 
@@ -231,8 +254,10 @@ public class GPSController {
 		minLat.setText("");
 		maxLong.setText("");
 		minLong.setText("");
-		maxElev.setText("");
-		minElev.setText("");
+		maxElevMet.setText("");
+		minElevMet.setText("");
+		maxElevFeet.setText("");
+		minElevFeet.setText("");
 		dMiles.setText("");
 		dKilometers.setText("");
 		avSpeedMPH.setText("");
@@ -309,6 +334,13 @@ public class GPSController {
 							new SpinnerValueFactory.ListSpinnerValueFactory<>(trackNames);
 					trackSpinner.setValueFactory(valueFactory);
 
+					trackSpinner.getValueFactory().setValue(trackLoaded.getName());
+
+					plotterController.updateSpinner(new SpinnerValueFactory.ListSpinnerValueFactory<>(trackNames),
+							trackLoaded.getName());
+
+					calcTrackStats();
+
 				}
 
 			} else {
@@ -332,7 +364,6 @@ public class GPSController {
 			((GPXHandler)handler).resetAttributes();
 
 		} catch (Exception e) {
-
 			createErrorDialog("Parsing Error", e.getLocalizedMessage());
 			((GPXHandler)handler).resetAttributes();
 		}
@@ -369,6 +400,38 @@ public class GPSController {
 		}
 
 
+	}
+
+	public TracksHandler getTracksHandler(){
+		return this.tracksHandler;
+	}
+
+	public void setPlotterController(PlotterController plotterController){
+		this.plotterController = plotterController;
+	}
+
+	public void setPlotterStage(Stage stage){
+		this.plotterStage = stage;
+	}
+
+	/**
+	 * Opens plotter window and immediately graphs all loaded tracks with 2D Plotter in cartesian coordinates
+	 * Only graphs selected tracks if window was already modified (saves state)
+	 */
+	public void showPlotter(){
+		plotterController.setTracksHandler(tracksHandler);
+		plotterStage.show();
+		plotterController.graphTwoDPlot();
+	}
+
+	/**
+	 * Opens plotter window and immediately graphs all loaded tracks with ElevationGain vs Time
+	 * Only graphs selected tracks if window was already modified (saves state)
+	 */
+	public void showElevationGainVsTime(){
+		plotterController.setTracksHandler(tracksHandler);
+		plotterStage.show();
+		plotterController.graphElevationGainVsTime();
 	}
 
 	/**
