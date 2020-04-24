@@ -176,10 +176,7 @@ public class PlotterController {
     }
 
     /**
-     * @author Austin Demars
-     *
-     * Called when 'File/Exit' is pressed
-     * Closes (exits) the application
+     * Closes (exits) the window
      */
     public void exit() {
         this.plotterStage.hide();

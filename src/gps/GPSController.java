@@ -13,6 +13,7 @@ import javafx.scene.control.SpinnerValueFactory;
 import javafx.scene.control.TextField;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import maps.CaptureController;
 import org.xml.sax.SAXException;
 
 import java.io.File;
@@ -65,6 +66,8 @@ public class GPSController {
 	private TextField maxSpeedKPH;
 	private PlotterController plotterController;
 	private Stage plotterStage;
+	private CaptureController mapsController;
+	private Stage mapsStage;
 
 	public GPSController(){
 		trackNames = FXCollections.observableArrayList();
@@ -414,6 +417,14 @@ public class GPSController {
 		this.plotterStage = stage;
 	}
 
+	public void setMapsController(CaptureController controller){
+		this.mapsController = controller;
+	}
+
+	public void setMapsStage(Stage stage){
+		this.mapsStage = stage;
+	}
+
 	/**
 	 * Opens plotter window and immediately graphs all loaded tracks with 2D Plotter in cartesian coordinates
 	 * Only graphs selected tracks if window was already modified (saves state)
@@ -432,6 +443,13 @@ public class GPSController {
 		plotterController.setTracksHandler(tracksHandler);
 		plotterStage.show();
 		plotterController.graphElevationGainVsTime();
+	}
+
+	/**
+	 * Shows Google Maps window
+	 */
+	public void showMapsWindow(){
+		this.mapsStage.show();
 	}
 
 	/**

@@ -7,6 +7,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import maps.CaptureController;
 
 /**
  *
@@ -25,6 +26,7 @@ public class GPSMain extends Application {
 		gpsWindow.show();
 		GPSController gpsController = gpsLoader.getController();
 
+		//Set up Plotter window
 		Parent rootPlotter;
 		FXMLLoader plotterLoader = new FXMLLoader(getClass().getResource("../gps_plotter/PlotterFXML.fxml"));
 		rootPlotter = plotterLoader.load();
@@ -37,8 +39,23 @@ public class GPSMain extends Application {
 
 		gpsController.setPlotterController(plotterController);
 		gpsController.setPlotterStage(plotterWindow);
-
 		plotterController.setMainController(gpsController);
+
+
+		//Set up Google maps window
+        Parent rootMaps;
+        FXMLLoader mapsLoader = new FXMLLoader(getClass().getResource("../maps/Capture.fxml"));
+        rootMaps = mapsLoader.load();
+        Stage mapsWindow = new Stage();
+        CaptureController captureController = mapsLoader.getController();
+        mapsWindow.setTitle("Google Maps");
+        mapsWindow.setScene(new Scene(rootMaps));
+        mapsWindow.hide();
+        captureController.setStage(mapsWindow);
+
+        gpsController.setMapsController(captureController);
+        gpsController.setMapsStage(mapsWindow);
+        captureController.setMainController(gpsController);
 	}
 
 

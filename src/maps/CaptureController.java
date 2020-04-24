@@ -8,8 +8,10 @@
 
 package maps;
 
+import gps.GPSController;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
+import javafx.stage.Stage;
 
 /**
  * This class queries map api for static map images
@@ -21,6 +23,9 @@ public class CaptureController {
     @FXML
     private TextField output;
 
+    private Stage captureStage; //This controller's stage
+    private GPSController gpsController; //Main GPS program controller
+
     @FXML
     public void sendGET() {
         // todo send get
@@ -28,4 +33,22 @@ public class CaptureController {
 
         // todo separate into methods
     }
+
+
+    /**
+     * Closes (exits) the window
+     * Used for UI button to close window
+     */
+    public void exit() {
+        this.captureStage.hide();
+    }
+
+    public void setStage(Stage stage){
+        this.captureStage = stage;
+    }
+
+    public void setMainController(GPSController gpsController){
+        this.gpsController = gpsController;
+    }
+
 }
