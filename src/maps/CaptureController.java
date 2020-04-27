@@ -34,16 +34,11 @@ public class CaptureController {
 
     @FXML
     public void sendGET() {
+        browser.clearMap();
         // load set of tracks
-        TrackPoint[] trackPoints = new TrackPoint[10];
-        for (int i = 0; i < 10; i++) {
-            double nextLat = 43.041070 + i * 50;
-            double nextLon = -87.909420 + i * 50;
-            double nextElev = 597.1;
-            long nextDate = 32492307;
-            trackPoints[i] = new TrackPoint(nextLat, nextLon, nextElev, new Date(nextDate));
+        for(int i = 0; i < gpsController.getTracksHandler().getTrackAmount(); i++){
+            browser.loadTrack(gpsController.getTracksHandler().getTrack(i), i);
         }
-        browser.loadTrack(trackPoints);
     }
 
 
