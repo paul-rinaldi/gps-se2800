@@ -6,6 +6,7 @@ import gps.*;
 import javafx.scene.Node;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.XYChart;
+import javafx.scene.paint.Color;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -71,12 +72,8 @@ public class Plotter {
             if (elevationPoint > 0.0) { //Only set highest elevation if gain is above 0
                 highestElevation = currentTrackPoint.getElevation();
             }
-
         }
-
         this.chart.getData().add(series);
-
-
     }
 
     /**
@@ -143,46 +140,88 @@ public class Plotter {
     }
 
     /**
-     * Plots elevation gain at each TrackPoint's date along the graph
+     * converts all selected tracks to different colored lines representing
+     * instantaneous speeds at that point when the graph 2D plot button is pressed
      *
-     * @param track track from which points will be plotted
+     * @throws throws a null pointer exception when this is called and no tracks have been loaded
      */
-    public void plotSpeedOverPath(Track track) {
-        //Gets the instantaneous speed of the
-        ArrayList<Double> speeds = track.getTrackStats().getSpeeds();
+    public void plotSpeedOverPath() throws NullPointerException {
+        //Clears the graph when window opens and a series exists.
+        checkGraph();
+        //Gets track handler, which holds all the tracks to be found.
+        TracksHandler tracksHandler = plotterController.getTracksHandler();
+        //Configures axises if there are tracks.
+        if (tracksHandler != null) {
+            setChartAxisLabels("Meters(east and west)", "Meters(north and south)");
+            int index = getFirstLoadedIndex();
+            boolean[] showOnGraph = plotterController.getShowOnGraph();
 
-        for (int x = 0; x < speeds.size(); x++) {
+            //If there is a track selected...
+            if (index != -1) {
+                //Loads the first track's first point.
+                TrackPoint trackZero = tracksHandler.getTrack(index).getTrackPoint(0);
+                //Color variable for future use.
+                Color color;
+                for (int i = 0; i < tracksHandler.getTrackAmount(); i++) {
+                    if (showOnGraph[i]) {
+                        Track track = tracksHandler.getTrack(i);
+                        //Gets the instantaneous speeds for the track. 
+                        ArrayList<Double> speeds = track.getTrackStats().getSpeeds();
+                        for (int z = 0; z < track.getPointAmount() - 1; z++) {
+                            XYChart.Series series = new XYChart.Series();
+                            series.setName(track.getName() + " " + z);
+                            //First point
+                            TrackPoint currentTrackPoint = track.getTrackPoint(z);
+                            double x = calculateXCoord(currentTrackPoint, trackZero);
+                            double y = calculateYCoord(currentTrackPoint, trackZero);
+                            plotPoint(series, x, y);
+                            //Second point
+                            TrackPoint nextTrackPoint = track.getTrackPoint(z + 1);
+                            x = calculateXCoord(nextTrackPoint, trackZero);
+                            y = calculateYCoord(nextTrackPoint, trackZero);
+                            plotPoint(series, x, y);
+                            //Adds the series to the chart
+                            this.chart.getData().add(series);
+                            //Gets the node property for the line of the newly created series.
+                            Node line = series.getNode().lookup(".chart-series-line");
 
-            XYChart.Series series = new XYChart.Series();
-            series.setName(track.getName() + " " + x);
-
-
-            //Gets the node property for the line
-            Node line = series.getNode().lookup(".chart-series-line");
-
-
-            //Skeleton for deciding which color the line should be based on speed.
-            //Dark blue
-            if (speeds.get(x) < 3) {
-
-                //Light blue
-            } else if (speeds.get(x) >= 3 && speeds.get(x) < 7) {
-
-                //Green
-            } else if (speeds.get(x) >= 7 && speeds.get(x) < 10) {
-
-                //Yellow
-            } else if (speeds.get(x) >= 10 && speeds.get(x) < 15) {
-
-                //Orange
-            } else if (speeds.get(x) >= 15 && speeds.get(x) <= 20) {
-
-                //Red
-            } else {
-
+                            //This section is for deciding which color the line should be based on instantaneous speed.
+                            //Dark blue- Anything less than 3 MPH
+                            if (speeds.get(z) < 3) {
+                                color = Color.BLUE;
+                            }
+                            //Light blue- any speed that's between 3 MPH and 7MPH, or equals 3 MPH.
+                            else if (speeds.get(z) >= 3 && speeds.get(z) < 7) {
+                                color = Color.AQUA;
+                            }
+                            //Green- any speed that's between 3 MPH and 7MPH, or equals 3 MPH.
+                            else if (speeds.get(z) >= 7 && speeds.get(z) < 10) {
+                                color = Color.GREEN;
+                            }
+                            //Yellow- any speed that's between 3 MPH and 7MPH, or equals 3 MPH.
+                            else if (speeds.get(z) >= 10 && speeds.get(z) < 15) {
+                                color = Color.YELLOW;
+                            }
+                            //Orange- any speed that's between 3 MPH and 7MPH, or equals 3 MPH.
+                            else if (speeds.get(z) >= 15 && speeds.get(z) <= 20) {
+                                color = Color.ORANGE;
+                            }
+                            //Red- Any speed over 20 MPH.
+                            else {
+                                color = Color.RED;
+                            }
+                            //Sets the line color for the series.
+                            line.setStyle("-fx-stroke: rgba(" + rgbFormat(color) + ", 1.0);");
+                        }
+                        plotterController.addTable(track.getTrackStats());
+                    }
+                }
             }
+        } else {
+            throw new NullPointerException("No Tracks are Loaded!");
         }
     }
+
 
     /**
      * converts all selected tracks to cartesian coordinates to be displayed on the graph and on the chart
@@ -191,10 +230,8 @@ public class Plotter {
      * @throws throws a null pointer exception when this is called and no tracks have been loaded
      */
     public void convertToCartesian() throws NullPointerException {
-        if (this.chart.getData() != null && this.chart.getData().size() != 0) { //Clears graph when window is opened only if series exists
-            clearChart();
-            plotterController.clearTable();
-        }
+        //Clears the graph when window opens and a series exists.
+        checkGraph();
         TracksHandler tracksHandler = plotterController.getTracksHandler();
         if (tracksHandler != null) {
             setChartAxisLabels("Meters(east and west)", "Meters(north and south)");
@@ -209,11 +246,8 @@ public class Plotter {
                         series.setName(track.getName());
                         for (int z = 0; z < track.getPointAmount(); z++) {
                             TrackPoint currentTrackPoint = track.getTrackPoint(z);
-                            double x = (RADIUS_OF_EARTH_M + ((trackZero.getElevation() + currentTrackPoint.getElevation()) / 2)) *
-                                    (trackZero.getLongitude() * DEG_TO_RAD - currentTrackPoint.getLongitude() * DEG_TO_RAD) *
-                                    Math.cos((trackZero.getLatitude() * DEG_TO_RAD + currentTrackPoint.getLatitude() * DEG_TO_RAD) / 2);
-                            double y = (RADIUS_OF_EARTH_M + (trackZero.getElevation() + currentTrackPoint.getElevation()) / 2) *
-                                    (trackZero.getLatitude() * DEG_TO_RAD - currentTrackPoint.getLatitude() * DEG_TO_RAD);
+                            double x = calculateXCoord(currentTrackPoint, trackZero);
+                            double y = calculateYCoord(currentTrackPoint, trackZero);
                             plotPoint(series, x, y);
                         }
                         this.chart.getData().add(series);
@@ -239,5 +273,33 @@ public class Plotter {
         return returnValue;
     }
 
+    private void checkGraph() {
+        if (this.chart.getData() != null && this.chart.getData().size() != 0) { //Clears graph when window is opened only if series exists
+            clearChart();
+            plotterController.clearTable();
+        }
+    }
 
+    //
+    private double calculateXCoord(TrackPoint currentTrackPoint, TrackPoint trackZero) {
+        return (RADIUS_OF_EARTH_M + ((trackZero.getElevation() + currentTrackPoint.getElevation()) / 2)) *
+                (trackZero.getLongitude() * DEG_TO_RAD - currentTrackPoint.getLongitude() * DEG_TO_RAD) *
+                Math.cos((trackZero.getLatitude() * DEG_TO_RAD + currentTrackPoint.getLatitude() * DEG_TO_RAD) / 2);
+    }
+
+    private double calculateYCoord(TrackPoint currentTrackPoint, TrackPoint trackZero) {
+        return (RADIUS_OF_EARTH_M + (trackZero.getElevation() + currentTrackPoint.getElevation()) / 2) *
+                (trackZero.getLatitude() * DEG_TO_RAD - currentTrackPoint.getLatitude() * DEG_TO_RAD);
+    }
+
+    private String rgbFormat(Color color) {
+        return String.format("%d, %d, %d",
+                (int) (color.getRed() * 255),
+                (int) (color.getGreen() * 255),
+                (int) (color.getBlue() * 255));
+    }
+
+    private void setLegend(){
+
+    }
 }
