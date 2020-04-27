@@ -145,7 +145,7 @@ public class PlotterController {
      * @param actionEvent the event that caused this to be called
      */
     public void showOrHide(ActionEvent actionEvent) {
-        int index = tracksHandler.getTrackIndex(trackSpinner.getValue());
+        int index = gpsController.getTracksHandler().getTrackIndex(trackSpinner.getValue());
         if(index == -1){
             createErrorDialog("Track not loaded", "The track that is to be shown is not loaded!");
         } else {
@@ -156,6 +156,7 @@ public class PlotterController {
             break;
             case "Elevation Gain Vs Time": graphElevationGainVsTime();
             break;
+            default: System.out.println("Error unrecognized graph name: " + lastGraphLoaded);
         }
     }
 
