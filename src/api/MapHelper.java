@@ -7,8 +7,8 @@ import java.util.ArrayList;
 /**
  * This class creates requests and parses them for google maps static images
  */
+@Deprecated
 public class MapHelper {
-    // Please do NOT send tons of requests, just enough, be nice, please
     private static final String GOOGLE_MAPS_STATIC_API_KEY = "AIzaSyD3Jb1jp2-D5Xi0kfEL5jEATK4c34nUDCY";
 
     /**

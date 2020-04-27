@@ -1,6 +1,7 @@
 package maps;
 
 import gps.TrackPoint;
+import javafx.concurrent.Worker;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -12,7 +13,14 @@ import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebEvent;
 import javafx.scene.web.WebView;
 
+import java.io.BufferedReader;
+import java.io.IOException;
 import java.net.URL;
+import java.io.IOException;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 public class Browser extends Pane {
     private double lat;
@@ -21,8 +29,15 @@ public class Browser extends Pane {
     WebView webView = new WebView();
     WebEngine webEngine = webView.getEngine();
     public Browser() {
-        final URL urlGoogleMaps = getClass().getResource("client.html");
-        webEngine.load(urlGoogleMaps.toExternalForm());
+        final URL urlGoogleMaps = getClass().getResource("/maps/client.html");
+
+        webEngine.getLoadWorker().stateProperty().addListener((obs, oldValue, newState) -> {
+            if (newState == Worker.State.SUCCEEDED) {
+                System.out.println("finished loading");
+            }
+        }); // addListener()
+        webEngine.load(urlGoogleMaps.toString());
+
         webEngine.setOnAlert(new EventHandler<WebEvent<String>>() {
             @Override
             public void handle(WebEvent<String> stringWebEvent) {
@@ -43,6 +58,14 @@ public class Browser extends Pane {
                 lon = Double.parseDouble(longitude.getText());
 
                 System.out.println("(Lat,Lon)=("+lat+", "+lon+")");
+
+                // load js
+                try {
+                    String js = readFile("./src/maps/client.js", StandardCharsets.UTF_8);
+                    webEngine.executeScript(js);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
 
                 webEngine.executeScript("" +
                         "window.lat = " + lat + ";" +
@@ -66,5 +89,9 @@ public class Browser extends Pane {
     @FXML
     public void loadTrack(TrackPoint[] track) {
 
+    }
+
+    public static String readFile(String path, Charset encoding) throws IOException {
+        return Files.readString(Paths.get(path), encoding);
     }
 }
