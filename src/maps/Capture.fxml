@@ -20,6 +20,9 @@
             xmlns:fx="http://javafx.com/fxml"
             fx:controller="maps.CaptureController"
             prefHeight="400.0" prefWidth="600.0">
+    <Browser fx:id="browser">
+    </Browser>
+    <GridPane>
     <Button text="Load Another Track" onAction="#sendGET"/>
-    <Browser/>
+    </GridPane>
 </BorderPane>

@@ -1,5 +1,6 @@
 package maps;
 
+import gps.Track;
 import gps.TrackPoint;
 import javafx.concurrent.Worker;
 import javafx.event.ActionEvent;
@@ -22,7 +23,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
-public class Browser extends Pane {
+public class Browser extends Pane{
     private double lat;
     private double lon;
 
@@ -87,8 +88,11 @@ public class Browser extends Pane {
      * @param track - TrackPoints array to add to
      */
     @FXML
-    public void loadTrack(TrackPoint[] track) {
-
+    public void loadTrack(Track track) {
+        for (int i = 0; i < track.getPointAmount(); i++) {
+            TrackPoint currentPoint = track.getTrackPoint(i);
+            webEngine.executeScript("addMarker(" + currentPoint.getLatitude() + ", " + currentPoint.getLongitude() + ");");
+        }
     }
 
     public static String readFile(String path, Charset encoding) throws IOException {

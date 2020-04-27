@@ -25,11 +25,11 @@ function initMap() {
 
 // adds a marker to the map and global markers
 function addMarker(lat, lng) {
-    let pos = new google.maps.Latlng(lat, lng);
+    let pos = new google.maps.LatLng(lat, lng);
     let marker = new google.maps.Marker({
         position: pos,
         map: map,
         title: ""
-    })
+    });
     markers.push(marker);
 }
