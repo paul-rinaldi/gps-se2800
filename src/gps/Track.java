@@ -31,8 +31,6 @@ public class Track {
 		return trackPoints.size();
 	}
 
-
-
 	public String getName(){
 		return name;
 	}

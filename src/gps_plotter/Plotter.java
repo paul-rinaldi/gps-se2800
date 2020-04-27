@@ -5,6 +5,7 @@ import gps.*;
 
 import javafx.scene.Node;
 import javafx.scene.chart.LineChart;
+import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
 import javafx.scene.paint.Color;
 
@@ -148,6 +149,13 @@ public class Plotter {
     public void plotSpeedOverPath() throws NullPointerException {
         //Clears the graph when window opens and a series exists.
         checkGraph();
+        //Temporarily removes the ability to make symbols for the lines.
+        chart.setCreateSymbols(false);
+        plotterController.setLegendTextVisible(true);
+        plotterController.setLegendText("Dark Blue = < 3 MPH     Light Blue = Between 3 & 7 MPH     Green = Between 7 & 10 MPH" +
+                "\nYellow = Between 10 & 15 MPH     Orange = Between 15 & 20 MPH     Red = Over 20 MPH");
+        //Set chart name
+        chart.setTitle("Instantaneous Speed Along Path");
         //Gets track handler, which holds all the tracks to be found.
         TracksHandler tracksHandler = plotterController.getTracksHandler();
         //Configures axises if there are tracks.
@@ -185,37 +193,16 @@ public class Plotter {
                             //Gets the node property for the line of the newly created series.
                             Node line = series.getNode().lookup(".chart-series-line");
 
-                            //This section is for deciding which color the line should be based on instantaneous speed.
-                            //Dark blue- Anything less than 3 MPH
-                            if (speeds.get(z) < 3) {
-                                color = Color.BLUE;
-                            }
-                            //Light blue- any speed that's between 3 MPH and 7MPH, or equals 3 MPH.
-                            else if (speeds.get(z) >= 3 && speeds.get(z) < 7) {
-                                color = Color.AQUA;
-                            }
-                            //Green- any speed that's between 3 MPH and 7MPH, or equals 3 MPH.
-                            else if (speeds.get(z) >= 7 && speeds.get(z) < 10) {
-                                color = Color.GREEN;
-                            }
-                            //Yellow- any speed that's between 3 MPH and 7MPH, or equals 3 MPH.
-                            else if (speeds.get(z) >= 10 && speeds.get(z) < 15) {
-                                color = Color.YELLOW;
-                            }
-                            //Orange- any speed that's between 3 MPH and 7MPH, or equals 3 MPH.
-                            else if (speeds.get(z) >= 15 && speeds.get(z) <= 20) {
-                                color = Color.ORANGE;
-                            }
-                            //Red- Any speed over 20 MPH.
-                            else {
-                                color = Color.RED;
-                            }
+                            //Decides line color
+                            color = setColor(speeds.get(z));
+
                             //Sets the line color for the series.
                             line.setStyle("-fx-stroke: rgba(" + rgbFormat(color) + ", 1.0);");
                         }
                         plotterController.addTable(track.getTrackStats());
                     }
                 }
+                chart.setLegendVisible(false);
             }
         } else {
             throw new NullPointerException("No Tracks are Loaded!");
@@ -232,6 +219,11 @@ public class Plotter {
     public void convertToCartesian() throws NullPointerException {
         //Clears the graph when window opens and a series exists.
         checkGraph();
+
+        plotterController.reEnableParts();
+
+        //Sets chart name.
+        chart.setTitle("Cartesian Coordinates");
         TracksHandler tracksHandler = plotterController.getTracksHandler();
         if (tracksHandler != null) {
             setChartAxisLabels("Meters(east and west)", "Meters(north and south)");
@@ -280,7 +272,7 @@ public class Plotter {
         }
     }
 
-    //
+
     private double calculateXCoord(TrackPoint currentTrackPoint, TrackPoint trackZero) {
         return (RADIUS_OF_EARTH_M + ((trackZero.getElevation() + currentTrackPoint.getElevation()) / 2)) *
                 (trackZero.getLongitude() * DEG_TO_RAD - currentTrackPoint.getLongitude() * DEG_TO_RAD) *
@@ -292,6 +284,7 @@ public class Plotter {
                 (trackZero.getLatitude() * DEG_TO_RAD - currentTrackPoint.getLatitude() * DEG_TO_RAD);
     }
 
+    //Format color object to string.
     private String rgbFormat(Color color) {
         return String.format("%d, %d, %d",
                 (int) (color.getRed() * 255),
@@ -299,7 +292,67 @@ public class Plotter {
                 (int) (color.getBlue() * 255));
     }
 
-    private void setLegend(){
-
+    //Method to select which color to represent speed with
+    private Color setColor(Double speed) {
+        //Dark blue- any speed less than 3 MPH
+        if (speed < 3) {
+            return Color.BLUE;
+        }
+        //Light blue- any speed that's >= 3 MPH and < than 7MPH.
+        else if (speed >= 3 && speed < 7) {
+            return Color.AQUA;
+        }
+        //Green- any speed that's >= 7 MPH and < than 10MPH.
+        else if (speed >= 7 && speed < 10) {
+            return Color.GREEN;
+        }
+        //Yellow- any speed that's >= 10 MPH and < than 15MPH.
+        else if (speed >= 10 && speed < 15) {
+            return Color.YELLOW;
+        }
+        //Orange- any speed that's >= 15 MPH and < than 15MPH.
+        else if (speed >= 15 && speed < 20) {
+            return Color.ORANGE;
+        }
+        //Red- Any speed that's over or equal to 20 MPH.
+        else {
+            return Color.RED;
+        }
     }
+
+    /*Creates the legend for speed plots.
+    private void setSpeedLegend() {
+        //Dummy chart to set to
+        LineChart<Number, Number> lineChart =
+                new LineChart<>(new NumberAxis(), new NumberAxis());
+        //Code to set specific line colors
+        lineChart.setStyle(".default-color0.chart-series-line { -fx-stroke: rgba(" + rgbFormat(Color.BLUE) + ", 1.0); }");
+        lineChart.setStyle(".default-color1.chart-series-line { -fx-stroke: rgba(" + rgbFormat(Color.AQUA) + ", 1.0); }");
+        lineChart.setStyle(".default-color2.chart-series-line { -fx-stroke: rgba(" + rgbFormat(Color.GREEN) + ", 1.0); }");
+        lineChart.setStyle(".default-color3.chart-series-line { -fx-stroke: rgba(" + rgbFormat(Color.YELLOW) + ", 1.0); }");
+        lineChart.setStyle(".default-color4.chart-series-line { -fx-stroke: rgba(" + rgbFormat(Color.ORANGE) + ", 1.0); }");
+        lineChart.setStyle(".default-color5.chart-series-line { -fx-stroke: rgba(" + rgbFormat(Color.RED) + ", 1.0); }");
+
+        //Series with names of Legends
+        XYChart.Series series0 = new XYChart.Series();
+        series0.setName("Less than 3 MPH");
+        XYChart.Series series1 = new XYChart.Series();
+        series1.setName("Between 3 & 7 MPH");
+        XYChart.Series series2 = new XYChart.Series();
+        series2.setName("Between 7 & 10 MPH");
+        XYChart.Series series3 = new XYChart.Series();
+        series3.setName("Between 10 & 15 MPH");
+        XYChart.Series series4 = new XYChart.Series();
+        series4.setName("Between 15 & 20 MPH");
+        XYChart.Series series5 = new XYChart.Series();
+        series5.setName("Above 20 MPH");
+
+        //Adds all the series.
+        lineChart.getData().addAll(series0, series1, series2, series3, series4, series5);
+
+        //Sets the legend of current graph to this dummy graph's legend.
+        lineChart.get
+        chart.getLegend();
+    }
+     */
 }
