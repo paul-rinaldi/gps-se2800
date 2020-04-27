@@ -41,7 +41,7 @@ public class Plotter {
      *
      * @param track track from which points will be plotted
      */
-    public void plotElevationGain(Track track){
+    public void plotElevationGain(Track track) {
         XYChart.Series series = new XYChart.Series();
         series.setName(track.getName());
         setChartAxisLabels("Time Passed (min)", "Elevation Gain (m)");
@@ -290,6 +290,7 @@ public class Plotter {
                 (int) (color.getGreen() * 255),
                 (int) (color.getBlue() * 255));
     }
+
     //Method to select which color to represent speed with
     private Color setColor(Double speed) {
         //Dark blue- any speed less than 3 MPH

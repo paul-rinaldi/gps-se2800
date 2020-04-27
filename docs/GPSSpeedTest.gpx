@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <gpx>
   <trk>
+<<<<<<< HEAD
     <name>GPS Test: Various speeds</name>
+=======
+    <name>GPS Test: 10 points. 73.9km </name>
+>>>>>>> Finished work on method to set line colors and the legend.
     <trkseg>
 	  <trkpt lat="43.30000000000000" lon="-87.90000000000000">
         <ele>2500.0000000000000</ele>
