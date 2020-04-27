@@ -143,7 +143,6 @@ public class TracksCalculator {
      * @param deltaT   the change in time between the current two track points
      * @param distance the distance between the current two track points
      */
-
     private void calcSpeed(double deltaT, double distance, ArrayList<Double> speedList) {
         double speedK = (distance * M_TO_KM) / deltaT;
         double speedM = (distance * M_TO_MI) / deltaT;

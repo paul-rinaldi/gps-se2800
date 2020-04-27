@@ -136,7 +136,7 @@ public class PlotterController {
         showHideButton.disableProperty().setValue(false);
         this.tracksHandler = gpsController.getTracksHandler();
         try {
-            plotter.convertToCartesian();
+            plotter.plotSpeedOverPath();
         } catch(NullPointerException n){
             showHideButton.disableProperty().setValue(true);
             createErrorDialog("2D Graph Plotting Error", "No tracks are loaded.");

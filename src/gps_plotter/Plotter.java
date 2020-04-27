@@ -141,7 +141,6 @@ public class Plotter {
     }
 
     /**
-<<<<<<< HEAD
      * converts all selected tracks to different colored lines representing
      * instantaneous speeds at that point when the graph 2D plot button is pressed
      *
@@ -164,6 +163,7 @@ public class Plotter {
             setChartAxisLabels("Meters(east and west)", "Meters(north and south)");
             int index = getFirstLoadedIndex();
             boolean[] showOnGraph = plotterController.getShowOnGraph();
+
             //If there is a track selected...
             if (index != -1) {
                 //Loads the first track's first point.
@@ -208,6 +208,7 @@ public class Plotter {
             throw new NullPointerException("No Tracks are Loaded!");
         }
     }
+
 
     /**
      * converts all selected tracks to cartesian coordinates to be displayed on the graph and on the chart
@@ -270,7 +271,6 @@ public class Plotter {
             plotterController.clearTable();
         }
     }
-
 
     private double calculateXCoord(TrackPoint currentTrackPoint, TrackPoint trackZero) {
         return (RADIUS_OF_EARTH_M + ((trackZero.getElevation() + currentTrackPoint.getElevation()) / 2)) *
