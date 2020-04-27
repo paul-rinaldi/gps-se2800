@@ -101,7 +101,6 @@ public class TracksCalculator {
                 totalTime += deltaT;
                 calcTotalDistance(distance);
                 calcSpeed(deltaT,distance,speeds);
-                calcMaxSpeed(deltaT, distance);
                 calcMinMaxElev(a);
                 calcMinMaxLat(a);
                 calcMinMaxLong(a);
@@ -144,9 +143,12 @@ public class TracksCalculator {
      * @param deltaT   the change in time between the current two track points
      * @param distance the distance between the current two track points
      */
-    private void calcMaxSpeed(double deltaT, double distance) {
+    private void calcSpeed(double deltaT, double distance, ArrayList<Double> speedList) {
         double speedK = (distance * M_TO_KM) / deltaT;
         double speedM = (distance * M_TO_MI) / deltaT;
+
+        //Adds calculated mile speed to speed list.
+        speedList.add(speedM);
 
         if (speedK > maxSpeedK) {
             maxSpeedK = speedK;
@@ -217,18 +219,5 @@ public class TracksCalculator {
     private void calcTotalDistance(double distance) {
         totalDistanceK += distance * M_TO_KM;
         totalDistanceM += distance * M_TO_MI;
-    }
-
-    /**
-     * Calculates the instantaneous speed between two points in MPH, and adds
-	 * it to the ArrayList that contains the instantaneous speeds.
-     *
-     * @param deltaT    the change in time between the current two track points
-     * @param distance  the distance between the current two track points
-     * @param speedList the arraylist containing the speeds between each points
-     */
-    private void calcSpeed(double deltaT, double distance, ArrayList<Double> speedList) {
-        double speedM = (distance * M_TO_MI) / deltaT;
-        speedList.add(speedM);
     }
 }
