@@ -12,6 +12,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // global on the dom so that we can access it later through java easily
 var map; // holds out google map (on the div with id #map)
+var markers = []; // global markers
 
 // global so that the callback in the google maps api async call can access this function
 function initMap() {
@@ -20,4 +21,15 @@ function initMap() {
         center: {lat: 43.0469577, lng: -87.90786},
         zoom: 8
     });
+}
+
+// adds a marker to the map and global markers
+function addMarker(lat, lng) {
+    let pos = new google.maps.Latlng(lat, lng);
+    let marker = new google.maps.Marker({
+        position: pos,
+        map: map,
+        title: ""
+    })
+    markers.push(marker);
 }
