@@ -29,6 +29,7 @@ public class Browser extends Pane{
 
     WebView webView = new WebView();
     WebEngine webEngine = webView.getEngine();
+
     public Browser() {
         final URL urlGoogleMaps = getClass().getResource("/maps/client.html");
 
@@ -86,13 +87,32 @@ public class Browser extends Pane{
     /**
      * Loads tracks into maps view
      * @param track - TrackPoints array to add to
+     * @param trackNumber the index of the trackshandler that the current track is located at
      */
     @FXML
-    public void loadTrack(Track track) {
+    public void loadTrack(Track track, int trackNumber) {
+        String linePath ="[";
         for (int i = 0; i < track.getPointAmount(); i++) {
             TrackPoint currentPoint = track.getTrackPoint(i);
-            webEngine.executeScript("addMarker(" + currentPoint.getLatitude() + ", " + currentPoint.getLongitude() + ");");
+            if(i == 0) {
+                webEngine.executeScript("addMarker(" + currentPoint.getLatitude() + ", " +
+                        currentPoint.getLongitude() + ", " + '"' + track.getName() + " Start" + '"'+ ");");
+            } else if(i == track.getPointAmount()-1){
+                webEngine.executeScript("addMarker(" + currentPoint.getLatitude() + ", " +
+                        currentPoint.getLongitude() + ", " + '"' + track.getName() + " End" + '"' + ");");
+            }
+            linePath += "{lat: " + currentPoint.getLatitude() + ", lng: " + currentPoint.getLongitude() + "},";
         }
+        linePath = linePath.substring(0, linePath.length()-1);
+        linePath += "]";
+        webEngine.executeScript("addLine(" + linePath  + ", " + trackNumber  + ");");
+    }
+
+    /**
+     * removes all markers from the map
+     */
+    public void clearMap(){
+        webEngine.executeScript("clearMap();");
     }
 
     public static String readFile(String path, Charset encoding) throws IOException {

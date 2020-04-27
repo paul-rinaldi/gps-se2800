@@ -34,9 +34,10 @@ public class CaptureController {
 
     @FXML
     public void sendGET() {
+        browser.clearMap();
         // load set of tracks
         for(int i = 0; i < gpsController.getTracksHandler().getTrackAmount(); i++){
-            browser.loadTrack(gpsController.getTracksHandler().getTrack(i));
+            browser.loadTrack(gpsController.getTracksHandler().getTrack(i), i);
         }
     }
 

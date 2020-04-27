@@ -13,6 +13,8 @@ document.addEventListener('DOMContentLoaded', function() {
 // global on the dom so that we can access it later through java easily
 var map; // holds out google map (on the div with id #map)
 var markers = []; // global markers
+var COLOR_ARRAY = ['#FF0000', '#00FF00', '#0000FF', '#FFA500', '#FFFF00', '#7F00FF', '#4B0082',
+            '#00B7EB', '#FFC0CB', '#83F52C'];
 
 // global so that the callback in the google maps api async call can access this function
 function initMap() {
@@ -24,12 +26,29 @@ function initMap() {
 }
 
 // adds a marker to the map and global markers
-function addMarker(lat, lng) {
+function addMarker(lat, lng, labelText) {
     let pos = new google.maps.LatLng(lat, lng);
     let marker = new google.maps.Marker({
         position: pos,
         map: map,
-        title: ""
+        title: labelText
     });
     markers.push(marker);
+}
+
+function addLine(linePath, trackNumber){
+      let path = new google.maps.Polyline({
+        path: linePath,
+        strokeColor: COLOR_ARRAY[trackNumber],
+        strokeOpacity: 1.0,
+        strokeWeight: 2
+      });
+
+      path.setMap(map);
+}
+
+function clearMap(){
+    for(let i = 0; i < markers.length; i++){
+        markers[i].setMap(null);
+    }
 }
