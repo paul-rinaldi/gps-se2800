@@ -7,22 +7,17 @@
  - Unlicensed.
  -->
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
 <!-- This Capture View shows what the GET google api request returns (in json) -->
 <?import maps.Browser?>
-<BorderPane maxHeight="-Infinity" minHeight="-Infinity" maxWidth="-Infinity" minWidth="-Infinity"
+<GridPane maxHeight="-Infinity" minHeight="-Infinity" maxWidth="-Infinity" minWidth="-Infinity"
             xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
             fx:controller="maps.CaptureController"
-            prefHeight="400.0" prefWidth="600.0">
-    <Browser fx:id="browser">
+            prefHeight="800.0" prefWidth="800.0">
+    <Browser fx:id="browser" GridPane.rowIndex="1">
     </Browser>
-    <GridPane>
-    <Button text="Load Another Track" onAction="#sendGET"/>
-    </GridPane>
-</BorderPane>
+    <Button text="Display Track" onAction="#sendGET" GridPane.rowIndex="0" prefWidth="200.0"/>
+</GridPane>

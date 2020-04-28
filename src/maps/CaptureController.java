@@ -17,7 +17,7 @@ import javafx.stage.Stage;
 import java.util.Date;
 
 /**
- * This class queries map api for static map images
+ * This class controls the Google Maps Browser View to allow for tracks to be loaded in
  */
 public class CaptureController {
     // Constants
@@ -35,9 +35,15 @@ public class CaptureController {
     @FXML
     public void sendGET() {
         browser.clearMap();
+
         // load set of tracks
-        for(int i = 0; i < gpsController.getTracksHandler().getTrackAmount(); i++){
-            browser.loadTrack(gpsController.getTracksHandler().getTrack(i), i);
+        if (gpsController.getTracksHandler() != null) {
+            for(int i = 0; i < gpsController.getTracksHandler().getTrackAmount(); i++){
+                browser.loadTrack(gpsController.getTracksHandler().getTrack(i), i);
+            }
+        } else {
+            // Alert user to load a file or allow user to recover by starting a filechooser to load the file
+            // FUTURE IMPL: browser.displayError
         }
     }
 

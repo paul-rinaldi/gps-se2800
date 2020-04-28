@@ -36,6 +36,7 @@ function addMarker(lat, lng, labelText) {
     markers.push(marker);
 }
 
+// adds a polyline path to the map given a linepath
 function addLine(linePath, trackNumber){
       let path = new google.maps.Polyline({
         path: linePath,
@@ -47,6 +48,7 @@ function addLine(linePath, trackNumber){
       path.setMap(map);
 }
 
+// removes all markers from the map
 function clearMap(){
     for(let i = 0; i < markers.length; i++){
         markers[i].setMap(null);

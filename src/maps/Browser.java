@@ -23,21 +23,18 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
-public class Browser extends Pane{
-    private double lat;
-    private double lon;
-
+/**
+ * This class extends Pane functionality with a Webview to browse a webpage loaded in specifically to interact with
+ * Google Maps over Javascript
+ */
+public class Browser extends Pane {
     WebView webView = new WebView();
     WebEngine webEngine = webView.getEngine();
 
-    public Browser() {
-        final URL urlGoogleMaps = getClass().getResource("/maps/client.html");
+    private static String CLIENT_URL = "/maps/client.html";
 
-        webEngine.getLoadWorker().stateProperty().addListener((obs, oldValue, newState) -> {
-            if (newState == Worker.State.SUCCEEDED) {
-                System.out.println("finished loading");
-            }
-        }); // addListener()
+    public Browser() {
+        final URL urlGoogleMaps = getClass().getResource(CLIENT_URL);
         webEngine.load(urlGoogleMaps.toString());
 
         webEngine.setOnAlert(new EventHandler<WebEvent<String>>() {
@@ -48,40 +45,6 @@ public class Browser extends Pane{
         });
 
         getChildren().add(webView);
-
-        final TextField latitude = new TextField("0.0");
-        final TextField longitude = new TextField("0.0");
-        Button update = new Button("Update");
-        update.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                // send our lat lon from java to javascript
-                lat = Double.parseDouble(latitude.getText());
-                lon = Double.parseDouble(longitude.getText());
-
-                System.out.println("(Lat,Lon)=("+lat+", "+lon+")");
-
-                // load js
-                try {
-                    String js = readFile("./src/maps/client.js", StandardCharsets.UTF_8);
-                    webEngine.executeScript(js);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-
-                webEngine.executeScript("" +
-                        "window.lat = " + lat + ";" +
-                        "window.lon = " + lon + ";"
-                );
-            }
-        });
-
-        HBox toolbar = new HBox();
-        // first parts
-        toolbar.getChildren().addAll(latitude, longitude, update);
-
-        // second level of hbox
-        getChildren().addAll(toolbar);
     }
 
     /**
@@ -113,9 +76,5 @@ public class Browser extends Pane{
      */
     public void clearMap(){
         webEngine.executeScript("clearMap();");
-    }
-
-    public static String readFile(String path, Charset encoding) throws IOException {
-        return Files.readString(Paths.get(path), encoding);
     }
 }
