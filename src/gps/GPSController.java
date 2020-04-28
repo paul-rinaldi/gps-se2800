@@ -435,7 +435,11 @@ public class GPSController {
 	}
 
 	/**
+<<<<<<< HEAD
 	 * Opens plotter window and immediately graphs all loaded tracks with ElevationGain vs Time
+=======
+	 * Opens plotter window and immediately graphs all loaded tracks with Plot Speed Along Path
+>>>>>>> 3e454af644ebe33d6bb6cf1143efa0f8bc27c9ae
 	 * Only graphs selected tracks if window was already modified (saves state)
 	 */
 	public void showSpeedPlot(){
