@@ -5,7 +5,6 @@ import gps.*;
 
 import javafx.scene.Node;
 import javafx.scene.chart.LineChart;
-import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
 import javafx.scene.paint.Color;
 
@@ -197,7 +196,7 @@ public class Plotter {
                             color = setColor(speeds.get(z));
 
                             //Sets the line color for the series.
-                            line.setStyle("-fx-stroke: rgba(" + rgbFormat(color) + ", 1.0);");
+                            line.setStyle("-fx-stroke: rgb(" + rgbFormat(color) + ");");
                         }
                         plotterController.addTable(track.getTrackStats());
                     }
@@ -276,12 +275,12 @@ public class Plotter {
     private double calculateXCoord(TrackPoint currentTrackPoint, TrackPoint trackZero) {
         return (RADIUS_OF_EARTH_M + ((trackZero.getElevation() + currentTrackPoint.getElevation()) / 2)) *
                 (trackZero.getLongitude() * DEG_TO_RAD - currentTrackPoint.getLongitude() * DEG_TO_RAD) *
-                Math.cos((trackZero.getLatitude() * DEG_TO_RAD + currentTrackPoint.getLatitude() * DEG_TO_RAD) / 2);
+                Math.cos((trackZero.getLatitude() * DEG_TO_RAD + currentTrackPoint.getLatitude() * DEG_TO_RAD) / 2) * -1;
     }
 
     private double calculateYCoord(TrackPoint currentTrackPoint, TrackPoint trackZero) {
         return (RADIUS_OF_EARTH_M + (trackZero.getElevation() + currentTrackPoint.getElevation()) / 2) *
-                (trackZero.getLatitude() * DEG_TO_RAD - currentTrackPoint.getLatitude() * DEG_TO_RAD);
+                (trackZero.getLatitude() * DEG_TO_RAD - currentTrackPoint.getLatitude() * DEG_TO_RAD) * -1;
     }
 
     //Format color object to string.
@@ -319,40 +318,4 @@ public class Plotter {
             return Color.RED;
         }
     }
-
-    /*Creates the legend for speed plots.
-    private void setSpeedLegend() {
-        //Dummy chart to set to
-        LineChart<Number, Number> lineChart =
-                new LineChart<>(new NumberAxis(), new NumberAxis());
-        //Code to set specific line colors
-        lineChart.setStyle(".default-color0.chart-series-line { -fx-stroke: rgba(" + rgbFormat(Color.BLUE) + ", 1.0); }");
-        lineChart.setStyle(".default-color1.chart-series-line { -fx-stroke: rgba(" + rgbFormat(Color.AQUA) + ", 1.0); }");
-        lineChart.setStyle(".default-color2.chart-series-line { -fx-stroke: rgba(" + rgbFormat(Color.GREEN) + ", 1.0); }");
-        lineChart.setStyle(".default-color3.chart-series-line { -fx-stroke: rgba(" + rgbFormat(Color.YELLOW) + ", 1.0); }");
-        lineChart.setStyle(".default-color4.chart-series-line { -fx-stroke: rgba(" + rgbFormat(Color.ORANGE) + ", 1.0); }");
-        lineChart.setStyle(".default-color5.chart-series-line { -fx-stroke: rgba(" + rgbFormat(Color.RED) + ", 1.0); }");
-
-        //Series with names of Legends
-        XYChart.Series series0 = new XYChart.Series();
-        series0.setName("Less than 3 MPH");
-        XYChart.Series series1 = new XYChart.Series();
-        series1.setName("Between 3 & 7 MPH");
-        XYChart.Series series2 = new XYChart.Series();
-        series2.setName("Between 7 & 10 MPH");
-        XYChart.Series series3 = new XYChart.Series();
-        series3.setName("Between 10 & 15 MPH");
-        XYChart.Series series4 = new XYChart.Series();
-        series4.setName("Between 15 & 20 MPH");
-        XYChart.Series series5 = new XYChart.Series();
-        series5.setName("Above 20 MPH");
-
-        //Adds all the series.
-        lineChart.getData().addAll(series0, series1, series2, series3, series4, series5);
-
-        //Sets the legend of current graph to this dummy graph's legend.
-        lineChart.get
-        chart.getLegend();
-    }
-     */
 }
