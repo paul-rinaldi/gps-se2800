@@ -20,6 +20,11 @@
                   <MenuItem mnemonicParsing="false" onAction="#showSpeedPlot" text="Instantaneous Speed " />
               </items>
             </Menu>
+            <Menu mnemonicParsing="false" text="Google Maps">
+               <items>
+                  <MenuItem mnemonicParsing="false" onAction="#showMapsWindow" text="Open Maps Window" />
+               </items>
+            </Menu>
         </menus>
       </MenuBar>
       <Label layoutX="14.0" layoutY="38.0" prefHeight="18.0" prefWidth="79.0" text="Track Selected:" />
