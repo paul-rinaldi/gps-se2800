@@ -1,7 +1,6 @@
 package tests;
 
-import gps.GPXHandler;
-import gps.Parser;
+import gps.*;
 import org.junit.jupiter.api.Test;
 import org.xml.sax.SAXException;
 

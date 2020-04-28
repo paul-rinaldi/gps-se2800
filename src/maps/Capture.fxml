@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ - Course: SE 2800 - 041
+ - Spring 2020
+ - Names: Paul Rinaldi
+ - Created 20 April 2020
+ - Unlicensed.
+ -->
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<!-- This Capture View shows what the GET google api request returns (in json) -->
+<?import maps.Browser?>
+<GridPane maxHeight="-Infinity" minHeight="-Infinity" maxWidth="-Infinity" minWidth="-Infinity"
+            xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="maps.CaptureController"
+            prefHeight="800.0" prefWidth="800.0">
+    <Browser fx:id="browser" GridPane.rowIndex="1">
+    </Browser>
+    <Button text="Display Track" onAction="#sendGET" GridPane.rowIndex="0" prefWidth="200.0"/>
+</GridPane>
