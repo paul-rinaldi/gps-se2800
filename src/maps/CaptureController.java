@@ -18,6 +18,7 @@ import java.util.Date;
 
 /**
  * This class controls the Google Maps Browser View to allow for tracks to be loaded in
+ * Ensure that javafx.web is added to the vm options for vm option --add-modules=
  */
 public class CaptureController {
     // Constants

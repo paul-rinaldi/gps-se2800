@@ -10,8 +10,10 @@ import javafx.stage.Stage;
 import maps.CaptureController;
 
 /**
- *
  * Main class of the program. Initializes controller and FXML
+ * Ensure that vm options are:
+ * --module-path ${PATH_TO_FX} --add-modules=javafx.controls,javafx.fxml,javafx.web
+ * For all javafx components to run correctly.
  */
 public class GPSMain extends Application {
 
