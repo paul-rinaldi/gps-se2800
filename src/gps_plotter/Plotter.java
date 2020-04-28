@@ -5,7 +5,6 @@ import gps.*;
 
 import javafx.scene.Node;
 import javafx.scene.chart.LineChart;
-import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
 import javafx.scene.paint.Color;
 
@@ -197,7 +196,7 @@ public class Plotter {
                             color = setColor(speeds.get(z));
 
                             //Sets the line color for the series.
-                            line.setStyle("-fx-stroke: rgba(" + rgbFormat(color) + ", 1.0);");
+                            line.setStyle("-fx-stroke: rgb(" + rgbFormat(color) + ");");
                         }
                         plotterController.addTable(track.getTrackStats());
                     }
@@ -319,3 +318,4 @@ public class Plotter {
         }
     }
 }
+

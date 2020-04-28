@@ -20,6 +20,9 @@ import java.text.SimpleDateFormat;
  */
 public class GPXHandler extends AbstractParserEventHandler {
 
+	public void enableLogging(boolean b) {
+	}
+
 	private enum PossibleStates {INITIAL, GPX, TRK, NAME, TRKSEG, TRKPT, ELE, TIME, FINAL}
 	private PossibleStates currentState = PossibleStates.INITIAL;
 
@@ -305,5 +308,4 @@ public class GPXHandler extends AbstractParserEventHandler {
 
 	public int getLine(){return this.line;}
 	public int getColumn(){return this.column;}
-
 }

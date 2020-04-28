@@ -135,7 +135,7 @@ public class PlotterController {
     public void graphPlotSpeedAlongPath() {
         lastGraphLoaded = "SpeedPlot";
         showHideButton.disableProperty().setValue(false);
-        this.tracksHandler = gpsController.getTracksHandler();
+        tracksHandler = gpsController.getTracksHandler();
         try {
             plotter.plotSpeedOverPath();
         } catch (NullPointerException n) {
@@ -182,6 +182,9 @@ public class PlotterController {
                     break;
                 case "Elevation Gain Vs Time":
                     graphElevationGainVsTime();
+                    break;
+                case "SpeedPlot":
+                    graphPlotSpeedAlongPath();
                     break;
                 default:
                     System.out.println("Error unrecognized graph name: " + lastGraphLoaded);
