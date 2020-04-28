@@ -31,6 +31,8 @@ public class PlotterController {
     private CheckBox showHideButton;
     @FXML
     private Spinner<String> trackSpinner;
+    @FXML
+    private TextArea LegendText;
 
     private GPSController gpsController;
     private Plotter plotter;
@@ -45,7 +47,7 @@ public class PlotterController {
      * Initializes JavaFX table element
      */
     @FXML
-    public void initialize(){
+    public void initialize() {
         //sets up the table so it can be populated
         plotter = new Plotter(lineChart, this);
 
@@ -62,13 +64,13 @@ public class PlotterController {
 
         //Adds event listener to spinner when the track gets changed to update state of select button
         trackSpinner.valueProperty().addListener((obs, oldValue, newValue) -> {
-            if(showHideButton.isDisable()){
+            if (showHideButton.isDisable()) {
                 showHideButton.disableProperty().setValue(false);
             }
             try {
                 int index = tracksHandler.getTrackIndex(newValue);
                 showHideButton.selectedProperty().setValue(showOnGraph[index]);
-            } catch (NullPointerException e){
+            } catch (NullPointerException e) {
                 //this is thrown when a new track is loaded but doesn't affect anything
             }
         });
@@ -77,31 +79,36 @@ public class PlotterController {
     /**
      * Plots all selected Tracks' elevation gains vs time
      */
-    public void graphElevationGainVsTime(){
+    public void graphElevationGainVsTime() {
         lastGraphLoaded = "Elevation Gain Vs Time";
+
         showHideButton.disableProperty().setValue(false);
 
         this.tracksHandler = gpsController.getTracksHandler();
 
         try {
 
-            if(this.lineChart.getData() != null && this.lineChart.getData().size() != 0){ //Clears graph when window is opened only if series exists
+            if (this.lineChart.getData() != null && this.lineChart.getData().size() != 0) { //Clears graph when window is opened only if series exists
                 this.plotter.clearChart();
             }
 
-            for(int i = 0; i < this.tracksHandler.getTrackAmount(); i++){
-                if(showOnGraph[i]){
+            reEnableParts();
+
+            lineChart.setTitle("Elevation Gain Vs. Time");
+
+            for (int i = 0; i < this.tracksHandler.getTrackAmount(); i++) {
+                if (showOnGraph[i]) {
                     Track t = this.tracksHandler.getTrack(i);
 
-                    if(t.getPointAmount() > 1) {
+                    if (t.getPointAmount() > 1) {
                         this.plotter.plotElevationGain(t);
-                    } else{
+                    } else {
                         createErrorDialog("Elevation Gain vs Time Plotting Error", "Track: " + t.getName() + " doesn't have enough points to graph Elevation Gain vs Time");
                     }
                 }
             }
 
-        } catch(NullPointerException n){
+        } catch (NullPointerException n) {
             showHideButton.disableProperty().setValue(true);
             createErrorDialog("Elevation Gain vs Time Plotting Error", "No tracks are loaded.");
         }
@@ -110,13 +117,29 @@ public class PlotterController {
     /**
      * graphs all selected tracks on a 2D plot
      */
-    public void graphTwoDPlot(){
+    public void graphTwoDPlot() {
         lastGraphLoaded = "2DPlot";
+
         showHideButton.disableProperty().setValue(false);
         this.tracksHandler = gpsController.getTracksHandler();
         try {
             plotter.convertToCartesian();
-        } catch(NullPointerException n){
+        } catch (NullPointerException n) {
+            showHideButton.disableProperty().setValue(true);
+            createErrorDialog("2D Graph Plotting Error", "No tracks are loaded.");
+        }
+    }
+
+    /**
+     * graphs all selected tracks on a 2D plot
+     */
+    public void graphPlotSpeedAlongPath() {
+        lastGraphLoaded = "SpeedPlot";
+        showHideButton.disableProperty().setValue(false);
+        tracksHandler = gpsController.getTracksHandler();
+        try {
+            plotter.plotSpeedOverPath();
+        } catch (NullPointerException n) {
             showHideButton.disableProperty().setValue(true);
             createErrorDialog("2D Graph Plotting Error", "No tracks are loaded.");
         }
@@ -124,39 +147,48 @@ public class PlotterController {
 
     /**
      * adds the tracks passed in to the spinner to allow it to be graphed
+     *
      * @param valueFactory the value factory for the spinner to add to the spinner
-     * @param trackName the name of the track to display on the spinner
+     * @param trackName    the name of the track to display on the spinner
      */
-    public void updateSpinner(SpinnerValueFactory<String> valueFactory, String trackName){
+    public void updateSpinner(SpinnerValueFactory<String> valueFactory, String trackName) {
         trackSpinner.setValueFactory(valueFactory);
         trackSpinner.getValueFactory().setValue(trackName);
     }
 
     /**
      * takes the track passed in gets the name of the track and the distance in kilometers and miles to display on the table
+     *
      * @param trackStats the track to get the information from to display
      */
-    public void addTable(TrackStats trackStats){
+    public void addTable(TrackStats trackStats) {
         tableView.getItems().add(trackStats);
     }
 
     /**
      * event that occurs when the show/Hide button is selected or unselected
+     *
      * @param actionEvent the event that caused this to be called
      */
     public void showOrHide(ActionEvent actionEvent) {
         int index = gpsController.getTracksHandler().getTrackIndex(trackSpinner.getValue());
-        if(index == -1){
+        if (index == -1) {
             createErrorDialog("Track not loaded", "The track that is to be shown is not loaded!");
         } else {
             showOnGraph[index] = !showOnGraph[index];
         }
         switch (lastGraphLoaded) {
-            case "2DPlot": graphTwoDPlot();
-            break;
-            case "Elevation Gain Vs Time": graphElevationGainVsTime();
-            break;
-            default: System.out.println("Error unrecognized graph name: " + lastGraphLoaded);
+            case "2DPlot":
+                graphTwoDPlot();
+                break;
+            case "Elevation Gain Vs Time":
+                graphElevationGainVsTime();
+                break;
+            case "SpeedPlot":
+                graphPlotSpeedAlongPath();
+                break;
+            default:
+                System.out.println("Error unrecognized graph name: " + lastGraphLoaded);
         }
     }
 
@@ -164,30 +196,32 @@ public class PlotterController {
      * Creates an error dialog from a type and message
      *
      * @param errorType type of error
-     * @param errorMsg message error provides
+     * @param errorMsg  message error provides
      */
-    private void createErrorDialog(String errorType, String errorMsg){
+    private void createErrorDialog(String errorType, String errorMsg) {
 
         Alert headerError = new Alert(Alert.AlertType.ERROR);
         headerError.setTitle("Error Dialog");
         headerError.setHeaderText(errorType);
         headerError.setContentText(errorMsg);
         headerError.showAndWait();
-
     }
 
     /**
-     * Closes (exits) the window
+     * @author Austin Demars
+     * <p>
+     * Called when 'File/Exit' is pressed
+     * Closes (exits) the application
      */
     public void exit() {
         this.plotterStage.hide();
     }
 
-    public NumberAxis getXAxis(){
+    public NumberAxis getXAxis() {
         return this.xAxis;
     }
 
-    public NumberAxis getYAxis(){
+    public NumberAxis getYAxis() {
         return this.yAxis;
     }
 
@@ -195,25 +229,42 @@ public class PlotterController {
         tableView.getItems().clear();
     }
 
-    public void setStage(Stage stage){
+    public void setStage(Stage stage) {
         this.plotterStage = stage;
     }
 
-    public void setMainController(GPSController gpsController){
+    public void setMainController(GPSController gpsController) {
         this.gpsController = gpsController;
     }
 
-    public boolean[] getShowOnGraph(){
+    public boolean[] getShowOnGraph() {
         return showOnGraph;
     }
 
-    public void setTracksHandler(TracksHandler tracksHandler){
+    public void setTracksHandler(TracksHandler tracksHandler) {
         this.tracksHandler = tracksHandler;
     }
 
-    public TracksHandler getTracksHandler(){
+    public TracksHandler getTracksHandler() {
         return tracksHandler;
     }
+
+    //In case certain parts are disabled, re-enables them..
+    public void reEnableParts() {
+        lineChart.setCreateSymbols(true);
+        lineChart.setLegendVisible(true);
+        LegendText.setVisible(false);
+    }
+
+    public void setLegendTextVisible(boolean b) {
+        LegendText.setVisible(b);
+    }
+
+    public void setLegendText(String message) {
+        LegendText.setText(message);
+    }
 }
+
+
 
 
