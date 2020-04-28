@@ -435,6 +435,16 @@ public class GPSController {
 	}
 
 	/**
+	 * Opens plotter window and immediately graphs all loaded tracks with Plot Speed Along Path
+	 * Only graphs selected tracks if window was already modified (saves state)
+	 */
+	public void showSpeedPlot(){
+		plotterController.setTracksHandler(tracksHandler);
+		plotterStage.show();
+		plotterController.graphPlotSpeedAlongPath();
+	}
+
+	/**
 	 * @author Austin Demars
 	 *
 	 * Called when 'File/Exit' is pressed

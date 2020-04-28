@@ -2,6 +2,7 @@ package gps;
 
 
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 
 /**
  * @author demarsa and aleckm
@@ -10,207 +11,213 @@ import java.text.DecimalFormat;
  */
 public class TracksCalculator {
 
-	private static final double DEG_TO_RAD = 0.0174533;
-	private static final double M_TO_KM = 0.001;
-	private static final double M_TO_MI = 0.000621371;
-	private static final double RADIUS_OF_EARTH_M = 6371000;
-	private static final double MILLI_SEC_TO_HOURS = 2.77778e-7;
-	private static final double FEET_PER_M = 3.2808;
-	private double avgSpeedK;
-	private double avgSpeedM;
-	private double maxSpeedK;
-	private double maxSpeedM;
-	private double minElev;
-	private double maxElev;
-	private double minLat;
-	private double maxLat;
-	private double minLong;
-	private double maxLong;
-	private double totalDistanceK;
-	private double totalDistanceM;
-	private double totalTime;
+    private static final double DEG_TO_RAD = 0.0174533;
+    private static final double M_TO_KM = 0.001;
+    private static final double M_TO_MI = 0.000621371;
+    private static final double RADIUS_OF_EARTH_M = 6371000;
+    private static final double MILLI_SEC_TO_HOURS = 2.77778e-7;
+    private static final double FEET_PER_M = 3.2808;
+    private double avgSpeedK;
+    private double avgSpeedM;
+    private double maxSpeedK;
+    private double maxSpeedM;
+    private double minElev;
+    private double maxElev;
+    private double minLat;
+    private double maxLat;
+    private double minLong;
+    private double maxLong;
+    private double totalDistanceK;
+    private double totalDistanceM;
+    private double totalTime;
+    private ArrayList<Double> speeds;
 
-	public TracksCalculator(){
-		avgSpeedK = 0;
-		avgSpeedM = 0;
-		totalDistanceK = 0;
-		totalDistanceM = 0;
-		totalTime = 0;
-		maxSpeedK = Double.MIN_VALUE;
-		maxSpeedM = Double.MIN_VALUE;
-		minElev = Double.MAX_VALUE;
-		maxElev = Double.MAX_VALUE*-1;
-		minLat = Double.MAX_VALUE;
-		maxLat = Double.MAX_VALUE*-1;
-		minLong = Double.MAX_VALUE;
-		maxLong = Double.MAX_VALUE*-1;
-	}
+    public TracksCalculator() {
+        avgSpeedK = 0;
+        avgSpeedM = 0;
+        totalDistanceK = 0;
+        totalDistanceM = 0;
+        totalTime = 0;
+        maxSpeedK = Double.MIN_VALUE;
+        maxSpeedM = Double.MIN_VALUE;
+        minElev = Double.MAX_VALUE;
+        maxElev = Double.MAX_VALUE * -1;
+        minLat = Double.MAX_VALUE;
+        maxLat = Double.MAX_VALUE * -1;
+        minLong = Double.MAX_VALUE;
+        maxLong = Double.MAX_VALUE * -1;
+    }
 
-	/**
-	 * Calculates the 12 desired metrics for the specified track
-	 *
-	 * @param track the track for which the metrics are being calculated
-	 * @throws UnsupportedOperationException when the track only has one track point
-	 */
-	public void calculateMetrics(Track track) throws UnsupportedOperationException{
-		track.setStats(new TrackStats());
-		TrackPoint a;
-		TrackPoint b;
-		double deltaX;
-		double deltaY;
-		double deltaZ;
+    /**
+     * Calculates the 12 desired metrics for the specified track
+     *
+     * @param track the track for which the metrics are being calculated
+     * @throws UnsupportedOperationException when the track only has one track point
+     */
+    public void calculateMetrics(Track track) throws UnsupportedOperationException {
+        track.setStats(new TrackStats());
+        TrackPoint a;
+        TrackPoint b;
+        double deltaX;
+        double deltaY;
+        double deltaZ;
 
-		int pointNum = track.getPointAmount();
-		if(pointNum == 1) {
-			a = track.getTrackPoint(0);
-			calcMinMaxLat(a);
-			calcMinMaxLong(a);
-			calcMinMaxElev(a);
+        int pointNum = track.getPointAmount();
+        if (pointNum == 1) {
+            a = track.getTrackPoint(0);
+            calcMinMaxLat(a);
+            calcMinMaxLong(a);
+            calcMinMaxElev(a);
 
-			TrackStats trackStats = track.getTrackStats();
-			trackStats.setMaxLat(maxLat);
-			trackStats.setMinLat(minLat);
-			trackStats.setMaxLong(maxLong);
-			trackStats.setMinLong(minLong);
-			trackStats.setMaxElevM(maxElev);
-			trackStats.setMinElevM(minElev);
-			DecimalFormat format = new DecimalFormat("#.##");
-			trackStats.setMinElevFt(Double.parseDouble(format.format(minElev*FEET_PER_M)));
-			trackStats.setMaxElevFt(Double.parseDouble(format.format(maxElev*FEET_PER_M)));
+            TrackStats trackStats = track.getTrackStats();
+            trackStats.setMaxLat(maxLat);
+            trackStats.setMinLat(minLat);
+            trackStats.setMaxLong(maxLong);
+            trackStats.setMinLong(minLong);
+            trackStats.setMaxElevM(maxElev);
+            trackStats.setMinElevM(minElev);
+            DecimalFormat format = new DecimalFormat("#.##");
+            trackStats.setMinElevFt(Double.parseDouble(format.format(minElev * FEET_PER_M)));
+            trackStats.setMaxElevFt(Double.parseDouble(format.format(maxElev * FEET_PER_M)));
 
-			throw new UnsupportedOperationException("Track only has one point");
-		}
+            throw new UnsupportedOperationException("Track only has one point");
+        }
 
-		for(int i = 0; i < pointNum; i++) {
-			if(i != pointNum-1) {
-				a = track.getTrackPoint(i);
-				b = track.getTrackPoint(i + 1);
+        speeds = new ArrayList<>();
+        for (int i = 0; i < pointNum; i++) {
+            if (i != pointNum - 1) {
+                a = track.getTrackPoint(i);
+                b = track.getTrackPoint(i + 1);
 
-				deltaX = (RADIUS_OF_EARTH_M + ((b.getElevation() + a.getElevation())/2)) *
-						(b.getLongitude()*DEG_TO_RAD - a.getLongitude()*DEG_TO_RAD) *
-						Math.cos((b.getLatitude()*DEG_TO_RAD + a.getLatitude()*DEG_TO_RAD)/2);
-				deltaY = (RADIUS_OF_EARTH_M + (b.getElevation() + a.getElevation())/2) *
-						(b.getLatitude()*DEG_TO_RAD - a.getLatitude()*DEG_TO_RAD);
-				deltaZ = b.getElevation() - a.getElevation();
-				double deltaT = (b.getTime().getTime() - a.getTime().getTime())*MILLI_SEC_TO_HOURS;
-				double distance = Math.sqrt(Math.pow(deltaX, 2) + Math.pow(deltaY, 2) + Math.pow(deltaZ, 2));
+                deltaX = (RADIUS_OF_EARTH_M + ((b.getElevation() + a.getElevation()) / 2)) *
+                        (b.getLongitude() * DEG_TO_RAD - a.getLongitude() * DEG_TO_RAD) *
+                        Math.cos((b.getLatitude() * DEG_TO_RAD + a.getLatitude() * DEG_TO_RAD) / 2);
+                deltaY = (RADIUS_OF_EARTH_M + (b.getElevation() + a.getElevation()) / 2) *
+                        (b.getLatitude() * DEG_TO_RAD - a.getLatitude() * DEG_TO_RAD);
+                deltaZ = b.getElevation() - a.getElevation();
+                double deltaT = (b.getTime().getTime() - a.getTime().getTime()) * MILLI_SEC_TO_HOURS;
+                double distance = Math.sqrt(Math.pow(deltaX, 2) + Math.pow(deltaY, 2) + Math.pow(deltaZ, 2));
 
-				totalTime += deltaT;
-				calcTotalDistance(distance);
-				calcMaxSpeed(deltaT, distance);
-				calcMinMaxElev(a);
-				calcMinMaxLat(a);
-				calcMinMaxLong(a);
-			} else {
+                totalTime += deltaT;
+                calcTotalDistance(distance);
+                calcSpeed(deltaT,distance,speeds);
+                calcMinMaxElev(a);
+                calcMinMaxLat(a);
+                calcMinMaxLong(a);
+            } else {
 
-				avgSpeedK = totalDistanceK/totalTime;
-				avgSpeedM = totalDistanceM/totalTime;
+                avgSpeedK = totalDistanceK / totalTime;
+                avgSpeedM = totalDistanceM / totalTime;
 
-				a = track.getTrackPoint(i);
+                a = track.getTrackPoint(i);
 
-				calcMinMaxElev(a);
-				calcMinMaxLat(a);
-				calcMinMaxLong(a);
-			}
-		}
+                calcMinMaxElev(a);
+                calcMinMaxLat(a);
+                calcMinMaxLong(a);
+            }
+        }
 
-		DecimalFormat format = new DecimalFormat("#.##");
-		TrackStats stats = track.getTrackStats();
-		stats.setAvgSpeedK(Double.parseDouble(format.format(avgSpeedK)));
-		stats.setAvgSpeedM(Double.parseDouble(format.format(avgSpeedM)));
-		stats.setMaxSpeedK(Double.parseDouble(format.format(maxSpeedK)));
-		stats.setMaxSpeedM(Double.parseDouble(format.format(maxSpeedM)));
-		stats.setDistK(Double.parseDouble(format.format(totalDistanceK)));
-		stats.setDistM(Double.parseDouble(format.format(totalDistanceM)));
-		stats.setMinElevM(Double.parseDouble(format.format(minElev)));
-		stats.setMaxElevM(Double.parseDouble(format.format(maxElev)));
-		stats.setMinElevFt(Double.parseDouble(format.format(minElev*FEET_PER_M)));
-		stats.setMaxElevFt(Double.parseDouble(format.format(maxElev*FEET_PER_M)));
-		stats.setMinLat(Double.parseDouble(format.format(minLat)));
-		stats.setMaxLat(Double.parseDouble(format.format(maxLat)));
-		stats.setMinLong(Double.parseDouble(format.format(minLong)));
-		stats.setMaxLong(Double.parseDouble(format.format(maxLong)));
-		stats.setName(track.getName());
-	}
+        DecimalFormat format = new DecimalFormat("#.##");
+        TrackStats stats = track.getTrackStats();
+        stats.setAvgSpeedK(Double.parseDouble(format.format(avgSpeedK)));
+        stats.setAvgSpeedM(Double.parseDouble(format.format(avgSpeedM)));
+        stats.setMaxSpeedK(Double.parseDouble(format.format(maxSpeedK)));
+        stats.setMaxSpeedM(Double.parseDouble(format.format(maxSpeedM)));
+        stats.setSpeeds(speeds);
+        stats.setDistK(Double.parseDouble(format.format(totalDistanceK)));
+        stats.setDistM(Double.parseDouble(format.format(totalDistanceM)));
+        stats.setMinElevM(Double.parseDouble(format.format(minElev)));
+        stats.setMaxElevM(Double.parseDouble(format.format(maxElev)));
+        stats.setMinElevFt(Double.parseDouble(format.format(minElev * FEET_PER_M)));
+        stats.setMaxElevFt(Double.parseDouble(format.format(maxElev * FEET_PER_M)));
+        stats.setMinLat(Double.parseDouble(format.format(minLat)));
+        stats.setMaxLat(Double.parseDouble(format.format(maxLat)));
+        stats.setMinLong(Double.parseDouble(format.format(minLong)));
+        stats.setMaxLong(Double.parseDouble(format.format(maxLong)));
+        stats.setName(track.getName());
+    }
 
-	/**
-	 * Calculates the average and max speeds in KPH and MPH for the track
-	 *
-	 * @param deltaT the change in time between the current two track points
-	 * @param distance the distance between the current two track points
-	 */
-	private void calcMaxSpeed(double deltaT, double distance) {
-		double speedK = (distance*M_TO_KM)/deltaT;
-		double speedM = (distance*M_TO_MI)/deltaT;
+    /**
+     * Calculates the average and max speeds in KPH and MPH for the track
+     *
+     * @param deltaT   the change in time between the current two track points
+     * @param distance the distance between the current two track points
+     */
+    private void calcSpeed(double deltaT, double distance, ArrayList<Double> speedList) {
+        double speedK = (distance * M_TO_KM) / deltaT;
+        double speedM = (distance * M_TO_MI) / deltaT;
 
-		if(speedK > maxSpeedK) {
-			maxSpeedK = speedK;
-		}
-		if(speedM > maxSpeedM) {
-			maxSpeedM = speedM;
-		}
-	}
+        //Adds calculated mile speed to speed list.
+        speedList.add(speedM);
 
-	/**
-	 * Calculates the max and min elevations of the track
-	 *
-	 * @param point the current track point
-	 */
-	//If on first iteration must set max/min to current value
-	//Then compare as normal
-	private void calcMinMaxElev(TrackPoint point) {
-		double elevation = point.getElevation();
-		if(elevation > maxElev) {
-			maxElev = elevation;
-		}
-		if(elevation < minElev) {
-			minElev = elevation;
-		}
-	}
+        if (speedK > maxSpeedK) {
+            maxSpeedK = speedK;
+        }
+        if (speedM > maxSpeedM) {
+            maxSpeedM = speedM;
+        }
+    }
+
+    /**
+     * Calculates the max and min elevations of the track
+     *
+     * @param point the current track point
+     */
+    //If on first iteration must set max/min to current value
+    //Then compare as normal
+    private void calcMinMaxElev(TrackPoint point) {
+        double elevation = point.getElevation();
+        if (elevation > maxElev) {
+            maxElev = elevation;
+        }
+        if (elevation < minElev) {
+            minElev = elevation;
+        }
+    }
 
 
-	/**
-	 * Calculates the max and min latitudes of the track
-	 *
-	 * @param point the current track point
-	 */
-	//If on first iteration must set max/min to current value
-	//Then compare as normal
-	private void calcMinMaxLat(TrackPoint point) {
-		double latitude = point.getLatitude();
-		if(latitude > maxLat) {
-			maxLat = latitude;
-		}
-		if(latitude < minLat) {
-			minLat = latitude;
-		}
-	}
+    /**
+     * Calculates the max and min latitudes of the track
+     *
+     * @param point the current track point
+     */
+    //If on first iteration must set max/min to current value
+    //Then compare as normal
+    private void calcMinMaxLat(TrackPoint point) {
+        double latitude = point.getLatitude();
+        if (latitude > maxLat) {
+            maxLat = latitude;
+        }
+        if (latitude < minLat) {
+            minLat = latitude;
+        }
+    }
 
-	/**
-	 * Calculates the max and min longitudes of the track
-	 *
-	 * @param point the current track point
-	 */
-	//If on first iteration must set max/min to current value
-	//Then compare as normal
-	private void calcMinMaxLong(TrackPoint point){
-		double longitude = point.getLongitude();
-		if(longitude > maxLong) {
-			maxLong = longitude;
-		}
-		if(longitude < minLong) {
-			minLong = longitude;
-		}
-	}
+    /**
+     * Calculates the max and min longitudes of the track
+     *
+     * @param point the current track point
+     */
+    //If on first iteration must set max/min to current value
+    //Then compare as normal
+    private void calcMinMaxLong(TrackPoint point) {
+        double longitude = point.getLongitude();
+        if (longitude > maxLong) {
+            maxLong = longitude;
+        }
+        if (longitude < minLong) {
+            minLong = longitude;
+        }
+    }
 
-	/**
-	 * Calculates the total distance covered in kilometers and miles for the track
-	 *
-	 * @param distance the distance between the current two track points
-	 */
-	//Don't execute if pointNum < 1
-	private void calcTotalDistance(double distance) {
-		totalDistanceK += distance*M_TO_KM;
-		totalDistanceM += distance*M_TO_MI;
-	}
+    /**
+     * Calculates the total distance covered in kilometers and miles for the track
+     *
+     * @param distance the distance between the current two track points
+     */
+    //Don't execute if pointNum < 1
+    private void calcTotalDistance(double distance) {
+        totalDistanceK += distance * M_TO_KM;
+        totalDistanceM += distance * M_TO_MI;
+    }
 }

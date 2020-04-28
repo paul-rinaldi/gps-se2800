@@ -1,17 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.chart.LineChart?>
-<?import javafx.scene.chart.NumberAxis?>
-<?import javafx.scene.control.CheckBox?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.Menu?>
-<?import javafx.scene.control.MenuBar?>
-<?import javafx.scene.control.MenuItem?>
-<?import javafx.scene.control.Spinner?>
-<?import javafx.scene.control.TableView?>
-<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.chart.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="465.0" prefWidth="882.0" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gps_plotter.PlotterController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="465.0" prefWidth="882.0" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gps_plotter.PlotterController">
     <children>
         <MenuBar layoutY="2.0" prefHeight="25.0" prefWidth="882.0">
             <menus>
@@ -19,6 +12,7 @@
                     <items>
                         <MenuItem mnemonicParsing="false" onAction="#exit" text="Close" />
                         <MenuItem mnemonicParsing="false" onAction="#graphTwoDPlot" text="View 2D Plot" />
+                        <MenuItem mnemonicParsing="false" onAction="#graphPlotSpeedAlongPath" text="View Speed Plot" />
                         <MenuItem mnemonicParsing="false" onAction="#graphElevationGainVsTime" text="Elevation Gain vs Time" />
                     </items>
                 </Menu>
@@ -37,5 +31,6 @@
         <TableView fx:id="tableView" layoutX="8.0" layoutY="95.0" prefHeight="346.0" prefWidth="304.0" />
       <CheckBox fx:id="showHideButton" layoutX="23.0" layoutY="69.0" mnemonicParsing="false" onAction="#showOrHide" selected="true" />
       <Label layoutX="2.0" layoutY="48.0" text="Show/Hide" />
+      <TextArea fx:id="LegendText" editable="false" layoutX="312.0" layoutY="422.0" prefHeight="38.0" prefWidth="568.0" text="Dark Blue = &lt; 3 MPH     Light Blue = Between 3 &amp; 7 MPH     Green = Between 7 &amp; 10 MPH                                                 hi" />
     </children>
 </AnchorPane>
