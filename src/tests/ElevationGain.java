@@ -19,19 +19,19 @@ public class ElevationGain {
         Plotter plotter = new Plotter(null, null);
 
         //elevations are random and vary in a way that makes sure method works
-        double[] elevations = {300.20, 302.20, 302.20, 300.10, 310.2, 400.2, 399, 401.2};
-        double[] gains = {0, 2.0, 0, 0, 8, 90, 0, 1};
+        double[] elevations = {300.20, 302.20, 302.20, 300.20, 310.2, 400.2, 399.2, 401.2};
+        double[] gains = {0, 2.0, 0, 0, 10, 90, 0, 2};
 
-        double highestElevation = elevations[0];
+        double prevElevation = elevations[0];
 
         for(int i = 0; i < elevations.length; i++){
 
             double currentElev = elevations[i];
-            double gain = plotter.calculateElevationGain(currentElev, highestElevation);
+            double gain = plotter.calculateElevationGain(currentElev, prevElevation);
             assertEquals(gains[i], gain);
-            if(gain > 0){
-                highestElevation = currentElev;
-            }
+
+            prevElevation = currentElev;
+
 
         }
 
@@ -45,18 +45,18 @@ public class ElevationGain {
 
         //elevations are random and vary in a way that makes sure method works; go up over time
         double[] elevations = {62, 28, 47, 89, 94, 94, 103, 102, 102, 104};
-        double[] gains = {0, 0, 0, 27, 5, 0, 9, 0, 0, 1};
+        double[] gains = {0, 0, 19, 42, 5, 0, 9, 0, 0, 2};
 
-        double highestElevation = elevations[0];
+        double prevElevation = elevations[0];
 
         for (int i = 0; i < elevations.length; i++) {
 
             double currentElev = elevations[i];
-            double gain = plotter.calculateElevationGain(currentElev, highestElevation);
+            double gain = plotter.calculateElevationGain(currentElev, prevElevation);
             assertEquals(gains[i], gain);
-            if (gain > 0) {
-                highestElevation = currentElev;
-            }
+
+            prevElevation = currentElev;
+
 
         }
     }

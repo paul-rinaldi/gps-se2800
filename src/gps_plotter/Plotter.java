@@ -11,6 +11,7 @@ import javafx.scene.paint.Color;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
 
 /**
  * Handles plotting tasks for the PlotterController
@@ -42,37 +43,37 @@ public class Plotter {
      * @param track track from which points will be plotted
      */
     public void plotElevationGain(Track track) {
+        
         XYChart.Series series = new XYChart.Series();
         series.setName(track.getName());
-        setChartAxisLabels("Time Passed (min)", "Elevation Gain (m)");
+        setChartAxisLabels("Time Passed (min)", "Elevation Gain (km)");
 
-        double highestElevation = track.getTrackPoint(0).getElevation();
+        double previousElevation = track.getTrackPoint(0).getElevation();
         double elevationPoint = 0;
         Date firstDate = null;
         Date currentDate;
 
-        for (int i = 0; i < track.getPointAmount(); i++) {
+        int i = 0;
+        for (TrackPoint point: track.getTrackPoints()) {
 
-            TrackPoint currentTrackPoint = track.getTrackPoint(i);
-
-            double currentElevation = currentTrackPoint.getElevation();
+            double currentElevation = point.getElevation();
 
             //Set first date to calculate time passed
             if (i == 0) {
-                firstDate = currentTrackPoint.getTime();
+                firstDate = point.getTime();
             }
 
-            currentDate = currentTrackPoint.getTime();
+            currentDate = point.getTime();
             double timePoint = timePassedInMin(currentDate, firstDate);
 
-            double elevationGain = calculateElevationGain(currentElevation, highestElevation);
+            double elevationGain = calculateElevationGain(currentElevation, previousElevation);
             elevationPoint += elevationGain; //Add the change in elevation to total change
 
             plotPoint(series, timePoint, elevationPoint); //Plot point on LineChart
 
-            if (elevationGain > 0.0) { //Only set highest elevation if gain is above 0
-                highestElevation = currentTrackPoint.getElevation();
-            }
+            previousElevation = point.getElevation();
+
+            i++;
         }
         this.chart.getData().add(series);
     }
@@ -173,31 +174,40 @@ public class Plotter {
                 for (int i = 0; i < tracksHandler.getTrackAmount(); i++) {
                     if (showOnGraph[i]) {
                         Track track = tracksHandler.getTrack(i);
-                        //Gets the instantaneous speeds for the track. 
-                        ArrayList<Double> speeds = track.getTrackStats().getSpeeds();
-                        for (int z = 0; z < track.getPointAmount() - 1; z++) {
-                            XYChart.Series series = new XYChart.Series();
-                            series.setName(track.getName() + " " + z);
-                            //First point
-                            TrackPoint currentTrackPoint = track.getTrackPoint(z);
-                            double x = calculateXCoord(currentTrackPoint, trackZero);
-                            double y = calculateYCoord(currentTrackPoint, trackZero);
-                            plotPoint(series, x, y);
-                            //Second point
-                            TrackPoint nextTrackPoint = track.getTrackPoint(z + 1);
-                            x = calculateXCoord(nextTrackPoint, trackZero);
-                            y = calculateYCoord(nextTrackPoint, trackZero);
-                            plotPoint(series, x, y);
-                            //Adds the series to the chart
-                            this.chart.getData().add(series);
-                            //Gets the node property for the line of the newly created series.
-                            Node line = series.getNode().lookup(".chart-series-line");
+                        //Gets the instantaneous speeds for the track.
 
-                            //Decides line color
-                            color = setColor(speeds.get(z));
+                        Iterator<TrackPoint> nextPoint = track.getTrackPoints().iterator();
+                        nextPoint.next();//Goes to +1 of for loop iterator
+                        Iterator<Double> speedIter = track.getTrackStats().getSpeeds().iterator();
 
-                            //Sets the line color for the series.
-                            line.setStyle("-fx-stroke: rgb(" + rgbFormat(color) + ");");
+                        int z = 0;
+                        for (TrackPoint point: track.getTrackPoints()) {
+
+                            if(z < track.getPointAmount()-1) {
+                                XYChart.Series series = new XYChart.Series();
+                                series.setName(track.getName() + " " + z);
+                                //First point
+                                double x = calculateXCoord(point, trackZero);
+                                double y = calculateYCoord(point, trackZero);
+                                plotPoint(series, x, y);
+                                //Second point
+                                TrackPoint nextTrackPoint = nextPoint.next();
+                                x = calculateXCoord(nextTrackPoint, trackZero);
+                                y = calculateYCoord(nextTrackPoint, trackZero);
+                                plotPoint(series, x, y);
+                                //Adds the series to the chart
+                                this.chart.getData().add(series);
+                                //Gets the node property for the line of the newly created series.
+                                Node line = series.getNode().lookup(".chart-series-line");
+
+                                //Decides line color
+                                color = setColor(speedIter.next());
+
+                                //Sets the line color for the series.
+                                line.setStyle("-fx-stroke: rgb(" + rgbFormat(color) + ");");
+                            }
+
+                            z++;
                         }
                         plotterController.addTable(track.getTrackStats());
                     }
