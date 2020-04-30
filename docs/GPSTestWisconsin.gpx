@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gpx>
+  <trk>
+    <name>GPS Wisconsin outline</name>
+    <trkseg>
+      <trkpt lat="42.492700" lon="-87.802095"> 
+        <ele>500.0000000000000</ele>
+        <time>2020-04-28T05:00:00Z</time>
+      </trkpt>
+	  <trkpt lat="42.508265" lon="-90.639852">
+        <ele>500.0000000000000</ele>
+        <time>2020-04-28T06:00:00Z</time>
+      </trkpt>
+	  <trkpt lat="43.825716" lon="-91.317359">
+        <ele>500.0000000000000</ele>
+        <time>2020-04-28T07:00:00Z</time>
+      </trkpt>
+	  <trkpt lat="44.755970" lon="-92.824292">
+        <ele>500.0000000000000</ele>
+        <time>2020-04-28T08:00:00Z</time>
+      </trkpt>
+	  <trkpt lat="46.741639" lon="-92.129325">
+        <ele>500.0000000000000</ele>
+        <time>2020-04-28T09:00:00Z</time>
+      </trkpt>
+	  <trkpt lat="47.045067" lon="-90.428436">
+        <ele>500.0000000000000</ele>
+        <time>2020-04-28T10:00:00Z</time>
+      </trkpt>
+	  <trkpt lat="46.635196" lon="-90.722141">
+        <ele>500.0000000000000</ele>
+        <time>2020-04-28T11:00:00Z</time>
+      </trkpt>
+	  <trkpt lat="45.657421" lon="-87.586080">
+        <ele>500.0000000000000</ele>
+        <time>2020-04-28T12:00:00Z</time>
+      </trkpt>
+	  <trkpt lat="44.525338" lon="-88.044099">
+        <ele>500.0000000000000</ele>
+        <time>2020-04-28T13:00:00Z</time>
+      </trkpt>
+	  <trkpt lat="45.390370" lon="-86.920155">
+        <ele>500.0000000000000</ele>
+        <time>2020-04-28T14:00:00Z</time>
+      </trkpt>
+	  <trkpt lat="44.018371" lon="-87.723933">
+        <ele>500.0000000000000</ele>
+        <time>2020-04-28T15:00:00Z</time>
+      </trkpt>
+	  <trkpt lat="43.253125" lon="-87.896030">
+        <ele>500.0000000000000</ele>
+        <time>2020-04-28T16:00:00Z</time>
+      </trkpt>
+      <trkpt lat="42.492700" lon="-87.802095"> 
+        <ele>500.0000000000000</ele>
+        <time>2020-04-28T17:00:00Z</time>
+      </trkpt>
+    </trkseg>
+  </trk>
+</gpx>

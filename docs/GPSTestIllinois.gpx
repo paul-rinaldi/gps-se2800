@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gpx>
+  <trk>
+    <name>GPS Illinois outline</name>
+    <trkseg>
+      <trkpt lat="42.492700" lon="-87.802095"> 
+        <ele>500.0000000000000</ele>
+        <time>2020-04-28T06:00:00Z</time>
+      </trkpt>
+	  <trkpt lat="42.508265" lon="-90.639852">
+        <ele>500.0000000000000</ele>
+        <time>2020-04-28T07:00:00Z</time>
+      </trkpt>
+      <trkpt lat="41.994040" lon="-90.165343"> 
+        <ele>500.0000000000000</ele>
+        <time>2020-04-28T08:00:00Z</time>
+      </trkpt>
+      <trkpt lat="41.390256" lon="-90.993867"> 
+        <ele>500.0000000000000</ele>
+        <time>2020-04-28T09:00:00Z</time>
+      </trkpt>
+      <trkpt lat="40.893823" lon="-90.979571"> 
+        <ele>500.0000000000000</ele>
+        <time>2020-04-28T10:00:00Z</time>
+      </trkpt>
+      <trkpt lat="40.214837" lon="-91.482761"> 
+        <ele>500.0000000000000</ele>
+        <time>2020-04-28T11:00:00Z</time>
+      </trkpt>
+      <trkpt lat="38.880660" lon="-90.166096"> 
+        <ele>500.0000000000000</ele>
+        <time>2020-04-28T12:00:00Z</time>
+      </trkpt>
+      <trkpt lat="38.197814" lon="-90.343559"> 
+        <ele>500.0000000000000</ele>
+        <time>2020-04-28T13:00:00Z</time>
+      </trkpt>
+      <trkpt lat="37.621140" lon="-89.506540"> 
+        <ele>500.0000000000000</ele>
+        <time>2020-04-28T14:00:00Z</time>
+      </trkpt>
+      <trkpt lat="36.988556" lon="-89.254178"> 
+        <ele>500.0000000000000</ele>
+        <time>2020-04-28T15:00:00Z</time>
+      </trkpt>
+      <trkpt lat="37.067231" lon="-88.472168"> 
+        <ele>500.0000000000000</ele>
+        <time>2020-04-28T16:00:00Z</time>
+      </trkpt>
+      <trkpt lat="38.274154" lon="-87.920347">  
+        <ele>500.0000000000000</ele>
+        <time>2020-04-28T17:00:00Z</time>
+      </trkpt>
+      <trkpt lat="39.354136" lon="-87.549402">
+        <ele>500.0000000000000</ele>
+        <time>2020-04-28T18:00:00Z</time>
+      </trkpt>
+      <trkpt lat="41.731009" lon="-87.535297">
+        <ele>500.0000000000000</ele>
+        <time>2020-04-28T19:00:00Z</time>
+      </trkpt>
+      <trkpt lat="42.492700" lon="-87.802095"> 
+        <ele>500.0000000000000</ele>
+        <time>2020-04-28T20:00:00Z</time>
+      </trkpt>
+    </trkseg>
+  </trk>
+</gpx>
