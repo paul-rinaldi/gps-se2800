@@ -175,39 +175,30 @@ public class Plotter {
                     if (showOnGraph[i]) {
                         Track track = tracksHandler.getTrack(i);
                         //Gets the instantaneous speeds for the track.
+                        ArrayList<Double> speeds = track.getTrackStats().getSpeeds();
+                        for (int z = 0; z < track.getPointAmount() - 1; z++) {
+                            XYChart.Series series = new XYChart.Series();
+                            series.setName(track.getName() + " " + z);
+                            //First point
+                            TrackPoint currentTrackPoint = track.getTrackPoint(z);
+                            double x = calculateXCoord(currentTrackPoint, trackZero);
+                            double y = calculateYCoord(currentTrackPoint, trackZero);
+                            plotPoint(series, x, y);
+                            //Second point
+                            TrackPoint nextTrackPoint = track.getTrackPoint(z + 1);
+                            x = calculateXCoord(nextTrackPoint, trackZero);
+                            y = calculateYCoord(nextTrackPoint, trackZero);
+                            plotPoint(series, x, y);
+                            //Adds the series to the chart
+                            this.chart.getData().add(series);
+                            //Gets the node property for the line of the newly created series.
+                            Node line = series.getNode().lookup(".chart-series-line");
 
-                        Iterator<TrackPoint> nextPoint = track.getTrackPoints().iterator();
-                        nextPoint.next();//Goes to +1 of for loop iterator
-                        Iterator<Double> speedIter = track.getTrackStats().getSpeeds().iterator();
+                            //Decides line color
+                            color = setColor(speeds.get(z));
 
-                        int z = 0;
-                        for (TrackPoint point: track.getTrackPoints()) {
-
-                            if(z < track.getPointAmount()-1) {
-                                XYChart.Series series = new XYChart.Series();
-                                series.setName(track.getName() + " " + z);
-                                //First point
-                                double x = calculateXCoord(point, trackZero);
-                                double y = calculateYCoord(point, trackZero);
-                                plotPoint(series, x, y);
-                                //Second point
-                                TrackPoint nextTrackPoint = nextPoint.next();
-                                x = calculateXCoord(nextTrackPoint, trackZero);
-                                y = calculateYCoord(nextTrackPoint, trackZero);
-                                plotPoint(series, x, y);
-                                //Adds the series to the chart
-                                this.chart.getData().add(series);
-                                //Gets the node property for the line of the newly created series.
-                                Node line = series.getNode().lookup(".chart-series-line");
-
-                                //Decides line color
-                                color = setColor(speedIter.next());
-
-                                //Sets the line color for the series.
-                                line.setStyle("-fx-stroke: rgb(" + rgbFormat(color) + ");");
-                            }
-
-                            z++;
+                            //Sets the line color for the series.
+                            line.setStyle("-fx-stroke: rgb(" + rgbFormat(color) + ");");
                         }
                         plotterController.addTable(track.getTrackStats());
                     }
