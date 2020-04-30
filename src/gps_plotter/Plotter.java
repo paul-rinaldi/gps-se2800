@@ -43,10 +43,10 @@ public class Plotter {
      * @param track track from which points will be plotted
      */
     public void plotElevationGain(Track track) {
-        
+
         XYChart.Series series = new XYChart.Series();
         series.setName(track.getName());
-        setChartAxisLabels("Time Passed (min)", "Elevation Gain (km)");
+        setChartAxisLabels("Time Passed (min)", "Elevation Gain (m)");
 
         double previousElevation = track.getTrackPoint(0).getElevation();
         double elevationPoint = 0;
