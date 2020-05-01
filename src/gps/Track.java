@@ -35,6 +35,8 @@ public class Track {
 		return name;
 	}
 
+	public ArrayList<TrackPoint> getTrackPoints(){return this.trackPoints;}
+
 	public TrackPoint getTrackPoint(int index) {
 		return trackPoints.get(index);
 	}

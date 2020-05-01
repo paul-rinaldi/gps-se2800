@@ -11,6 +11,7 @@ import javafx.scene.paint.Color;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
 
 /**
  * Handles plotting tasks for the PlotterController
@@ -42,37 +43,37 @@ public class Plotter {
      * @param track track from which points will be plotted
      */
     public void plotElevationGain(Track track) {
+
         XYChart.Series series = new XYChart.Series();
         series.setName(track.getName());
         setChartAxisLabels("Time Passed (min)", "Elevation Gain (m)");
 
-        double highestElevation = track.getTrackPoint(0).getElevation();
+        double previousElevation = track.getTrackPoint(0).getElevation();
         double elevationPoint = 0;
         Date firstDate = null;
         Date currentDate;
 
-        for (int i = 0; i < track.getPointAmount(); i++) {
+        int i = 0;
+        for (TrackPoint point: track.getTrackPoints()) {
 
-            TrackPoint currentTrackPoint = track.getTrackPoint(i);
-
-            double currentElevation = currentTrackPoint.getElevation();
+            double currentElevation = point.getElevation();
 
             //Set first date to calculate time passed
             if (i == 0) {
-                firstDate = currentTrackPoint.getTime();
+                firstDate = point.getTime();
             }
 
-            currentDate = currentTrackPoint.getTime();
+            currentDate = point.getTime();
             double timePoint = timePassedInMin(currentDate, firstDate);
 
-            double elevationGain = calculateElevationGain(currentElevation, highestElevation);
+            double elevationGain = calculateElevationGain(currentElevation, previousElevation);
             elevationPoint += elevationGain; //Add the change in elevation to total change
 
             plotPoint(series, timePoint, elevationPoint); //Plot point on LineChart
 
-            if (elevationGain > 0.0) { //Only set highest elevation if gain is above 0
-                highestElevation = currentTrackPoint.getElevation();
-            }
+            previousElevation = point.getElevation();
+
+            i++;
         }
         this.chart.getData().add(series);
     }
@@ -173,7 +174,7 @@ public class Plotter {
                 for (int i = 0; i < tracksHandler.getTrackAmount(); i++) {
                     if (showOnGraph[i]) {
                         Track track = tracksHandler.getTrack(i);
-                        //Gets the instantaneous speeds for the track. 
+                        //Gets the instantaneous speeds for the track.
                         ArrayList<Double> speeds = track.getTrackStats().getSpeeds();
                         for (int z = 0; z < track.getPointAmount() - 1; z++) {
                             XYChart.Series series = new XYChart.Series();
