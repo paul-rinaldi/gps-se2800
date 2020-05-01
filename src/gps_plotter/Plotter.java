@@ -22,6 +22,7 @@ public class Plotter {
     private static final double RADIUS_OF_EARTH_M = 6371000;
 
     private static double MS_IN_MIN = 60000;
+    private static double M_IN_KM = 1000;
 
     private LineChart<Double, Double> chart;
 
@@ -46,7 +47,7 @@ public class Plotter {
 
         XYChart.Series series = new XYChart.Series();
         series.setName(track.getName());
-        setChartAxisLabels("Time Passed (min)", "Elevation Gain (m)");
+        setChartAxisLabels("Time Passed (min)", "Elevation Gain (km)");
 
         double previousElevation = track.getTrackPoint(0).getElevation();
         double elevationPoint = 0;
@@ -66,7 +67,7 @@ public class Plotter {
             currentDate = point.getTime();
             double timePoint = timePassedInMin(currentDate, firstDate);
 
-            double elevationGain = calculateElevationGain(currentElevation, previousElevation);
+            double elevationGain = calculateElevationGain(currentElevation, previousElevation)/M_IN_KM;
             elevationPoint += elevationGain; //Add the change in elevation to total change
 
             plotPoint(series, timePoint, elevationPoint); //Plot point on LineChart
@@ -161,7 +162,7 @@ public class Plotter {
         TracksHandler tracksHandler = plotterController.getTracksHandler();
         //Configures axises if there are tracks.
         if (tracksHandler != null) {
-            setChartAxisLabels("Meters(east and west)", "Meters(north and south)");
+            setChartAxisLabels("Kilometer(east and west)", "Kilometers(north and south)");
             int index = getFirstLoadedIndex();
             boolean[] showOnGraph = plotterController.getShowOnGraph();
 
@@ -181,13 +182,13 @@ public class Plotter {
                             series.setName(track.getName() + " " + z);
                             //First point
                             TrackPoint currentTrackPoint = track.getTrackPoint(z);
-                            double x = calculateXCoord(currentTrackPoint, trackZero);
-                            double y = calculateYCoord(currentTrackPoint, trackZero);
+                            double x = calculateXCoord(currentTrackPoint, trackZero)/M_IN_KM;
+                            double y = calculateYCoord(currentTrackPoint, trackZero)/M_IN_KM;
                             plotPoint(series, x, y);
                             //Second point
                             TrackPoint nextTrackPoint = track.getTrackPoint(z + 1);
-                            x = calculateXCoord(nextTrackPoint, trackZero);
-                            y = calculateYCoord(nextTrackPoint, trackZero);
+                            x = calculateXCoord(nextTrackPoint, trackZero)/M_IN_KM;
+                            y = calculateYCoord(nextTrackPoint, trackZero)/M_IN_KM;
                             plotPoint(series, x, y);
                             //Adds the series to the chart
                             this.chart.getData().add(series);
@@ -227,7 +228,7 @@ public class Plotter {
         chart.setTitle("Cartesian Coordinates");
         TracksHandler tracksHandler = plotterController.getTracksHandler();
         if (tracksHandler != null) {
-            setChartAxisLabels("Meters(east and west)", "Meters(north and south)");
+            setChartAxisLabels("Kilometers(east and west)", "Kilometers(north and south)");
             int index = getFirstLoadedIndex();
             boolean[] showOnGraph = plotterController.getShowOnGraph();
             if (index != -1) {
@@ -239,8 +240,8 @@ public class Plotter {
                         series.setName(track.getName());
                         for (int z = 0; z < track.getPointAmount(); z++) {
                             TrackPoint currentTrackPoint = track.getTrackPoint(z);
-                            double x = calculateXCoord(currentTrackPoint, trackZero);
-                            double y = calculateYCoord(currentTrackPoint, trackZero);
+                            double x = calculateXCoord(currentTrackPoint, trackZero)/M_IN_KM;
+                            double y = calculateYCoord(currentTrackPoint, trackZero)/M_IN_KM;
                             plotPoint(series, x, y);
                         }
                         this.chart.getData().add(series);
