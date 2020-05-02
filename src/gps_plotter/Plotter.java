@@ -160,11 +160,11 @@ public class Plotter {
         TracksHandler tracksHandler = plotterController.getTracksHandler();
         //Configures axises if there are tracks.
         if (tracksHandler != null) {
+            System.out.println("HERE");
             setChartAxisLabels("Meters(east and west)", "Meters(north and south)");
             int index = getFirstLoadedIndex();
             boolean[] showOnGraph = plotterController.getShowOnGraph();
-
-            //If there is a track selected...
+             //If there is a track selected...
             if (index != -1) {
                 //Loads the first track's first point.
                 TrackPoint trackZero = tracksHandler.getTrack(index).getTrackPoint(0);
@@ -173,7 +173,7 @@ public class Plotter {
                 for (int i = 0; i < tracksHandler.getTrackAmount(); i++) {
                     if (showOnGraph[i]) {
                         Track track = tracksHandler.getTrack(i);
-                        //Gets the instantaneous speeds for the track. 
+                        //Gets the instantaneous speeds for the track.
                         ArrayList<Double> speeds = track.getTrackStats().getSpeeds();
                         for (int z = 0; z < track.getPointAmount() - 1; z++) {
                             XYChart.Series series = new XYChart.Series();
@@ -189,7 +189,7 @@ public class Plotter {
                             y = calculateYCoord(nextTrackPoint, trackZero);
                             plotPoint(series, x, y);
                             //Adds the series to the chart
-                            this.chart.getData().add(series);
+                            chart.getData().add(series);
                             //Gets the node property for the line of the newly created series.
                             Node line = series.getNode().lookup(".chart-series-line");
 
@@ -217,6 +217,7 @@ public class Plotter {
      * @throws throws a null pointer exception when this is called and no tracks have been loaded
      */
     public void convertToCartesian() throws NullPointerException {
+        chart.axisSortingPolicyProperty().setValue(LineChart.SortingPolicy.NONE);
         //Clears the graph when window opens and a series exists.
         checkGraph();
 
@@ -226,7 +227,7 @@ public class Plotter {
         chart.setTitle("Cartesian Coordinates");
         TracksHandler tracksHandler = plotterController.getTracksHandler();
         if (tracksHandler != null) {
-            setChartAxisLabels("Meters(east and west)", "Meters(north and south)");
+            setChartAxisLabels("Kilometers(east and west)", "Kilometers(north and south)");
             int index = getFirstLoadedIndex();
             boolean[] showOnGraph = plotterController.getShowOnGraph();
             if (index != -1) {
@@ -292,7 +293,7 @@ public class Plotter {
     }
 
     //Method to select which color to represent speed with
-    private Color setColor(Double speed) {
+            private Color setColor(Double speed) {
         //Dark blue- any speed less than 3 MPH
         if (speed < 3) {
             return Color.BLUE;
