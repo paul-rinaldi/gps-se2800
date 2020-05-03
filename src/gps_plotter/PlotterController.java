@@ -80,6 +80,8 @@ public class PlotterController {
      * Plots all selected Tracks' elevation gains vs time
      */
     public void graphElevationGainVsTime() {
+        xAxis.setAutoRanging(true);
+        yAxis.setAutoRanging(true);
         lastGraphLoaded = "Elevation Gain Vs Time";
 
         showHideButton.disableProperty().setValue(false);
@@ -262,6 +264,37 @@ public class PlotterController {
 
     public void setLegendText(String message) {
         LegendText.setText(message);
+    }
+
+    public void scaleAxis(double xMax, double xMin, double yMax, double yMin){
+        xAxis.setAutoRanging(false);
+        yAxis.setAutoRanging(false);
+        if (xMax <= 10){
+            xMax += 2;
+        }
+        if(xMin >= -10){
+            xMin -= 2;
+        }
+        if (yMax <= 10){
+            yMax += 2;
+        }
+        if(yMin >= -10){
+            yMin -= 2;
+        }
+        if(yMax > xMax){
+            xAxis.setUpperBound(yMax);
+            yAxis.setUpperBound(yMax);
+        } else {
+            xAxis.setUpperBound(xMax);
+            yAxis.setUpperBound(xMax);
+        }
+        if (yMin < xMin){
+            xAxis.setLowerBound(yMin);
+            yAxis.setLowerBound(yMin);
+        } else {
+            xAxis.setLowerBound(xMin);
+            yAxis.setLowerBound(xMin);
+        }
     }
 }
 

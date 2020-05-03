@@ -21,8 +21,14 @@ public class Plotter {
     private static final double DEG_TO_RAD = 0.0174533;
     private static final double RADIUS_OF_EARTH_M = 6371000;
 
-    private static double MS_IN_MIN = 60000;
-    private static double M_IN_KM = 1000;
+    private static final double MS_IN_MIN = 60000;
+    private static final double M_IN_KM = 1000;
+
+    //used to scale the graph
+    private int xMax;
+    private int xMin;
+    private int yMax;
+    private int yMin;
 
     private LineChart<Double, Double> chart;
 
@@ -218,6 +224,7 @@ public class Plotter {
      * @throws throws a null pointer exception when this is called and no tracks have been loaded
      */
     public void convertToCartesian() throws NullPointerException {
+        resetMinMax();
         chart.axisSortingPolicyProperty().setValue(LineChart.SortingPolicy.NONE);
         //Clears the graph when window opens and a series exists.
         checkGraph();
@@ -242,6 +249,7 @@ public class Plotter {
                             TrackPoint currentTrackPoint = track.getTrackPoint(z);
                             double x = calculateXCoord(currentTrackPoint, trackZero)/M_IN_KM;
                             double y = calculateYCoord(currentTrackPoint, trackZero)/M_IN_KM;
+                            checkMinMax(x, y);
                             plotPoint(series, x, y);
                         }
                         this.chart.getData().add(series);
@@ -251,6 +259,30 @@ public class Plotter {
             }
         } else {
             throw new NullPointerException("No Tracks are Loaded!");
+        }
+        plotterController.scaleAxis(xMax, xMin, yMax, yMin);
+    }
+
+    private void resetMinMax() {
+        xMax = 0;
+        xMin = 0;
+        yMax = 0;
+        yMin = 0;
+    }
+
+    private void checkMinMax(double xCheck, double yCheck) {
+        //multiply by 1.1 to scale the axis so the bounds are not right on the edge of the graph
+        int x = (int) Math.round(xCheck * 1.1);
+        int y = (int) Math.round(yCheck * 1.1);
+        if (x > xMax){
+            xMax = x;
+        } else if(x < xMin){
+            xMin = x;
+        }
+        if (y > yMax){
+            yMax = y;
+        } else if(y < yMin){
+            yMin = y;
         }
     }
 
