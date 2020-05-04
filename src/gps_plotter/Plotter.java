@@ -151,8 +151,7 @@ public class Plotter {
     public void plotSpeedOverPath() throws NullPointerException {
         //Clears the graph when window opens and a series exists.
         checkGraph();
-        //Temporarily removes the ability to make symbols for the lines.
-        chart.setCreateSymbols(false);
+        //Brings up the alternative legend.
         plotterController.setLegendTextVisible(true);
         plotterController.setLegendText("Dark Blue = < 3 MPH     Light Blue = Between 3 & 7 MPH     Green = Between 7 & 10 MPH" +
                 "\nYellow = Between 10 & 15 MPH     Orange = Between 15 & 20 MPH     Red = Over 20 MPH");
@@ -222,7 +221,7 @@ public class Plotter {
         //Clears the graph when window opens and a series exists.
         checkGraph();
 
-        plotterController.reEnableParts();
+        plotterController.reenableLegend();
 
         //Sets chart name.
         chart.setTitle("Cartesian Coordinates");
