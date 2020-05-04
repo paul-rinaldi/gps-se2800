@@ -37,7 +37,7 @@ public class PlotterController {
     private GPSController gpsController;
     private Plotter plotter;
     private TracksHandler tracksHandler;
-    private String lastGraphLoaded;
+    private String lastGraphLoaded = "";
 
     private Stage plotterStage;
 
@@ -67,9 +67,7 @@ public class PlotterController {
 
         //Adds event listener to spinner when the track gets changed to update state of select button
         trackSpinner.valueProperty().addListener((obs, oldValue, newValue) -> {
-            if (showHideButton.isDisable()) {
-                showHideButton.disableProperty().setValue(false);
-            }
+
             try {
                 int index = tracksHandler.getTrackIndex(newValue);
                 showHideButton.selectedProperty().setValue(showOnGraph[index]);
@@ -193,6 +191,13 @@ public class PlotterController {
             default:
                 System.out.println("Error unrecognized graph name: " + lastGraphLoaded);
         }
+    }
+
+    /**
+     * Disables show and hide checkbox for tracks
+     */
+    public void disableShowHideButton(){
+        showHideButton.disableProperty().setValue(true);
     }
 
     /**

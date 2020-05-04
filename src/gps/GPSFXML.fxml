@@ -15,9 +15,7 @@
           </Menu>
             <Menu mnemonicParsing="false" text="Graph">
               <items>
-                <MenuItem mnemonicParsing="false" onAction="#showPlotter" text="2D Plot" />
-                  <MenuItem mnemonicParsing="false" onAction="#showElevationGainVsTime" text="Elevation Gain Vs Time" />
-                  <MenuItem mnemonicParsing="false" onAction="#showSpeedPlot" text="Instantaneous Speed " />
+                <MenuItem mnemonicParsing="false" onAction="#showPlotter" text="Open plotter" />
               </items>
             </Menu>
             <Menu mnemonicParsing="false" text="Google Maps">

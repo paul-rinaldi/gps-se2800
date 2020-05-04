@@ -69,6 +69,8 @@ public class GPSController {
     private CaptureController mapsController;
     private Stage mapsStage;
 
+    private boolean firstTimePlotting = true;
+
     public GPSController() {
         trackNames = FXCollections.observableArrayList();
     }
@@ -430,28 +432,12 @@ public class GPSController {
      */
     public void showPlotter() {
         plotterController.setTracksHandler(tracksHandler);
-        plotterStage.show();
-        plotterController.graphTwoDPlot();
-    }
 
-    /**
-     * Opens plotter window and immediately graphs all loaded tracks with ElevationGain vs Time
-     * Only graphs selected tracks if window was already modified (saves state)
-     */
-    public void showElevationGainVsTime() {
-        plotterController.setTracksHandler(tracksHandler);
+        if(tracksHandler == null || firstTimePlotting){
+            plotterController.disableShowHideButton();
+            this.firstTimePlotting = false;
+        }
         plotterStage.show();
-        plotterController.graphElevationGainVsTime();
-    }
-
-    /**
-     * Opens plotter window and immediately graphs all loaded tracks with Plot Speed Along Path
-     * Only graphs selected tracks if window was already modified (saves state)
-     */
-    public void showSpeedPlot() {
-        plotterController.setTracksHandler(tracksHandler);
-        plotterStage.show();
-        plotterController.graphPlotSpeedAlongPath();
     }
 
     /**
