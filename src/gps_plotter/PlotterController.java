@@ -269,18 +269,6 @@ public class PlotterController {
     public void scaleAxis(double xMax, double xMin, double yMax, double yMin){
         xAxis.setAutoRanging(false);
         yAxis.setAutoRanging(false);
-        if (xMax <= 10){
-            xMax += 2;
-        }
-        if(xMin >= -10){
-            xMin -= 2;
-        }
-        if (yMax <= 10){
-            yMax += 2;
-        }
-        if(yMin >= -10){
-            yMin -= 2;
-        }
         if(yMax > xMax){
             xAxis.setUpperBound(yMax);
             yAxis.setUpperBound(yMax);

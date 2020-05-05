@@ -264,10 +264,10 @@ public class Plotter {
     }
 
     private void resetMinMax() {
-        xMax = 0;
-        xMin = 0;
-        yMax = 0;
-        yMin = 0;
+        xMax = 2;
+        xMin = -2;
+        yMax = 2;
+        yMin = -2;
     }
 
     private void checkMinMax(double xCheck, double yCheck) {
