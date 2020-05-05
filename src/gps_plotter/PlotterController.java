@@ -1,17 +1,13 @@
 package gps_plotter;
 
 import gps.*;
-import javafx.application.Platform;
-import javafx.beans.InvalidationListener;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
-import javafx.scene.chart.XYChart;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
-import javafx.stage.Window;
 
 /**
  * Controller in charge of plotting window
@@ -282,6 +278,21 @@ public class PlotterController {
     public void scaleAxis(double xMax, double xMin, double yMax, double yMin){
         xAxis.setAutoRanging(false);
         yAxis.setAutoRanging(false);
+        //added so edge cases at small points are easier to see
+        /*
+        if (xMax < 10){
+            xMax++;
+        }
+        if (xMin > -10){
+            xMin--;
+        }
+        if (yMax < 10){
+            yMax++;
+        }
+        if (yMin > -10){
+            yMin--;
+        }
+        */
         if(yMax > xMax){
             xAxis.setUpperBound(yMax);
             yAxis.setUpperBound(yMax);
