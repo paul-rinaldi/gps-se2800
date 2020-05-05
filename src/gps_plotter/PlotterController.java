@@ -81,8 +81,6 @@ public class PlotterController {
      * Plots all selected Tracks' elevation gains vs time
      */
     public void graphElevationGainVsTime() {
-        xAxis.setAutoRanging(true);
-        yAxis.setAutoRanging(true);
         lastGraphLoaded = "Elevation Gain Vs Time";
 
         showHideButton.disableProperty().setValue(false);
@@ -273,6 +271,14 @@ public class PlotterController {
         LegendText.setText(message);
     }
 
+    /**
+     * sets both axis to the same scale based on the variables passed in, sets the max value for both the x and y axis
+     * based on what number is greater, similarly sets the x and y axis min's to which number is smaller.
+     * @param xMax the max x axis value
+     * @param xMin the min x axis value
+     * @param yMax the max y axis value
+     * @param yMin the min y axis value
+     */
     public void scaleAxis(double xMax, double xMin, double yMax, double yMin){
         xAxis.setAutoRanging(false);
         yAxis.setAutoRanging(false);

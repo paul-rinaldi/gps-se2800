@@ -5,13 +5,11 @@ import gps.*;
 
 import javafx.scene.Node;
 import javafx.scene.chart.LineChart;
-import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
 import javafx.scene.paint.Color;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.Iterator;
 
 /**
  * Handles plotting tasks for the PlotterController
@@ -155,6 +153,7 @@ public class Plotter {
      * @throws throws a null pointer exception when this is called and no tracks have been loaded
      */
     public void plotSpeedOverPath() throws NullPointerException {
+        resetMinMax();
         //Clears the graph when window opens and a series exists.
         checkGraph();
         //Brings up the alternative legend.
@@ -193,6 +192,7 @@ public class Plotter {
                             TrackPoint nextTrackPoint = track.getTrackPoint(z + 1);
                             x = calculateXCoord(nextTrackPoint, trackZero)/M_IN_KM;
                             y = calculateYCoord(nextTrackPoint, trackZero)/M_IN_KM;
+                            checkMinMax(x, y);
                             plotPoint(series, x, y);
                             //Adds the series to the chart
                             chart.getData().add(series);
@@ -213,6 +213,7 @@ public class Plotter {
         } else {
             throw new NullPointerException("No Tracks are Loaded!");
         }
+        plotterController.scaleAxis(xMax, xMin, yMax, yMin);
     }
 
 
@@ -263,10 +264,10 @@ public class Plotter {
     }
 
     private void resetMinMax() {
-        xMax = 2;
-        xMin = -2;
-        yMax = 2;
-        yMin = -2;
+        xMax = 0;
+        xMin = 0;
+        yMax = 0;
+        yMin = 0;
     }
 
     private void checkMinMax(double xCheck, double yCheck) {
@@ -325,7 +326,7 @@ public class Plotter {
     }
 
     //Method to select which color to represent speed with
-            private Color setColor(Double speed) {
+    private Color setColor(Double speed) {
         //Dark blue- any speed less than 3 MPH
         if (speed < 3) {
             return Color.BLUE;
