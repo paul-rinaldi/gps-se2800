@@ -279,7 +279,6 @@ public class PlotterController {
         xAxis.setAutoRanging(false);
         yAxis.setAutoRanging(false);
         //added so edge cases at small points are easier to see
-        /*
         if (xMax < 10){
             xMax++;
         }
@@ -292,7 +291,6 @@ public class PlotterController {
         if (yMin > -10){
             yMin--;
         }
-        */
         if(yMax > xMax){
             xAxis.setUpperBound(yMax);
             yAxis.setUpperBound(yMax);
