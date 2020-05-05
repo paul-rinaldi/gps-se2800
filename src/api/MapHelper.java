@@ -7,6 +7,7 @@ import java.util.ArrayList;
 /**
  * This class creates requests and parses them for google maps static images
  */
+//MLH: Why is this @deprecated?
 @Deprecated
 public class MapHelper {
     private static final String GOOGLE_MAPS_STATIC_API_KEY = "AIzaSyD3Jb1jp2-D5Xi0kfEL5jEATK4c34nUDCY";

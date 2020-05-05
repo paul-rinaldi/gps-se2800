@@ -1,3 +1,4 @@
+// GLOBAL FUNCTIONS - yech
 // document on ready -- this can probably be all updated to JS6...
 document.addEventListener('DOMContentLoaded', function() {
   if (document.querySelectorAll('#map').length > 0)
