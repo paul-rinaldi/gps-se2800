@@ -1,17 +1,13 @@
 package gps_plotter;
 
 import gps.*;
-import javafx.application.Platform;
-import javafx.beans.InvalidationListener;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
-import javafx.scene.chart.XYChart;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
-import javafx.stage.Window;
 
 /**
  * Controller in charge of plotting window
@@ -269,6 +265,46 @@ public class PlotterController {
 
     public void setLegendText(String message) {
         LegendText.setText(message);
+    }
+
+    /**
+     * sets both axis to the same scale based on the variables passed in, sets the max value for both the x and y axis
+     * based on what number is greater, similarly sets the x and y axis min's to which number is smaller.
+     * @param xMax the max x axis value
+     * @param xMin the min x axis value
+     * @param yMax the max y axis value
+     * @param yMin the min y axis value
+     */
+    public void scaleAxis(double xMax, double xMin, double yMax, double yMin){
+        xAxis.setAutoRanging(false);
+        yAxis.setAutoRanging(false);
+        //added so edge cases at small points are easier to see
+        if (xMax < 10){
+            xMax++;
+        }
+        if (xMin > -10){
+            xMin--;
+        }
+        if (yMax < 10){
+            yMax++;
+        }
+        if (yMin > -10){
+            yMin--;
+        }
+        if(yMax > xMax){
+            xAxis.setUpperBound(yMax);
+            yAxis.setUpperBound(yMax);
+        } else {
+            xAxis.setUpperBound(xMax);
+            yAxis.setUpperBound(xMax);
+        }
+        if (yMin < xMin){
+            xAxis.setLowerBound(yMin);
+            yAxis.setLowerBound(yMin);
+        } else {
+            xAxis.setLowerBound(xMin);
+            yAxis.setLowerBound(xMin);
+        }
     }
 }
 

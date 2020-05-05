@@ -5,13 +5,11 @@ import gps.*;
 
 import javafx.scene.Node;
 import javafx.scene.chart.LineChart;
-import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
 import javafx.scene.paint.Color;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.Iterator;
 
 /**
  * Handles plotting tasks for the PlotterController
@@ -21,8 +19,14 @@ public class Plotter {
     private static final double DEG_TO_RAD = 0.0174533;
     private static final double RADIUS_OF_EARTH_M = 6371000;
 
-    private static double MS_IN_MIN = 60000;
-    private static double M_IN_KM = 1000;
+    private static final double MS_IN_MIN = 60000;
+    private static final double M_IN_KM = 1000;
+
+    //used to scale the graph
+    private int xMax;
+    private int xMin;
+    private int yMax;
+    private int yMin;
 
     private LineChart<Double, Double> chart;
 
@@ -149,6 +153,7 @@ public class Plotter {
      * @throws throws a null pointer exception when this is called and no tracks have been loaded
      */
     public void plotSpeedOverPath() throws NullPointerException {
+        resetMinMax();
         //Clears the graph when window opens and a series exists.
         checkGraph();
         //Brings up the alternative legend.
@@ -164,8 +169,7 @@ public class Plotter {
             setChartAxisLabels("Kilometer(east and west)", "Kilometers(north and south)");
             int index = getFirstLoadedIndex();
             boolean[] showOnGraph = plotterController.getShowOnGraph();
-
-            //If there is a track selected...
+             //If there is a track selected...
             if (index != -1) {
                 //Loads the first track's first point.
                 TrackPoint trackZero = tracksHandler.getTrack(index).getTrackPoint(0);
@@ -188,9 +192,10 @@ public class Plotter {
                             TrackPoint nextTrackPoint = track.getTrackPoint(z + 1);
                             x = calculateXCoord(nextTrackPoint, trackZero)/M_IN_KM;
                             y = calculateYCoord(nextTrackPoint, trackZero)/M_IN_KM;
+                            checkMinMax(x, y);
                             plotPoint(series, x, y);
                             //Adds the series to the chart
-                            this.chart.getData().add(series);
+                            chart.getData().add(series);
                             //Gets the node property for the line of the newly created series.
                             Node line = series.getNode().lookup(".chart-series-line");
 
@@ -208,6 +213,7 @@ public class Plotter {
         } else {
             throw new NullPointerException("No Tracks are Loaded!");
         }
+        plotterController.scaleAxis(xMax, xMin, yMax, yMin);
     }
 
 
@@ -218,6 +224,8 @@ public class Plotter {
      * @throws throws a null pointer exception when this is called and no tracks have been loaded
      */
     public void convertToCartesian() throws NullPointerException {
+        resetMinMax();
+        chart.axisSortingPolicyProperty().setValue(LineChart.SortingPolicy.NONE);
         //Clears the graph when window opens and a series exists.
         checkGraph();
 
@@ -241,6 +249,7 @@ public class Plotter {
                             TrackPoint currentTrackPoint = track.getTrackPoint(z);
                             double x = calculateXCoord(currentTrackPoint, trackZero)/M_IN_KM;
                             double y = calculateYCoord(currentTrackPoint, trackZero)/M_IN_KM;
+                            checkMinMax(x, y);
                             plotPoint(series, x, y);
                         }
                         this.chart.getData().add(series);
@@ -250,6 +259,30 @@ public class Plotter {
             }
         } else {
             throw new NullPointerException("No Tracks are Loaded!");
+        }
+        plotterController.scaleAxis(xMax, xMin, yMax, yMin);
+    }
+
+    private void resetMinMax() {
+        xMax = 0;
+        xMin = 0;
+        yMax = 0;
+        yMin = 0;
+    }
+
+    private void checkMinMax(double xCheck, double yCheck) {
+        //multiply by 1.1 to scale the axis so the bounds are not right on the edge of the graph
+        int x = (int) Math.round(xCheck * 1.1);
+        int y = (int) Math.round(yCheck * 1.1);
+        if (x > xMax){
+            xMax = x;
+        } else if(x < xMin){
+            xMin = x;
+        }
+        if (y > yMax){
+            yMax = y;
+        } else if(y < yMin){
+            yMin = y;
         }
     }
 
