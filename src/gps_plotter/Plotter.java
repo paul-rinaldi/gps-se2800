@@ -42,6 +42,47 @@ public class Plotter {
         this.plotterController = plotterController;
     }
 
+    public void plotDistanceVsTime(Track track){
+        XYChart.Series series = new XYChart.Series();
+        series.setName(track.getName());
+        setChartAxisLabels("Time Passed (min)", "Distance (km)");
+
+        TrackPoint trackPointZero = track.getTrackPoint(0);
+        Date firstDate = null;
+        Date currentDate;
+        double distanceTraveled = 0;
+
+        for (int i = 0; i < track.getPointAmount(); i++) {
+
+            TrackPoint currentPoint = track.getTrackPoint(i);
+            TrackPoint previousPoint;
+            //Set first date to calculate time passed
+            if (i == 0) {
+                firstDate = currentPoint.getTime();
+                previousPoint = track.getTrackPoint(i);
+            } else{
+                previousPoint = track.getTrackPoint(i-1);
+            }
+
+            double prevX = calculateXCoord(previousPoint, trackPointZero)/M_IN_KM;
+            double prevY = calculateYCoord(previousPoint, trackPointZero)/M_IN_KM;
+
+            double currentX = calculateXCoord(currentPoint, trackPointZero)/M_IN_KM;
+            double currentY = calculateYCoord(currentPoint, trackPointZero)/M_IN_KM;
+
+
+
+            currentDate = currentPoint.getTime();
+            double timePoint = timePassedInMin(currentDate, firstDate);
+
+            distanceTraveled += 0;
+
+            plotPoint(series, timePoint, distanceTraveled); //Plot point on LineChart
+
+        }
+        this.chart.getData().add(series);
+    }
+
     /**
      * Plots elevation gain at each TrackPoint's date along the graph
      *
