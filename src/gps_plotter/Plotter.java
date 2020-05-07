@@ -92,7 +92,7 @@ public class Plotter {
 
         XYChart.Series series = new XYChart.Series();
         series.setName(track.getName());
-        setChartAxisLabels("Time Passed (min)", "Elevation Gain (km)");
+        setChartAxisLabels("Time Passed (min)", "Elevation Gain (m)");
 
         double previousElevation = track.getTrackPoint(0).getElevation();
         double elevationPoint = 0;
@@ -112,7 +112,7 @@ public class Plotter {
             currentDate = point.getTime();
             double timePoint = timePassedInMin(currentDate, firstDate);
 
-            double elevationGain = calculateElevationGain(currentElevation, previousElevation)/M_IN_KM;
+            double elevationGain = calculateElevationGain(currentElevation, previousElevation);
             elevationPoint += elevationGain; //Add the change in elevation to total change
 
             plotPoint(series, timePoint, elevationPoint); //Plot point on LineChart
