@@ -7,6 +7,7 @@ import javafx.scene.Node;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.XYChart;
 import javafx.scene.paint.Color;
+import java.lang.Math;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -21,6 +22,7 @@ public class Plotter {
 
     private static final double MS_IN_MIN = 60000;
     private static final double M_IN_KM = 1000;
+    private static final double M_IN_MI = 1609.344;
 
     //used to scale the graph
     private int xMax;
@@ -42,10 +44,20 @@ public class Plotter {
         this.plotterController = plotterController;
     }
 
-    public void plotDistanceVsTime(Track track){
+    /**
+     * Plots graph of distance vs time
+     *
+     * @param track track to plot
+     * @param kilometers determines whether the distance displayed/calculated is in miles or kilometers (true: kilometers; false: miles)
+     */
+    public void plotDistanceVsTime(Track track, boolean kilometers){
         XYChart.Series series = new XYChart.Series();
         series.setName(track.getName());
-        setChartAxisLabels("Time Passed (min)", "Distance (km)");
+        if(kilometers) {
+            setChartAxisLabels("Time Passed (min)", "Distance (km)");
+        } else{
+            setChartAxisLabels("Time Passed (min)", "Distance (mi)");
+        }
 
         TrackPoint trackPointZero = track.getTrackPoint(0);
         Date firstDate = null;
@@ -54,33 +66,59 @@ public class Plotter {
 
         for (int i = 0; i < track.getPointAmount(); i++) {
 
+
             TrackPoint currentPoint = track.getTrackPoint(i);
             TrackPoint previousPoint;
+            double currentElevation = currentPoint.getElevation();
+            double previousElevation;
             //Set first date to calculate time passed
             if (i == 0) {
                 firstDate = currentPoint.getTime();
                 previousPoint = track.getTrackPoint(i);
+                previousElevation = currentPoint.getElevation();
             } else{
                 previousPoint = track.getTrackPoint(i-1);
+                previousElevation = previousPoint.getElevation();
             }
 
-            double prevX = calculateXCoord(previousPoint, trackPointZero)/M_IN_KM;
-            double prevY = calculateYCoord(previousPoint, trackPointZero)/M_IN_KM;
+            double prevX = calculateXCoord(previousPoint, trackPointZero);
+            double prevY = calculateYCoord(previousPoint, trackPointZero);
 
-            double currentX = calculateXCoord(currentPoint, trackPointZero)/M_IN_KM;
-            double currentY = calculateYCoord(currentPoint, trackPointZero)/M_IN_KM;
-
-
+            double currentX = calculateXCoord(currentPoint, trackPointZero);
+            double currentY = calculateYCoord(currentPoint, trackPointZero);
 
             currentDate = currentPoint.getTime();
             double timePoint = timePassedInMin(currentDate, firstDate);
 
-            distanceTraveled += 0;
+            double currentDistance = calculateThreeDimensionalDistance(prevX, currentX, prevY, currentY, previousElevation, currentElevation, kilometers);
+
+            distanceTraveled += currentDistance;
 
             plotPoint(series, timePoint, distanceTraveled); //Plot point on LineChart
 
         }
         this.chart.getData().add(series);
+    }
+
+    private double calculateThreeDimensionalDistance(double x1, double x2, double y1, double y2, double z1, double z2, boolean kilometers){
+
+        double divisor = kilometers ? M_IN_KM: M_IN_MI;
+
+        //Convert distances to proper units (miles or kilometers)
+        x1/=divisor;
+        x2/=divisor;
+        y1/=divisor;
+        y2/=divisor;
+        z1/=divisor;
+        z2/=divisor;
+
+        double xComponent = (x2 - x1)*(x2 - x1);
+        double yComponent = (y2 - y1)*(y2 - y1);
+        double zComponent = (z2 - z1)*(z2 - z1);
+
+        double distance = Math.sqrt(xComponent + yComponent + zComponent);
+        return distance;
+
     }
 
     /**

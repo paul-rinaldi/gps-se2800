@@ -1,10 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.chart.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.scene.chart.LineChart?>
+<?import javafx.scene.chart.NumberAxis?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.Spinner?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="465.0" prefWidth="882.0" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gps_plotter.PlotterController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="465.0" prefWidth="882.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gps_plotter.PlotterController">
     <children>
         <MenuBar layoutY="2.0" prefHeight="25.0" prefWidth="882.0">
             <menus>
@@ -14,7 +23,7 @@
                         <MenuItem mnemonicParsing="false" onAction="#graphTwoDPlot" text="View 2D Plot" />
                         <MenuItem mnemonicParsing="false" onAction="#graphPlotSpeedAlongPath" text="View Speed Plot" />
                         <MenuItem mnemonicParsing="false" onAction="#graphElevationGainVsTime" text="Elevation Gain vs Time" />
-                        <MenuItem mnemonicParsing="false" text="Distance vs Time" />
+                        <MenuItem mnemonicParsing="false" onAction="#graphDistanceVsTimeStartup" text="Distance vs Time" />
                     </items>
                 </Menu>
             </menus>
@@ -32,6 +41,9 @@
         <TableView fx:id="tableView" layoutX="8.0" layoutY="95.0" prefHeight="346.0" prefWidth="304.0" />
       <CheckBox fx:id="showHideButton" layoutX="23.0" layoutY="69.0" mnemonicParsing="false" onAction="#showOrHide" selected="true" />
       <Label layoutX="2.0" layoutY="48.0" text="Show/Hide" />
-      <TextArea fx:id="LegendText" editable="false" layoutX="312.0" layoutY="422.0" prefHeight="38.0" prefWidth="568.0" text="Dark Blue = &lt; 3 MPH     Light Blue = Between 3 &amp; 7 MPH     Green = Between 7 &amp; 10 MPH                                                 hi" />
+      <TextArea fx:id="LegendText" editable="false" layoutX="312.0" layoutY="422.0" prefHeight="38.0" prefWidth="568.0" text="Dark Blue = &lt; 3 MPH     Light Blue = Between 3 &amp; 7 MPH     Green = Between 7 &amp; 10 MPH                                                 hi" visible="false" />
+      <Button fx:id="distanceKM" layoutX="441.0" layoutY="36.0" mnemonicParsing="false" onAction="#graphDistanceVsTimeKM" text="Kilometers" visible="false" />
+      <Button fx:id="distanceMI" layoutX="537.0" layoutY="36.0" mnemonicParsing="false" onAction="#graphDistanceVsTimeMI" text="Miles" visible="false" />
+      <Label fx:id="distanceLabel" layoutX="348.0" layoutY="40.0" text="Distance Units:" visible="false" />
     </children>
 </AnchorPane>

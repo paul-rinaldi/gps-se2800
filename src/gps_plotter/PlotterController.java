@@ -14,7 +14,6 @@ import javafx.stage.Stage;
  */
 public class PlotterController {
 
-
     @FXML
     private LineChart<Double, Double> lineChart;
     @FXML
@@ -29,6 +28,12 @@ public class PlotterController {
     private Spinner<String> trackSpinner;
     @FXML
     private TextArea LegendText;
+    @FXML
+    private Button distanceKM;
+    @FXML
+    private Button distanceMI;
+    @FXML
+    private Label distanceLabel;
 
     private GPSController gpsController;
     private Plotter plotter;
@@ -37,7 +42,41 @@ public class PlotterController {
 
     private Stage plotterStage;
 
-    private boolean[] showOnGraph = {true, true, true, true, true, true, true, true, true, true};
+    private boolean[] showOnGraph = {true, false, false, false, false, false, false, false, false, false};
+
+    private boolean graphDistanceVsTimeInKM = true;
+
+    private void showDistanceVsTimeUnits(boolean visible){
+        this.distanceKM.setVisible(visible);
+        this.distanceMI.setVisible(visible);
+        this.distanceLabel.setVisible(visible);
+    }
+
+    /**
+     * Called when Distance Vs Time menu item is pressed
+     */
+    public void graphDistanceVsTimeStartup(){
+        showDistanceVsTimeUnits(true);
+        graphDistanceVsTimeKM();
+    }
+
+    /**
+     * Called when Kilometers button is pressed
+     */
+    public void graphDistanceVsTimeKM(){
+        graphDistanceVsTimeInKM = true;
+        graphDistanceVsTime();
+
+    }
+
+    /**
+     * Called when Miles button is pressed
+     */
+    public void graphDistanceVsTimeMI(){
+        graphDistanceVsTimeInKM = false;
+        graphDistanceVsTime();
+
+    }
 
     /**
      * Initializes JavaFX table element
@@ -74,9 +113,10 @@ public class PlotterController {
     }
 
     /**
-     * Plots all selected Tracks' distance vs time
+     * Plots all selected Tracks' distance vs time - distance unit is based on user selection
+     * Default distance unit is kilometers
      */
-    public void graphDistanceVsTime(){
+    private void graphDistanceVsTime(){
         lastGraphLoaded = "Distance Vs Time";
 
         showHideButton.disableProperty().setValue(false);
@@ -98,7 +138,7 @@ public class PlotterController {
                     Track t = this.tracksHandler.getTrack(i);
 
                     if (t.getPointAmount() > 1) {
-                       //TODO
+                       plotter.plotDistanceVsTime(t, graphDistanceVsTimeInKM);
                     } else {
                         createErrorDialog("Distance vs Time Plotting Error", "Track: " + t.getName() + " doesn't have enough points to graph Elevation Gain vs Time");
                     }
@@ -118,6 +158,7 @@ public class PlotterController {
         lastGraphLoaded = "Elevation Gain Vs Time";
 
         showHideButton.disableProperty().setValue(false);
+        showDistanceVsTimeUnits(false);
 
         this.tracksHandler = gpsController.getTracksHandler();
 
@@ -155,6 +196,7 @@ public class PlotterController {
     public void graphTwoDPlot() {
         lastGraphLoaded = "2DPlot";
 
+        showDistanceVsTimeUnits(false);
         showHideButton.disableProperty().setValue(false);
         this.tracksHandler = gpsController.getTracksHandler();
         try {
@@ -170,6 +212,7 @@ public class PlotterController {
      */
     public void graphPlotSpeedAlongPath() {
         lastGraphLoaded = "SpeedPlot";
+        showDistanceVsTimeUnits(false);
         showHideButton.disableProperty().setValue(false);
         tracksHandler = gpsController.getTracksHandler();
         try {
