@@ -57,7 +57,7 @@ public class PlotterController {
      */
     public void graphDistanceVsTimeStartup(){
         showDistanceVsTimeUnits(true);
-        graphDistanceVsTimeKM();
+        graphDistanceVsTime();
     }
 
     /**
