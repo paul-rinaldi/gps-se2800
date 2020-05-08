@@ -29,9 +29,9 @@ public class PlotterController {
     @FXML
     private TextArea LegendText;
     @FXML
-    private Button distanceKM;
+    private RadioButton distanceKM;
     @FXML
-    private Button distanceMI;
+    private RadioButton distanceMI;
     @FXML
     private Label distanceLabel;
 
@@ -56,6 +56,7 @@ public class PlotterController {
      * Called when Distance Vs Time menu item is pressed
      */
     public void graphDistanceVsTimeStartup(){
+        this.distanceKM.setSelected(true);
         showDistanceVsTimeUnits(true);
         graphDistanceVsTime();
     }
