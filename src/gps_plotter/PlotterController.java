@@ -39,6 +39,7 @@ public class PlotterController {
     private Plotter plotter;
     private TracksHandler tracksHandler;
     private String lastGraphLoaded = "";
+    private boolean firstTimePlottingDvsT = true;
 
     private Stage plotterStage;
 
@@ -56,7 +57,10 @@ public class PlotterController {
      * Called when Distance Vs Time menu item is pressed
      */
     public void graphDistanceVsTimeStartup(){
-        this.distanceKM.setSelected(true);
+        if(firstTimePlottingDvsT) {
+            this.distanceKM.setSelected(true); //Initially sets KM radio button to selected
+            this.firstTimePlottingDvsT = false;
+        }
         showDistanceVsTimeUnits(true);
         graphDistanceVsTime();
     }
