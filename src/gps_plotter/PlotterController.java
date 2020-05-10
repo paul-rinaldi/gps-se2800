@@ -77,6 +77,8 @@ public class PlotterController {
      * Plots all selected Tracks' elevation gains vs time
      */
     public void graphElevationGainVsTime() {
+        xAxis.setAutoRanging(true);
+        yAxis.setAutoRanging(true);
         lastGraphLoaded = "Elevation Gain Vs Time";
 
         showHideButton.disableProperty().setValue(false);
@@ -104,7 +106,6 @@ public class PlotterController {
                     }
                 }
             }
-
         } catch (NullPointerException n) {
             showHideButton.disableProperty().setValue(true);
             createErrorDialog("Elevation Gain vs Time Plotting Error", "No tracks are loaded.");
@@ -305,6 +306,8 @@ public class PlotterController {
             xAxis.setLowerBound(xMin);
             yAxis.setLowerBound(xMin);
         }
+        yAxis.setTickUnit(yMax/10);
+        xAxis.setTickUnit(xMax/10);
     }
 }
 

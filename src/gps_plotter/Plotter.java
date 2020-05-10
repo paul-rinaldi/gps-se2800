@@ -272,8 +272,8 @@ public class Plotter {
 
     private void checkMinMax(double xCheck, double yCheck) {
         //multiply by 1.1 to scale the axis so the bounds are not right on the edge of the graph
-        int x = (int) Math.round(xCheck * 1.1);
-        int y = (int) Math.round(yCheck * 1.1);
+        int x = (int) Math.round(xCheck * 1.05);
+        int y = (int) Math.round(yCheck * 1.05);
         if (x > xMax){
             xMax = x;
         } else if(x < xMin){
