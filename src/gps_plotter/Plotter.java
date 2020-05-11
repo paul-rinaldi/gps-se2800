@@ -200,7 +200,79 @@ public class Plotter {
                             Node line = series.getNode().lookup(".chart-series-line");
 
                             //Decides line color
-                            color = setColor(speeds.get(z));
+                            color = setSpeedColor(speeds.get(z));
+
+                            //Sets the line color for the series.
+                            line.setStyle("-fx-stroke: rgb(" + rgbFormat(color) + ");");
+                        }
+                        plotterController.addTable(track.getTrackStats());
+                    }
+                }
+                chart.setLegendVisible(false);
+            }
+        } else {
+            throw new NullPointerException("No Tracks are Loaded!");
+        }
+        plotterController.scaleAxis(xMax, xMin, yMax, yMin);
+    }
+
+/**
+     * converts all selected tracks to different colored lines representing
+     * their grade (Steepness) at that point when the graph grade button is pressed
+     *
+     * @throws throws a null pointer exception when this is called and no tracks have been loaded
+     */
+    public void plotGrade() throws NullPointerException {
+        resetMinMax();
+        //Clears the graph when window opens and a series exists.
+        checkGraph();
+        //Brings up the alternative legend.
+        plotterController.setLegendTextVisible(true);
+        plotterController.setLegendText("Dark Blue = < -5%      Light Blue = Between -5% & -1%      Green = Between -1% & 1% " +
+                "\nYellow = Between 1% & 3%      Orange = Between 3% & 5%      Red = Over 5%");
+        //Set chart name
+        chart.setTitle("Grade of Plot");
+        //Gets track handler, which holds all the tracks to be found.
+        TracksHandler tracksHandler = plotterController.getTracksHandler();
+        //Configures axises if there are tracks.
+        if (tracksHandler != null) {
+            setChartAxisLabels("Kilometer(east and west)", "Kilometers(north and south)");
+            int index = getFirstLoadedIndex();
+            boolean[] showOnGraph = plotterController.getShowOnGraph();
+             //If there is a track selected...
+            if (index != -1) {
+                //Loads the first track's first point.
+                TrackPoint trackZero = tracksHandler.getTrack(index).getTrackPoint(0);
+                //Color variable for future use.
+                Color color;
+                for (int i = 0; i < tracksHandler.getTrackAmount(); i++) {
+                    if (showOnGraph[i]) {
+                        Track track = tracksHandler.getTrack(i);
+
+                        //Goes through the track's points...
+                        for (int z = 0; z < track.getPointAmount() - 1; z++) {
+                            XYChart.Series series = new XYChart.Series();
+                            series.setName(track.getName());
+                            //First point
+                            TrackPoint currentTrackPoint = track.getTrackPoint(z);
+                            double x1 = calculateXCoord(currentTrackPoint, trackZero)/M_IN_KM;
+                            double y1 = calculateYCoord(currentTrackPoint, trackZero)/M_IN_KM;
+                            plotPoint(series, x1, y1);
+                            //Second point
+                            TrackPoint nextTrackPoint = track.getTrackPoint(z + 1);
+                            double x2 = calculateXCoord(nextTrackPoint, trackZero)/M_IN_KM;
+                            double y2 = calculateYCoord(nextTrackPoint, trackZero)/M_IN_KM;
+                            checkMinMax(x2, y2);
+                            plotPoint(series, x2, y2);
+                            //Adds the series to the chart
+                            chart.getData().add(series);
+                            //Gets the node property for the line of the newly created series.
+                            Node line = series.getNode().lookup(".chart-series-line");
+
+                            double grade = calculateGrade(x1, y1, x2, y2);
+
+                            //Decides line color
+                            color = setGradeColor(grade);
 
                             //Sets the line color for the series.
                             line.setStyle("-fx-stroke: rgb(" + rgbFormat(color) + ");");
@@ -326,7 +398,7 @@ public class Plotter {
     }
 
     //Method to select which color to represent speed with
-    private Color setColor(Double speed) {
+    private Color setSpeedColor(Double speed) {
         //Dark blue- any speed less than 3 MPH
         if (speed < 3) {
             return Color.BLUE;
@@ -352,5 +424,39 @@ public class Plotter {
             return Color.RED;
         }
     }
+    
+    //Method to select which color to represent grade with
+    private Color setGradeColor(Double grade) {
+        //Dark blue- any grade less than -5% Grade
+        if (grade < -5) {
+            return Color.BLUE;
+        }
+        //Light blue- any grade that's >= -5% and < than -1%.
+        else if (grade >= -5 && grade < -1) {
+            return Color.AQUA;
+        }
+        //Green- any grade that's >=-1% MPH and < than 1%.
+        else if (grade >= -1 && grade < 1) {
+            return Color.GREEN;
+        }
+        //Yellow- any grade that's >= 1% MPH and < 3%.
+        else if (grade >= 1 && grade < 3) {
+            return Color.YELLOW;
+        }
+        //Orange- any grade that's >= 3% MPH and < than 5%.
+        else if (grade >= 3 && grade < 5) {
+            return Color.ORANGE;
+        }
+        //Red- Any grade that's over or equal to 5% Grade.
+        else {
+            return Color.RED;
+        }
+    }
+
+    //Essentially calculates the slope between two points.
+    private double calculateGrade(double x1, double y1, double x2, double y2) {
+        return (y2 - y1) / (x2 - x1);
+    }
+
 }
 
