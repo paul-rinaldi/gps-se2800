@@ -130,6 +130,24 @@ public class PlotterController {
     /**
      * graphs all selected tracks on a 2D plot
      */
+    public void graphSpeedVsTime() {
+        xAxis.setAutoRanging(true);
+        yAxis.setAutoRanging(true);
+        lastGraphLoaded = "Speed Vs. Time";
+
+        showHideButton.disableProperty().setValue(false);
+        this.tracksHandler = gpsController.getTracksHandler();
+        try {
+            plotter.plotSpeedVsTime();
+        } catch (NullPointerException n) {
+            showHideButton.disableProperty().setValue(true);
+            createErrorDialog("2D Graph Plotting Error", "No tracks are loaded.");
+        }
+    }
+
+    /**
+     * graphs all selected tracks on a 2D plot
+     */
     public void graphPlotSpeedAlongPath() {
         lastGraphLoaded = "SpeedPlot";
         showHideButton.disableProperty().setValue(false);

@@ -352,5 +352,44 @@ public class Plotter {
             return Color.RED;
         }
     }
+
+    public void plotSpeedVsTime() {
+        chart.axisSortingPolicyProperty().setValue(LineChart.SortingPolicy.NONE);
+        //Clears the graph when window opens and a series exists.
+        checkGraph();
+
+        plotterController.reenableLegend();
+
+        //Sets chart name.
+        chart.setTitle("Speed Vs. Time");
+        TracksHandler tracksHandler = plotterController.getTracksHandler();
+        if (tracksHandler != null) {
+            setChartAxisLabels("Time(Min)", "Speed(Km/Hr)");
+            int index = getFirstLoadedIndex();
+            boolean[] showOnGraph = plotterController.getShowOnGraph();
+            TrackPoint trackZero = tracksHandler.getTrack(index).getTrackPoint(0);
+            int firstMinutes = trackZero.getTime().getMinutes() + (trackZero.getTime().getHours() * 60);
+            if (index != -1) {
+                for (int i = 0; i < tracksHandler.getTrackAmount(); i++) {
+                    if (showOnGraph[i]) {
+                        Track track = tracksHandler.getTrack(i);
+                        ArrayList<Double> speeds = track.getTrackStats().getSpeeds();
+                        XYChart.Series series = new XYChart.Series();
+                        series.setName(track.getName());
+                        for (int z = 0; z < track.getPointAmount()-1; z++) {
+                            TrackPoint currentTrackPoint = track.getTrackPoint(z);
+                            double y = speeds.get(z);
+                            double x = (currentTrackPoint.getTime().getMinutes() +
+                                    currentTrackPoint.getTime().getHours()*60) - firstMinutes;
+                            plotPoint(series, x, y);
+                        }
+                        this.chart.getData().add(series);
+                    }
+                }
+            }
+        } else {
+            throw new NullPointerException("No Tracks are Loaded!");
+        }
+    }
 }
 
