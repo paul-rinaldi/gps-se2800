@@ -25,6 +25,7 @@
                         <MenuItem mnemonicParsing="false" onAction="#graphPlotSpeedAlongPath" text="View Speed Plot" />
                         <MenuItem mnemonicParsing="false" onAction="#graphElevationGainVsTime" text="Elevation Gain vs Time" />
                         <MenuItem mnemonicParsing="false" onAction="#graphDistanceVsTimeStartup" text="Distance vs Time" />
+                        <MenuItem mnemonicParsing="false" onAction="#graphElevationVsTime" text="Elevation vs Time" />
                     </items>
                 </Menu>
             </menus>

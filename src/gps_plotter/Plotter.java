@@ -122,6 +122,41 @@ public class Plotter {
     }
 
     /**
+     * Plots elevation at each TrackPoint's date along the graph
+     *
+     * @param track track from which points will be plotted
+     */
+    public void plotElevationVsTime(Track track){
+        XYChart.Series series = new XYChart.Series();
+        series.setName(track.getName());
+        setChartAxisLabels("Time Passed (min)", "Elevation (m)");
+
+        Date firstDate = null;
+        Date currentDate;
+
+        int i = 0;
+        for (TrackPoint point: track.getTrackPoints()) {
+
+            double currentElevation = point.getElevation();
+
+            //Set first date to calculate time passed
+            if (i == 0) {
+                firstDate = point.getTime();
+            }
+
+            currentDate = point.getTime();
+            double timePoint = timePassedInMin(currentDate, firstDate);
+
+            double elevation = point.getElevation();
+
+            plotPoint(series, timePoint, elevation); //Plot point on LineChart
+
+            i++;
+        }
+        this.chart.getData().add(series);
+    }
+
+    /**
      * Plots elevation gain at each TrackPoint's date along the graph
      *
      * @param track track from which points will be plotted

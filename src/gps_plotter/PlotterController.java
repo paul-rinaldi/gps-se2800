@@ -157,6 +157,45 @@ public class PlotterController {
     }
 
     /**
+     * Plots all selected Tracks' elevation vs time
+     */
+    public void graphElevationVsTime(){
+        lastGraphLoaded = "Elevation Vs Time";
+
+        showHideButton.disableProperty().setValue(false);
+        showDistanceVsTimeUnits(false);
+
+        this.tracksHandler = gpsController.getTracksHandler();
+
+        try {
+
+            if (this.lineChart.getData() != null && this.lineChart.getData().size() != 0) { //Clears graph when window is opened only if series exists
+                this.plotter.clearChart();
+            }
+
+            reenableLegend();
+
+            lineChart.setTitle("Elevation Vs. Time");
+
+            for (int i = 0; i < this.tracksHandler.getTrackAmount(); i++) {
+                if (showOnGraph[i]) {
+                    Track t = this.tracksHandler.getTrack(i);
+
+                    if (t.getPointAmount() > 1) {
+                        this.plotter.plotElevationVsTime(t);
+                    } else {
+                        createErrorDialog("Elevation vs Time Plotting Error", "Track: " + t.getName() + " doesn't have enough points to graph Elevation Gain vs Time");
+                    }
+                }
+            }
+
+        } catch (NullPointerException n) {
+            showHideButton.disableProperty().setValue(true);
+            createErrorDialog("Elevation vs Time Plotting Error", "No tracks are loaded.");
+        }
+    }
+
+    /**
      * Plots all selected Tracks' elevation gains vs time
      */
     public void graphElevationGainVsTime() {
@@ -273,6 +312,8 @@ public class PlotterController {
             case "Distance Vs Time":
                 graphDistanceVsTime();
                 break;
+            case "Elevation Vs Time":
+                graphElevationVsTime();
             default:
                 System.out.println("Error unrecognized graph name: " + lastGraphLoaded);
         }
