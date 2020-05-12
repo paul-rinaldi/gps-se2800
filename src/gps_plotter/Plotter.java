@@ -201,12 +201,12 @@ public class Plotter {
      * Returns the gain in elevation from the previous elevation
      *
      * @param current current elevation
-     * @param highest highest elevation read
+     * @param previous previous elevation
      * @return difference between them; 0 if difference is < 0
      */
-    public double calculateElevationGain(double current, double highest) {
+    public double calculateElevationGain(double current, double previous) {
 
-        double result = current - highest;
+        double result = current - previous;
 
         return result > 0 ? result : 0;
 
