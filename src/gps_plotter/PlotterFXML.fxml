@@ -7,9 +7,11 @@
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.RadioButton?>
 <?import javafx.scene.control.Spinner?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.ToggleGroup?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
@@ -23,6 +25,7 @@
                         <MenuItem mnemonicParsing="false" onAction="#graphTwoDPlot" text="View 2D Plot" />
                         <MenuItem mnemonicParsing="false" onAction="#graphPlotSpeedAlongPath" text="View Speed Plot" />
                         <MenuItem mnemonicParsing="false" onAction="#graphElevationGainVsTime" text="Elevation Gain vs Time" />
+                        <MenuItem mnemonicParsing="false" onAction="#graphDistanceVsTimeStartup" text="Distance vs Time" />
                     </items>
                 </Menu>
             </menus>
@@ -40,11 +43,19 @@
         <TableView fx:id="tableView" layoutX="8.0" layoutY="95.0" prefHeight="480.0" prefWidth="304.0" />
       <CheckBox fx:id="showHideButton" layoutX="23.0" layoutY="69.0" mnemonicParsing="false" onAction="#showOrHide" selected="true" />
       <Label layoutX="2.0" layoutY="48.0" text="Show/Hide" />
-      <TextArea fx:id="LegendText" editable="false" layoutX="318.0" layoutY="541.0" prefHeight="38.0" prefWidth="568.0" text="Dark Blue = &lt; 3 MPH     Light Blue = Between 3 &amp; 7 MPH     Green = Between 7 &amp; 10 MPH" />
       <Label fx:id="chartTitle" alignment="CENTER" layoutX="439.0" layoutY="28.0" prefHeight="27.0" prefWidth="423.0">
          <font>
             <Font size="18.0" />
          </font>
       </Label>
+      <TextArea fx:id="LegendText" editable="false" layoutX="320.0" layoutY="530.0" prefHeight="38.0" prefWidth="568.0" text="Dark Blue = &lt; 3 MPH     Light Blue = Between 3 &amp; 7 MPH     Green = Between 7 &amp; 10 MPH                                                 hi" visible="false" />
+      <Label fx:id="distanceLabel" layoutX="330.0" layoutY="35.0" text="Distance Units:" visible="false" />
+      <RadioButton fx:id="distanceKM" layoutX="435.0" layoutY="35.0" mnemonicParsing="false" onAction="#graphDistanceVsTimeKM" prefHeight="17.0" prefWidth="91.0" text="Kilometers" visible="false">
+          <toggleGroup>
+              <ToggleGroup fx:id="distanceButtons" />
+          </toggleGroup>
+      </RadioButton>
+      <RadioButton fx:id="distanceMI" layoutX="525.0" layoutY="35.0" mnemonicParsing="false" onAction="#graphDistanceVsTimeMI" prefHeight="17.0" prefWidth="91.0" text="Miles" toggleGroup="$distanceButtons" visible="false">
+      </RadioButton>
     </children>
 </AnchorPane>
