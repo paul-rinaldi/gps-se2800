@@ -29,6 +29,8 @@ public class PlotterController {
     @FXML
     private TextArea LegendText;
     @FXML
+    private Label chartTitle;
+    @FXML
     private RadioButton distanceKM;
     @FXML
     private RadioButton distanceMI;
@@ -122,6 +124,8 @@ public class PlotterController {
      * Default distance unit is kilometers
      */
     private void graphDistanceVsTime(){
+        xAxis.setAutoRanging(true);
+        yAxis.setAutoRanging(true);
         lastGraphLoaded = "Distance Vs Time";
 
         showHideButton.disableProperty().setValue(false);
@@ -136,7 +140,7 @@ public class PlotterController {
 
             reenableLegend();
 
-            lineChart.setTitle("Distance Vs Time");
+            setChartTitle("Distance Vs Time");
 
             for (int i = 0; i < this.tracksHandler.getTrackAmount(); i++) {
                 if (showOnGraph[i]) {
@@ -160,12 +164,16 @@ public class PlotterController {
      * Plots all selected Tracks' elevation gains vs time
      */
     public void graphElevationGainVsTime() {
+        xAxis.setAutoRanging(true);
+        yAxis.setAutoRanging(true);
         lastGraphLoaded = "Elevation Gain Vs Time";
 
         showHideButton.disableProperty().setValue(false);
         showDistanceVsTimeUnits(false);
 
         this.tracksHandler = gpsController.getTracksHandler();
+
+        chartTitle.setText("Elevation Gain Vs. Time");
 
         try {
 
@@ -174,8 +182,6 @@ public class PlotterController {
             }
 
             reenableLegend();
-
-            lineChart.setTitle("Elevation Gain Vs. Time");
 
             for (int i = 0; i < this.tracksHandler.getTrackAmount(); i++) {
                 if (showOnGraph[i]) {
@@ -188,7 +194,6 @@ public class PlotterController {
                     }
                 }
             }
-
         } catch (NullPointerException n) {
             showHideButton.disableProperty().setValue(true);
             createErrorDialog("Elevation Gain vs Time Plotting Error", "No tracks are loaded.");
@@ -356,6 +361,10 @@ public class PlotterController {
         LegendText.setText(message);
     }
 
+    public void setChartTitle(String title){
+        chartTitle.setText(title);
+    }
+
     /**
      * sets both axis to the same scale based on the variables passed in, sets the max value for both the x and y axis
      * based on what number is greater, similarly sets the x and y axis min's to which number is smaller.
@@ -364,7 +373,12 @@ public class PlotterController {
      * @param yMax the max y axis value
      * @param yMin the min y axis value
      */
-    public void scaleAxis(double xMax, double xMin, double yMax, double yMin){
+    public void scaleAxis(int xMax, int xMin, int yMax, int yMin){
+        int tickUnit;
+        int tempMax;
+        int tempMin;
+        int xAdjust = centerX(xMax, xMin, yMax, yMin);
+        int yAdjust = centerY(xMax, xMin, yMax, yMin);
         xAxis.setAutoRanging(false);
         yAxis.setAutoRanging(false);
         //added so edge cases at small points are easier to see
@@ -381,20 +395,56 @@ public class PlotterController {
             yMin--;
         }
         if(yMax > xMax){
-            xAxis.setUpperBound(yMax);
-            yAxis.setUpperBound(yMax);
+            xAxis.setUpperBound(yMax + xAdjust);
+            yAxis.setUpperBound(yMax + yAdjust);
+            tempMax = yMax;
         } else {
-            xAxis.setUpperBound(xMax);
-            yAxis.setUpperBound(xMax);
+            xAxis.setUpperBound(xMax + xAdjust);
+            yAxis.setUpperBound(xMax + yAdjust);
+            tempMax = xMax;
         }
         if (yMin < xMin){
-            xAxis.setLowerBound(yMin);
-            yAxis.setLowerBound(yMin);
+            xAxis.setLowerBound(yMin+xAdjust);
+            yAxis.setLowerBound(yMin+yAdjust);
+            tempMin = yMin;
         } else {
-            xAxis.setLowerBound(xMin);
-            yAxis.setLowerBound(xMin);
+            xAxis.setLowerBound(xMin+xAdjust);
+            yAxis.setLowerBound(xMin+yAdjust);
+            tempMin = xMin;
         }
+        tickUnit = (tempMax- tempMin)/10;
+        yAxis.setTickUnit(tickUnit);
+        xAxis.setTickUnit(tickUnit);
     }
+
+    private int centerY(int xMax, int xMin, int yMax, int yMin){
+        int minDiff;
+        int maxDiff;
+        minDiff = yMin - xMin;
+        maxDiff = yMax - xMax;
+        if(minDiff < 0){
+            minDiff = 0;
+        }
+        if (maxDiff > 0){
+            maxDiff = 0;
+        }
+        return (maxDiff + minDiff)/2;
+    }
+
+    private int centerX(int xMax, int xMin, int yMax, int yMin){
+        int minDiff;
+        int maxDiff;
+        minDiff = xMin - yMin;
+        maxDiff = xMax - yMax;
+        if(minDiff < 0){
+            minDiff = 0;
+        }
+        if (maxDiff > 0){
+            maxDiff = 0;
+        }
+        return (maxDiff + minDiff)/2;
+    }
+
 }
 
 

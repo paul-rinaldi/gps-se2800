@@ -240,7 +240,7 @@ public class Plotter {
         plotterController.setLegendText("Dark Blue = < 3 MPH     Light Blue = Between 3 & 7 MPH     Green = Between 7 & 10 MPH" +
                 "\nYellow = Between 10 & 15 MPH     Orange = Between 15 & 20 MPH     Red = Over 20 MPH");
         //Set chart name
-        chart.setTitle("Instantaneous Speed Along Path");
+        plotterController.setChartTitle("Instantaneous Speed Along Path");
         //Gets track handler, which holds all the tracks to be found.
         TracksHandler tracksHandler = plotterController.getTracksHandler();
         //Configures axises if there are tracks.
@@ -309,9 +309,7 @@ public class Plotter {
         checkGraph();
 
         plotterController.reenableLegend();
-
-        //Sets chart name.
-        chart.setTitle("Cartesian Coordinates");
+        plotterController.setChartTitle("Cartesian Coordinates");
         TracksHandler tracksHandler = plotterController.getTracksHandler();
         if (tracksHandler != null) {
             setChartAxisLabels("Kilometers(east and west)", "Kilometers(north and south)");
@@ -351,8 +349,8 @@ public class Plotter {
 
     private void checkMinMax(double xCheck, double yCheck) {
         //multiply by 1.1 to scale the axis so the bounds are not right on the edge of the graph
-        int x = (int) Math.round(xCheck * 1.1);
-        int y = (int) Math.round(yCheck * 1.1);
+        int x = (int) Math.round(xCheck * 1.05);
+        int y = (int) Math.round(yCheck * 1.05);
         if (x > xMax){
             xMax = x;
         } else if(x < xMin){
