@@ -45,6 +45,54 @@ public class Plotter {
     }
 
     /**
+     * Plots speed (y) at each TrackPoint's distance (x) along the graph
+     *
+     * @param track track from which points will be plotted
+     */
+    public void plotSpeedVsDistance(Track track, boolean kilometers) {
+        XYChart.Series series = new XYChart.Series();
+        series.setName(track.getName());
+
+        if (kilometers) {
+            setChartAxisLabels("Speed (km/hr)", "Distance (km)");
+        } else {
+            setChartAxisLabels("Speed (mi/hr)", "Distance (mi)");
+        }
+
+        ArrayList<Double> speeds = track.getTrackStats().getSpeeds(); // todo in what unit??
+
+        double previousElevation = track.getTrackPoint(0).getElevation();
+        double elevationPoint = 0;
+
+        Date firstDate = null;
+        Date currentDate;
+
+        int i = 0;
+        for (TrackPoint point: track.getTrackPoints()) {
+
+            double currentElevation = point.getElevation();
+
+            //Set first date to calculate time passed
+            if (i == 0) {
+                firstDate = point.getTime();
+            }
+
+            currentDate = point.getTime();
+            double timePoint = timePassedInMin(currentDate, firstDate);
+
+            double elevationGain = calculateElevationGain(currentElevation, previousElevation);
+            elevationPoint += elevationGain; //Add the change in elevation to total change
+
+            plotPoint(series, timePoint, elevationPoint); //Plot point on LineChart
+
+            previousElevation = point.getElevation();
+
+            i++;
+        }
+        this.chart.getData().add(series);
+    }
+
+    /**
      * Plots graph of distance vs time
      *
      * @param track track to plot
