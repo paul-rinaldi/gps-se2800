@@ -7,6 +7,7 @@ import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 
 /**
@@ -29,6 +30,8 @@ public class PlotterController {
     private Spinner<String> trackSpinner;
     @FXML
     private TextArea LegendText;
+    @FXML
+    private Label chartTitle;
 
     private GPSController gpsController;
     private Plotter plotter;
@@ -85,6 +88,8 @@ public class PlotterController {
 
         this.tracksHandler = gpsController.getTracksHandler();
 
+        chartTitle.setText("Elevation Gain Vs. Time");
+
         try {
 
             if (this.lineChart.getData() != null && this.lineChart.getData().size() != 0) { //Clears graph when window is opened only if series exists
@@ -92,8 +97,6 @@ public class PlotterController {
             }
 
             reenableLegend();
-
-            lineChart.setTitle("Elevation Gain Vs. Time");
 
             for (int i = 0; i < this.tracksHandler.getTrackAmount(); i++) {
                 if (showOnGraph[i]) {
@@ -268,6 +271,10 @@ public class PlotterController {
         LegendText.setText(message);
     }
 
+    public void setChartTitle(String title){
+        chartTitle.setText(title);
+    }
+
     /**
      * sets both axis to the same scale based on the variables passed in, sets the max value for both the x and y axis
      * based on what number is greater, similarly sets the x and y axis min's to which number is smaller.
@@ -276,7 +283,12 @@ public class PlotterController {
      * @param yMax the max y axis value
      * @param yMin the min y axis value
      */
-    public void scaleAxis(double xMax, double xMin, double yMax, double yMin){
+    public void scaleAxis(int xMax, int xMin, int yMax, int yMin){
+        int tickUnit;
+        int tempMax;
+        int tempMin;
+        int xAdjust = centerX(xMax, xMin, yMax, yMin);
+        int yAdjust = centerY(xMax, xMin, yMax, yMin);
         xAxis.setAutoRanging(false);
         yAxis.setAutoRanging(false);
         //added so edge cases at small points are easier to see
@@ -293,22 +305,59 @@ public class PlotterController {
             yMin--;
         }
         if(yMax > xMax){
-            xAxis.setUpperBound(yMax);
-            yAxis.setUpperBound(yMax);
+            xAxis.setUpperBound(yMax + xAdjust);
+            yAxis.setUpperBound(yMax + yAdjust);
+            tempMax = yMax;
         } else {
-            xAxis.setUpperBound(xMax);
-            yAxis.setUpperBound(xMax);
+            xAxis.setUpperBound(xMax + xAdjust);
+            yAxis.setUpperBound(xMax + yAdjust);
+            tempMax = xMax;
         }
         if (yMin < xMin){
-            xAxis.setLowerBound(yMin);
-            yAxis.setLowerBound(yMin);
+            xAxis.setLowerBound(yMin+xAdjust);
+            yAxis.setLowerBound(yMin+yAdjust);
+            tempMin = yMin;
         } else {
-            xAxis.setLowerBound(xMin);
-            yAxis.setLowerBound(xMin);
+            xAxis.setLowerBound(xMin+xAdjust);
+            yAxis.setLowerBound(xMin+yAdjust);
+            tempMin = xMin;
         }
-        yAxis.setTickUnit(yMax/10);
-        xAxis.setTickUnit(xMax/10);
+        tickUnit = (tempMax- tempMin)/10;
+        yAxis.setTickUnit(tickUnit);
+        xAxis.setTickUnit(tickUnit);
     }
+
+    private int centerY(int xMax, int xMin, int yMax, int yMin){
+        int minDiff;
+        int maxDiff;
+        minDiff = yMin - xMin;
+        maxDiff = yMax - xMax;
+        if(minDiff < 0){
+            minDiff = 0;
+        }
+        if (maxDiff > 0){
+            maxDiff = 0;
+        }
+        System.out.println("yMax: " + maxDiff);
+        System.out.println("yMin: " + minDiff);
+        System.out.println("Difference: " + (maxDiff + minDiff));
+        return (maxDiff + minDiff)/2;
+    }
+
+    private int centerX(int xMax, int xMin, int yMax, int yMin){
+        int minDiff;
+        int maxDiff;
+        minDiff = xMin - yMin;
+        maxDiff = xMax - yMax;
+        if(minDiff < 0){
+            minDiff = 0;
+        }
+        if (maxDiff > 0){
+            maxDiff = 0;
+        }
+        return (maxDiff + minDiff)/2;
+    }
+
 }
 
 

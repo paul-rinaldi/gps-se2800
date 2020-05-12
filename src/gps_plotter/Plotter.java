@@ -161,7 +161,7 @@ public class Plotter {
         plotterController.setLegendText("Dark Blue = < 3 MPH     Light Blue = Between 3 & 7 MPH     Green = Between 7 & 10 MPH" +
                 "\nYellow = Between 10 & 15 MPH     Orange = Between 15 & 20 MPH     Red = Over 20 MPH");
         //Set chart name
-        chart.setTitle("Instantaneous Speed Along Path");
+        plotterController.setChartTitle("Instantaneous Speed Along Path");
         //Gets track handler, which holds all the tracks to be found.
         TracksHandler tracksHandler = plotterController.getTracksHandler();
         //Configures axises if there are tracks.
@@ -230,9 +230,7 @@ public class Plotter {
         checkGraph();
 
         plotterController.reenableLegend();
-
-        //Sets chart name.
-        chart.setTitle("Cartesian Coordinates");
+        plotterController.setChartTitle("Cartesian Coordinates");
         TracksHandler tracksHandler = plotterController.getTracksHandler();
         if (tracksHandler != null) {
             setChartAxisLabels("Kilometers(east and west)", "Kilometers(north and south)");
