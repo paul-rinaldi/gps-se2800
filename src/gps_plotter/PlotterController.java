@@ -179,7 +179,7 @@ public class PlotterController {
 
             reenableLegend();
 
-            lineChart.setTitle("Elevation Vs. Time");
+            setChartTitle("Elevation Vs. Time");
 
             for (int i = 0; i < this.tracksHandler.getTrackAmount(); i++) {
                 if (showOnGraph[i]) {
@@ -212,7 +212,7 @@ public class PlotterController {
 
         this.tracksHandler = gpsController.getTracksHandler();
 
-        chartTitle.setText("Elevation Gain Vs. Time");
+        setChartTitle("Elevation Gain Vs. Time");
 
         try {
 
@@ -319,6 +319,7 @@ public class PlotterController {
                 break;
             case "Elevation Vs Time":
                 graphElevationVsTime();
+                break;
             default:
                 System.out.println("Error unrecognized graph name: " + lastGraphLoaded);
         }
