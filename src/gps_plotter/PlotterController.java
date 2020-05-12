@@ -14,7 +14,6 @@ import javafx.stage.Stage;
  */
 public class PlotterController {
 
-
     @FXML
     private LineChart<Double, Double> lineChart;
     @FXML
@@ -29,15 +28,62 @@ public class PlotterController {
     private Spinner<String> trackSpinner;
     @FXML
     private TextArea LegendText;
+    @FXML
+    private Label chartTitle;
+    @FXML
+    private RadioButton distanceKM;
+    @FXML
+    private RadioButton distanceMI;
+    @FXML
+    private Label distanceLabel;
 
     private GPSController gpsController;
     private Plotter plotter;
     private TracksHandler tracksHandler;
     private String lastGraphLoaded = "";
+    private boolean firstTimePlottingDvsT = true;
 
     private Stage plotterStage;
 
-    private boolean[] showOnGraph = {true, true, true, true, true, true, true, true, true, true};
+    private boolean[] showOnGraph = {true, false, false, false, false, false, false, false, false, false};
+
+    private boolean graphDistanceVsTimeInKM = true;
+
+    private void showDistanceVsTimeUnits(boolean visible){
+        this.distanceKM.setVisible(visible);
+        this.distanceMI.setVisible(visible);
+        this.distanceLabel.setVisible(visible);
+    }
+
+    /**
+     * Called when Distance Vs Time menu item is pressed
+     */
+    public void graphDistanceVsTimeStartup(){
+        if(firstTimePlottingDvsT) {
+            this.distanceKM.setSelected(true); //Initially sets KM radio button to selected
+            this.firstTimePlottingDvsT = false;
+        }
+        showDistanceVsTimeUnits(true);
+        graphDistanceVsTime();
+    }
+
+    /**
+     * Called when Kilometers button is pressed
+     */
+    public void graphDistanceVsTimeKM(){
+        graphDistanceVsTimeInKM = true;
+        graphDistanceVsTime();
+
+    }
+
+    /**
+     * Called when Miles button is pressed
+     */
+    public void graphDistanceVsTimeMI(){
+        graphDistanceVsTimeInKM = false;
+        graphDistanceVsTime();
+
+    }
 
     /**
      * Initializes JavaFX table element
@@ -74,10 +120,13 @@ public class PlotterController {
     }
 
     /**
-     * Plots all selected Tracks' elevation gains vs time
+     * Plots all selected Tracks' distance vs time - distance unit is based on user selection
+     * Default distance unit is kilometers
      */
-    public void graphElevationGainVsTime() {
-        lastGraphLoaded = "Elevation Gain Vs Time";
+    private void graphDistanceVsTime(){
+        xAxis.setAutoRanging(true);
+        yAxis.setAutoRanging(true);
+        lastGraphLoaded = "Distance Vs Time";
 
         showHideButton.disableProperty().setValue(false);
 
@@ -91,7 +140,48 @@ public class PlotterController {
 
             reenableLegend();
 
-            lineChart.setTitle("Elevation Gain Vs. Time");
+            setChartTitle("Distance Vs Time");
+
+            for (int i = 0; i < this.tracksHandler.getTrackAmount(); i++) {
+                if (showOnGraph[i]) {
+                    Track t = this.tracksHandler.getTrack(i);
+
+                    if (t.getPointAmount() > 1) {
+                       plotter.plotDistanceVsTime(t, graphDistanceVsTimeInKM);
+                    } else {
+                        createErrorDialog("Distance vs Time Plotting Error", "Track: " + t.getName() + " doesn't have enough points to graph Elevation Gain vs Time");
+                    }
+                }
+            }
+
+        } catch (NullPointerException n) {
+            showHideButton.disableProperty().setValue(true);
+            createErrorDialog("Distance vs Time Plotting Error", "No tracks are loaded.");
+        }
+    }
+
+    /**
+     * Plots all selected Tracks' elevation gains vs time
+     */
+    public void graphElevationGainVsTime() {
+        xAxis.setAutoRanging(true);
+        yAxis.setAutoRanging(true);
+        lastGraphLoaded = "Elevation Gain Vs Time";
+
+        showHideButton.disableProperty().setValue(false);
+        showDistanceVsTimeUnits(false);
+
+        this.tracksHandler = gpsController.getTracksHandler();
+
+        chartTitle.setText("Elevation Gain Vs. Time");
+
+        try {
+
+            if (this.lineChart.getData() != null && this.lineChart.getData().size() != 0) { //Clears graph when window is opened only if series exists
+                this.plotter.clearChart();
+            }
+
+            reenableLegend();
 
             for (int i = 0; i < this.tracksHandler.getTrackAmount(); i++) {
                 if (showOnGraph[i]) {
@@ -104,7 +194,6 @@ public class PlotterController {
                     }
                 }
             }
-
         } catch (NullPointerException n) {
             showHideButton.disableProperty().setValue(true);
             createErrorDialog("Elevation Gain vs Time Plotting Error", "No tracks are loaded.");
@@ -117,6 +206,7 @@ public class PlotterController {
     public void graphTwoDPlot() {
         lastGraphLoaded = "2DPlot";
 
+        showDistanceVsTimeUnits(false);
         showHideButton.disableProperty().setValue(false);
         this.tracksHandler = gpsController.getTracksHandler();
         try {
@@ -132,6 +222,7 @@ public class PlotterController {
      */
     public void graphPlotSpeedAlongPath() {
         lastGraphLoaded = "SpeedPlot";
+        showDistanceVsTimeUnits(false);
         showHideButton.disableProperty().setValue(false);
         tracksHandler = gpsController.getTracksHandler();
         try {
@@ -183,6 +274,9 @@ public class PlotterController {
                 break;
             case "SpeedPlot":
                 graphPlotSpeedAlongPath();
+                break;
+            case "Distance Vs Time":
+                graphDistanceVsTime();
                 break;
             default:
                 System.out.println("Error unrecognized graph name: " + lastGraphLoaded);
@@ -267,6 +361,10 @@ public class PlotterController {
         LegendText.setText(message);
     }
 
+    public void setChartTitle(String title){
+        chartTitle.setText(title);
+    }
+
     /**
      * sets both axis to the same scale based on the variables passed in, sets the max value for both the x and y axis
      * based on what number is greater, similarly sets the x and y axis min's to which number is smaller.
@@ -275,7 +373,12 @@ public class PlotterController {
      * @param yMax the max y axis value
      * @param yMin the min y axis value
      */
-    public void scaleAxis(double xMax, double xMin, double yMax, double yMin){
+    public void scaleAxis(int xMax, int xMin, int yMax, int yMin){
+        int tickUnit;
+        int tempMax;
+        int tempMin;
+        int xAdjust = centerX(xMax, xMin, yMax, yMin);
+        int yAdjust = centerY(xMax, xMin, yMax, yMin);
         xAxis.setAutoRanging(false);
         yAxis.setAutoRanging(false);
         //added so edge cases at small points are easier to see
@@ -292,20 +395,56 @@ public class PlotterController {
             yMin--;
         }
         if(yMax > xMax){
-            xAxis.setUpperBound(yMax);
-            yAxis.setUpperBound(yMax);
+            xAxis.setUpperBound(yMax + xAdjust);
+            yAxis.setUpperBound(yMax + yAdjust);
+            tempMax = yMax;
         } else {
-            xAxis.setUpperBound(xMax);
-            yAxis.setUpperBound(xMax);
+            xAxis.setUpperBound(xMax + xAdjust);
+            yAxis.setUpperBound(xMax + yAdjust);
+            tempMax = xMax;
         }
         if (yMin < xMin){
-            xAxis.setLowerBound(yMin);
-            yAxis.setLowerBound(yMin);
+            xAxis.setLowerBound(yMin+xAdjust);
+            yAxis.setLowerBound(yMin+yAdjust);
+            tempMin = yMin;
         } else {
-            xAxis.setLowerBound(xMin);
-            yAxis.setLowerBound(xMin);
+            xAxis.setLowerBound(xMin+xAdjust);
+            yAxis.setLowerBound(xMin+yAdjust);
+            tempMin = xMin;
         }
+        tickUnit = (tempMax- tempMin)/10;
+        yAxis.setTickUnit(tickUnit);
+        xAxis.setTickUnit(tickUnit);
     }
+
+    private int centerY(int xMax, int xMin, int yMax, int yMin){
+        int minDiff;
+        int maxDiff;
+        minDiff = yMin - xMin;
+        maxDiff = yMax - xMax;
+        if(minDiff < 0){
+            minDiff = 0;
+        }
+        if (maxDiff > 0){
+            maxDiff = 0;
+        }
+        return (maxDiff + minDiff)/2;
+    }
+
+    private int centerX(int xMax, int xMin, int yMax, int yMin){
+        int minDiff;
+        int maxDiff;
+        minDiff = xMin - yMin;
+        maxDiff = xMax - yMax;
+        if(minDiff < 0){
+            minDiff = 0;
+        }
+        if (maxDiff > 0){
+            maxDiff = 0;
+        }
+        return (maxDiff + minDiff)/2;
+    }
+
 }
 
 

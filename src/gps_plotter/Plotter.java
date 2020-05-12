@@ -7,6 +7,7 @@ import javafx.scene.Node;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.XYChart;
 import javafx.scene.paint.Color;
+import java.lang.Math;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -21,6 +22,7 @@ public class Plotter {
 
     private static final double MS_IN_MIN = 60000;
     private static final double M_IN_KM = 1000;
+    private static final double M_IN_MI = 1609.344;
 
     //used to scale the graph
     private int xMax;
@@ -40,6 +42,83 @@ public class Plotter {
     public Plotter(LineChart<Double, Double> chart, PlotterController plotterController) {
         this.chart = chart;
         this.plotterController = plotterController;
+    }
+
+    /**
+     * Plots graph of distance vs time
+     *
+     * @param track track to plot
+     * @param kilometers determines whether the distance displayed/calculated is in miles or kilometers (true: kilometers; false: miles)
+     */
+    public void plotDistanceVsTime(Track track, boolean kilometers){
+        XYChart.Series series = new XYChart.Series();
+        series.setName(track.getName());
+        if(kilometers) {
+            setChartAxisLabels("Time Passed (min)", "Distance (km)");
+        } else{
+            setChartAxisLabels("Time Passed (min)", "Distance (mi)");
+        }
+
+        TrackPoint trackPointZero = track.getTrackPoint(0);
+        Date firstDate = null;
+        Date currentDate;
+        double distanceTraveled = 0;
+
+        for (int i = 0; i < track.getPointAmount(); i++) {
+
+
+            TrackPoint currentPoint = track.getTrackPoint(i);
+            TrackPoint previousPoint;
+            double currentElevation = currentPoint.getElevation();
+            double previousElevation;
+            //Set first date to calculate time passed
+            if (i == 0) {
+                firstDate = currentPoint.getTime();
+                previousPoint = track.getTrackPoint(i);
+                previousElevation = currentPoint.getElevation();
+            } else{
+                previousPoint = track.getTrackPoint(i-1);
+                previousElevation = previousPoint.getElevation();
+            }
+
+            double prevX = calculateXCoord(previousPoint, trackPointZero);
+            double prevY = calculateYCoord(previousPoint, trackPointZero);
+
+            double currentX = calculateXCoord(currentPoint, trackPointZero);
+            double currentY = calculateYCoord(currentPoint, trackPointZero);
+
+            currentDate = currentPoint.getTime();
+            double timePoint = timePassedInMin(currentDate, firstDate);
+
+            double currentDistance = calculateThreeDimensionalDistance(prevX, currentX, prevY, currentY, previousElevation, currentElevation, kilometers);
+
+            distanceTraveled += currentDistance;
+
+            plotPoint(series, timePoint, distanceTraveled); //Plot point on LineChart
+
+        }
+        this.chart.getData().add(series);
+    }
+
+    private double calculateThreeDimensionalDistance(double x1, double x2, double y1, double y2, double z1, double z2, boolean kilometers){
+
+        double divisor = kilometers ? M_IN_KM: M_IN_MI;
+
+        //Convert distances to proper units (miles or kilometers)
+        x1/=divisor;
+        x2/=divisor;
+        y1/=divisor;
+        y2/=divisor;
+        z1/=divisor;
+        z2/=divisor;
+
+        double xComponent = (x2 - x1)*(x2 - x1);
+        double yComponent = (y2 - y1)*(y2 - y1);
+        double zComponent = (z2 - z1)*(z2 - z1);
+
+        double distance = Math.sqrt(xComponent + yComponent + zComponent);
+        return distance;
+
     }
 
     /**
@@ -161,7 +240,7 @@ public class Plotter {
         plotterController.setLegendText("Dark Blue = < 3 MPH     Light Blue = Between 3 & 7 MPH     Green = Between 7 & 10 MPH" +
                 "\nYellow = Between 10 & 15 MPH     Orange = Between 15 & 20 MPH     Red = Over 20 MPH");
         //Set chart name
-        chart.setTitle("Instantaneous Speed Along Path");
+        plotterController.setChartTitle("Instantaneous Speed Along Path");
         //Gets track handler, which holds all the tracks to be found.
         TracksHandler tracksHandler = plotterController.getTracksHandler();
         //Configures axises if there are tracks.
@@ -302,9 +381,7 @@ public class Plotter {
         checkGraph();
 
         plotterController.reenableLegend();
-
-        //Sets chart name.
-        chart.setTitle("Cartesian Coordinates");
+        plotterController.setChartTitle("Cartesian Coordinates");
         TracksHandler tracksHandler = plotterController.getTracksHandler();
         if (tracksHandler != null) {
             setChartAxisLabels("Kilometers(east and west)", "Kilometers(north and south)");
@@ -344,8 +421,8 @@ public class Plotter {
 
     private void checkMinMax(double xCheck, double yCheck) {
         //multiply by 1.1 to scale the axis so the bounds are not right on the edge of the graph
-        int x = (int) Math.round(xCheck * 1.1);
-        int y = (int) Math.round(yCheck * 1.1);
+        int x = (int) Math.round(xCheck * 1.05);
+        int y = (int) Math.round(yCheck * 1.05);
         if (x > xMax){
             xMax = x;
         } else if(x < xMin){
