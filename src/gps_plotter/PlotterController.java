@@ -49,7 +49,7 @@ public class PlotterController {
 
     private boolean graphDistanceVsTimeInKM = true;
 
-    private void showDistanceVsTimeUnits(boolean visible){
+    private void showDistanceSelect(boolean visible){
         this.distanceKM.setVisible(visible);
         this.distanceMI.setVisible(visible);
         this.distanceLabel.setVisible(visible);
@@ -63,14 +63,18 @@ public class PlotterController {
             this.distanceKM.setSelected(true); //Initially sets KM radio button to selected
             this.firstTimePlottingDvsT = false;
         }
-        showDistanceVsTimeUnits(true);
+
+        this.distanceKM.setSelected(graphDistanceVsTimeInKM);
+        this.distanceMI.setSelected(!graphDistanceVsTimeInKM);
+
+        showDistanceSelect(true);
         graphDistanceVsTime();
     }
 
     /**
      * Called when Kilometers button is pressed
      */
-    public void graphDistanceVsTimeKM(){
+    public void graphDistanceInKM(){
 
         if(lastGraphLoaded.equals("Distance Vs Time")){
             graphDistanceVsTimeInKM = true;
@@ -81,7 +85,7 @@ public class PlotterController {
     /**
      * Called when Miles button is pressed
      */
-    public void graphDistanceVsTimeMI(){
+    public void graphDistanceInMI(){
 
         if(lastGraphLoaded.equals("Distance Vs Time")){
             graphDistanceVsTimeInKM = false;
@@ -172,7 +176,7 @@ public class PlotterController {
         lastGraphLoaded = "Elevation Vs Time";
 
         showHideButton.disableProperty().setValue(false);
-        showDistanceVsTimeUnits(false);
+        showDistanceSelect(false);
 
         this.tracksHandler = gpsController.getTracksHandler();
 
@@ -213,7 +217,7 @@ public class PlotterController {
         lastGraphLoaded = "Elevation Gain Vs Time";
 
         showHideButton.disableProperty().setValue(false);
-        showDistanceVsTimeUnits(false);
+        showDistanceSelect(false);
 
         this.tracksHandler = gpsController.getTracksHandler();
 
@@ -250,7 +254,7 @@ public class PlotterController {
     public void graphTwoDPlot() {
         lastGraphLoaded = "2DPlot";
 
-        showDistanceVsTimeUnits(false);
+        showDistanceSelect(false);
         showHideButton.disableProperty().setValue(false);
         this.tracksHandler = gpsController.getTracksHandler();
         try {
@@ -266,7 +270,7 @@ public class PlotterController {
      */
     public void graphPlotSpeedAlongPath() {
         lastGraphLoaded = "SpeedPlot";
-        showDistanceVsTimeUnits(false);
+        showDistanceSelect(false);
         showHideButton.disableProperty().setValue(false);
         tracksHandler = gpsController.getTracksHandler();
         try {
