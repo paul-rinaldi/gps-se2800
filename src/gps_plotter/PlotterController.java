@@ -71,17 +71,22 @@ public class PlotterController {
      * Called when Kilometers button is pressed
      */
     public void graphDistanceVsTimeKM(){
-        graphDistanceVsTimeInKM = true;
-        graphDistanceVsTime();
 
+        if(lastGraphLoaded.equals("Elevation Vs Time")){
+            graphDistanceVsTimeInKM = true;
+            graphDistanceVsTime();
+        }
     }
 
     /**
      * Called when Miles button is pressed
      */
     public void graphDistanceVsTimeMI(){
-        graphDistanceVsTimeInKM = false;
-        graphDistanceVsTime();
+
+        if(lastGraphLoaded.equals("Distance Vs Time")){
+            graphDistanceVsTimeInKM = false;
+            graphDistanceVsTime();
+        }
 
     }
 
