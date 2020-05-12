@@ -50,6 +50,7 @@ public class Plotter {
      * @param track track from which points will be plotted
      */
     public void plotSpeedVsDistance(Track track, boolean kilometers) {
+        final double zeroSpeed = 0.0;
         XYChart.Series series = new XYChart.Series();
         series.setName(track.getName());
 
@@ -61,33 +62,43 @@ public class Plotter {
 
         ArrayList<Double> speeds = track.getTrackStats().getSpeeds(); // todo in what unit??
 
-        double previousElevation = track.getTrackPoint(0).getElevation();
+        TrackPoint trackPointZero = track.getTrackPoint(0);
+        double distanceTraveled = 0;
+
+        double previousDistance = 0;
+
         double elevationPoint = 0;
 
-        Date firstDate = null;
-        Date currentDate;
+        for (int i = 0; i < track.getPointAmount(); i++) {
+            TrackPoint currentPoint = track.getTrackPoint(i);
+            TrackPoint previousPoint;
 
-        int i = 0;
-        for (TrackPoint point: track.getTrackPoints()) {
-
-            double currentElevation = point.getElevation();
-
+            double currentElevation = currentPoint.getElevation();
+            double previousElevation;
             //Set first date to calculate time passed
             if (i == 0) {
-                firstDate = point.getTime();
+                previousPoint = track.getTrackPoint(i);
+                previousElevation = currentPoint.getElevation();
+            } else {
+                previousPoint = track.getTrackPoint(i-1);
+                previousElevation = previousPoint.getElevation();
             }
 
-            currentDate = point.getTime();
-            double timePoint = timePassedInMin(currentDate, firstDate);
+            double prevX = calculateXCoord(previousPoint, trackPointZero);
+            double prevY = calculateYCoord(previousPoint, trackPointZero);
 
-            double elevationGain = calculateElevationGain(currentElevation, previousElevation);
-            elevationPoint += elevationGain; //Add the change in elevation to total change
+            double currentX = calculateXCoord(currentPoint, trackPointZero);
+            double currentY = calculateYCoord(currentPoint, trackPointZero);
 
-            plotPoint(series, timePoint, elevationPoint); //Plot point on LineChart
+            double currentDistance = calculateThreeDimensionalDistance(prevX, currentX, prevY, currentY, previousElevation, currentElevation, kilometers);
 
-            previousElevation = point.getElevation();
+            distanceTraveled += currentDistance;
 
-            i++;
+            if (i == 0) {
+                plotPoint(series, distanceTraveled, zeroSpeed); //Plot point on LineChart (first speed is zero)
+            } else {
+                plotPoint(series, distanceTraveled, speeds.get(i-1)); //Plot point on LineChart (speeds only contains track(1)-track(n-1)'s speeds)
+            }
         }
         this.chart.getData().add(series);
     }

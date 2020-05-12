@@ -132,6 +132,46 @@ public class PlotterController {
      * Plots all selected Tracks' distance vs time - distance unit is based on user selection
      * Default distance unit is kilometers
      */
+    @FXML
+    private void graphSpeedVsDistance(){
+        String name = "Speed vs Distance";
+        xAxis.setAutoRanging(true);
+        yAxis.setAutoRanging(true);
+        lastGraphLoaded = name;
+
+        showHideButton.disableProperty().setValue(false);
+        this.tracksHandler = gpsController.getTracksHandler();
+
+        try {
+            if (this.lineChart.getData() != null && this.lineChart.getData().size() != 0) { //Clears graph when window is opened only if series exists
+                this.plotter.clearChart();
+            }
+
+            reenableLegend();
+            setChartTitle(name);
+
+            for (int i = 0; i < this.tracksHandler.getTrackAmount(); i++) {
+                if (showOnGraph[i]) {
+                    Track t = this.tracksHandler.getTrack(i);
+
+                    if (t.getPointAmount() > 1) {
+                        plotter.plotSpeedVsDistance(t, graphDistanceVsTimeInKM);
+                    } else {
+                        createErrorDialog(name + " Plotting Error", "Track: " + t.getName() + " doesn't have enough points to graph " + name);
+                    }
+                }
+            }
+
+        } catch (NullPointerException n) {
+            showHideButton.disableProperty().setValue(true);
+            createErrorDialog(name + " Plotting Error", "No tracks are loaded.");
+        }
+    }
+
+    /**
+     * Plots all selected Tracks' distance vs time - distance unit is based on user selection
+     * Default distance unit is kilometers
+     */
     private void graphDistanceVsTime(){
         xAxis.setAutoRanging(true);
         yAxis.setAutoRanging(true);
@@ -328,6 +368,8 @@ public class PlotterController {
                 break;
             case "Elevation Vs Time":
                 graphElevationVsTime();
+                break;
+            case "Distance Vs Speed":
                 break;
             default:
                 System.out.println("Error unrecognized graph name: " + lastGraphLoaded);
