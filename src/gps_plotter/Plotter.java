@@ -206,10 +206,6 @@ public class Plotter {
      */
     public double calculateElevationGain(double current, double highest) {
 
-        if (current < 0.0 || highest < 0.0) { //Values below zero will not be expected (below sea level)
-            return 0.0;
-        }
-
         double result = current - highest;
 
         return result > 0 ? result : 0;
