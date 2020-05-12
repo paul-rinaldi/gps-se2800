@@ -310,7 +310,7 @@ public class Plotter {
         plotterController.setLegendText("Dark Blue = < -5%      Light Blue = Between -5% & -1%      Green = Between -1% & 1% " +
                 "\nYellow = Between 1% & 3%      Orange = Between 3% & 5%      Red = Over 5%");
         //Set chart name
-        chart.setTitle("Grade of Plot");
+        plotterController.setChartTitle("Grade of Plot");
         //Gets track handler, which holds all the tracks to be found.
         TracksHandler tracksHandler = plotterController.getTracksHandler();
         //Configures axises if there are tracks.
@@ -334,21 +334,22 @@ public class Plotter {
                             series.setName(track.getName());
                             //First point
                             TrackPoint currentTrackPoint = track.getTrackPoint(z);
-                            double x1 = calculateXCoord(currentTrackPoint, trackZero)/M_IN_KM;
-                            double y1 = calculateYCoord(currentTrackPoint, trackZero)/M_IN_KM;
-                            plotPoint(series, x1, y1);
+                            double x = calculateXCoord(currentTrackPoint, trackZero)/M_IN_KM;
+                            double y = calculateYCoord(currentTrackPoint, trackZero)/M_IN_KM;
+                            plotPoint(series, x, y);
                             //Second point
                             TrackPoint nextTrackPoint = track.getTrackPoint(z + 1);
-                            double x2 = calculateXCoord(nextTrackPoint, trackZero)/M_IN_KM;
-                            double y2 = calculateYCoord(nextTrackPoint, trackZero)/M_IN_KM;
-                            checkMinMax(x2, y2);
-                            plotPoint(series, x2, y2);
+                            x = calculateXCoord(nextTrackPoint, trackZero)/M_IN_KM;
+                            y = calculateYCoord(nextTrackPoint, trackZero)/M_IN_KM;
+                            checkMinMax(x, y);
+                            plotPoint(series, x, y);
                             //Adds the series to the chart
                             chart.getData().add(series);
                             //Gets the node property for the line of the newly created series.
                             Node line = series.getNode().lookup(".chart-series-line");
 
-                            double grade = calculateGrade(x1, y1, x2, y2);
+                            //Calculates the grade between two points
+                            double grade = calculateGrade(currentTrackPoint, nextTrackPoint);
 
                             //Decides line color
                             color = setGradeColor(grade);
@@ -530,9 +531,12 @@ public class Plotter {
         }
     }
 
-    //Essentially calculates the slope between two points.
-    private double calculateGrade(double x1, double y1, double x2, double y2) {
-        return (y2 - y1) / (x2 - x1);
+    //Essentially calculates the grade between two points. Returns a number
+    private double calculateGrade(TrackPoint point1, TrackPoint point2) {
+        double elevationChange = point2.getElevation() - point1.getElevation();
+        double distance = 0.0; //TODO
+
+        return (elevationChange / distance) * 100.0;
     }
 
 }
