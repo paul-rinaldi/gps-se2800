@@ -72,7 +72,7 @@ public class PlotterController {
      */
     public void graphDistanceVsTimeKM(){
 
-        if(lastGraphLoaded.equals("Elevation Vs Time")){
+        if(lastGraphLoaded.equals("Distance Vs Time")){
             graphDistanceVsTimeInKM = true;
             graphDistanceVsTime();
         }
