@@ -369,7 +369,7 @@ public class PlotterController {
             case "Elevation Vs Time":
                 graphElevationVsTime();
                 break;
-            case "Distance Vs Speed":
+            case "Speed Vs Distance":
                 break;
             default:
                 System.out.println("Error unrecognized graph name: " + lastGraphLoaded);
