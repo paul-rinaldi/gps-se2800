@@ -7,6 +7,7 @@ import javafx.scene.Node;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.XYChart;
 import javafx.scene.paint.Color;
+
 import java.lang.Math;
 
 import java.util.ArrayList;
@@ -47,15 +48,15 @@ public class Plotter {
     /**
      * Plots graph of distance vs time
      *
-     * @param track track to plot
+     * @param track      track to plot
      * @param kilometers determines whether the distance displayed/calculated is in miles or kilometers (true: kilometers; false: miles)
      */
-    public void plotDistanceVsTime(Track track, boolean kilometers){
+    public void plotDistanceVsTime(Track track, boolean kilometers) {
         XYChart.Series series = new XYChart.Series();
         series.setName(track.getName());
-        if(kilometers) {
+        if (kilometers) {
             setChartAxisLabels("Time Passed (min)", "Distance (km)");
-        } else{
+        } else {
             setChartAxisLabels("Time Passed (min)", "Distance (mi)");
         }
 
@@ -76,8 +77,8 @@ public class Plotter {
                 firstDate = currentPoint.getTime();
                 previousPoint = track.getTrackPoint(i);
                 previousElevation = currentPoint.getElevation();
-            } else{
-                previousPoint = track.getTrackPoint(i-1);
+            } else {
+                previousPoint = track.getTrackPoint(i - 1);
                 previousElevation = previousPoint.getElevation();
             }
 
@@ -100,21 +101,21 @@ public class Plotter {
         this.chart.getData().add(series);
     }
 
-    private double calculateThreeDimensionalDistance(double x1, double x2, double y1, double y2, double z1, double z2, boolean kilometers){
+    private double calculateThreeDimensionalDistance(double x1, double x2, double y1, double y2, double z1, double z2, boolean kilometers) {
 
-        double divisor = kilometers ? M_IN_KM: M_IN_MI;
+        double divisor = kilometers ? M_IN_KM : M_IN_MI;
 
         //Convert distances to proper units (miles or kilometers)
-        x1/=divisor;
-        x2/=divisor;
-        y1/=divisor;
-        y2/=divisor;
-        z1/=divisor;
-        z2/=divisor;
+        x1 /= divisor;
+        x2 /= divisor;
+        y1 /= divisor;
+        y2 /= divisor;
+        z1 /= divisor;
+        z2 /= divisor;
 
-        double xComponent = (x2 - x1)*(x2 - x1);
-        double yComponent = (y2 - y1)*(y2 - y1);
-        double zComponent = (z2 - z1)*(z2 - z1);
+        double xComponent = (x2 - x1) * (x2 - x1);
+        double yComponent = (y2 - y1) * (y2 - y1);
+        double zComponent = (z2 - z1) * (z2 - z1);
 
         double distance = Math.sqrt(xComponent + yComponent + zComponent);
         return distance;
@@ -126,7 +127,7 @@ public class Plotter {
      *
      * @param track track from which points will be plotted
      */
-    public void plotElevationVsTime(Track track){
+    public void plotElevationVsTime(Track track) {
         XYChart.Series series = new XYChart.Series();
         series.setName(track.getName());
         setChartAxisLabels("Time Passed (min)", "Elevation (m)");
@@ -135,7 +136,7 @@ public class Plotter {
         Date currentDate;
 
         int i = 0;
-        for (TrackPoint point: track.getTrackPoints()) {
+        for (TrackPoint point : track.getTrackPoints()) {
 
             double currentElevation = point.getElevation();
 
@@ -173,7 +174,7 @@ public class Plotter {
         Date currentDate;
 
         int i = 0;
-        for (TrackPoint point: track.getTrackPoints()) {
+        for (TrackPoint point : track.getTrackPoints()) {
 
             double currentElevation = point.getElevation();
 
@@ -200,7 +201,7 @@ public class Plotter {
     /**
      * Returns the gain in elevation from the previous elevation
      *
-     * @param current current elevation
+     * @param current  current elevation
      * @param previous previous elevation
      * @return difference between them; 0 if difference is < 0
      */
@@ -279,7 +280,7 @@ public class Plotter {
             setChartAxisLabels("Kilometer(east and west)", "Kilometers(north and south)");
             int index = getFirstLoadedIndex();
             boolean[] showOnGraph = plotterController.getShowOnGraph();
-             //If there is a track selected...
+            //If there is a track selected...
             if (index != -1) {
                 //Loads the first track's first point.
                 TrackPoint trackZero = tracksHandler.getTrack(index).getTrackPoint(0);
@@ -295,13 +296,13 @@ public class Plotter {
                             series.setName(track.getName() + " " + z);
                             //First point
                             TrackPoint currentTrackPoint = track.getTrackPoint(z);
-                            double x = calculateXCoord(currentTrackPoint, trackZero)/M_IN_KM;
-                            double y = calculateYCoord(currentTrackPoint, trackZero)/M_IN_KM;
+                            double x = calculateXCoord(currentTrackPoint, trackZero) / M_IN_KM;
+                            double y = calculateYCoord(currentTrackPoint, trackZero) / M_IN_KM;
                             plotPoint(series, x, y);
                             //Second point
                             TrackPoint nextTrackPoint = track.getTrackPoint(z + 1);
-                            x = calculateXCoord(nextTrackPoint, trackZero)/M_IN_KM;
-                            y = calculateYCoord(nextTrackPoint, trackZero)/M_IN_KM;
+                            x = calculateXCoord(nextTrackPoint, trackZero) / M_IN_KM;
+                            y = calculateYCoord(nextTrackPoint, trackZero) / M_IN_KM;
                             checkMinMax(x, y);
                             plotPoint(series, x, y);
                             //Adds the series to the chart
@@ -326,7 +327,7 @@ public class Plotter {
         plotterController.scaleAxis(xMax, xMin, yMax, yMin);
     }
 
-/**
+    /**
      * converts all selected tracks to different colored lines representing
      * their grade (Steepness) at that point when the graph grade button is pressed
      *
@@ -349,7 +350,7 @@ public class Plotter {
             setChartAxisLabels("Kilometer(east and west)", "Kilometers(north and south)");
             int index = getFirstLoadedIndex();
             boolean[] showOnGraph = plotterController.getShowOnGraph();
-             //If there is a track selected...
+            //If there is a track selected...
             if (index != -1) {
                 //Loads the first track's first point.
                 TrackPoint trackZero = tracksHandler.getTrack(index).getTrackPoint(0);
@@ -365,13 +366,13 @@ public class Plotter {
                             series.setName(track.getName());
                             //First point
                             TrackPoint currentTrackPoint = track.getTrackPoint(z);
-                            double x = calculateXCoord(currentTrackPoint, trackZero)/M_IN_KM;
-                            double y = calculateYCoord(currentTrackPoint, trackZero)/M_IN_KM;
+                            double x = calculateXCoord(currentTrackPoint, trackZero) / M_IN_KM;
+                            double y = calculateYCoord(currentTrackPoint, trackZero) / M_IN_KM;
                             plotPoint(series, x, y);
                             //Second point
                             TrackPoint nextTrackPoint = track.getTrackPoint(z + 1);
-                            x = calculateXCoord(nextTrackPoint, trackZero)/M_IN_KM;
-                            y = calculateYCoord(nextTrackPoint, trackZero)/M_IN_KM;
+                            x = calculateXCoord(nextTrackPoint, trackZero) / M_IN_KM;
+                            y = calculateYCoord(nextTrackPoint, trackZero) / M_IN_KM;
                             checkMinMax(x, y);
                             plotPoint(series, x, y);
                             //Adds the series to the chart
@@ -428,8 +429,8 @@ public class Plotter {
                         series.setName(track.getName());
                         for (int z = 0; z < track.getPointAmount(); z++) {
                             TrackPoint currentTrackPoint = track.getTrackPoint(z);
-                            double x = calculateXCoord(currentTrackPoint, trackZero)/M_IN_KM;
-                            double y = calculateYCoord(currentTrackPoint, trackZero)/M_IN_KM;
+                            double x = calculateXCoord(currentTrackPoint, trackZero) / M_IN_KM;
+                            double y = calculateYCoord(currentTrackPoint, trackZero) / M_IN_KM;
                             checkMinMax(x, y);
                             plotPoint(series, x, y);
                         }
@@ -455,14 +456,14 @@ public class Plotter {
         //multiply by 1.1 to scale the axis so the bounds are not right on the edge of the graph
         int x = (int) Math.round(xCheck * 1.05);
         int y = (int) Math.round(yCheck * 1.05);
-        if (x > xMax){
+        if (x > xMax) {
             xMax = x;
-        } else if(x < xMin){
+        } else if (x < xMin) {
             xMin = x;
         }
-        if (y > yMax){
+        if (y > yMax) {
             yMax = y;
-        } else if(y < yMin){
+        } else if (y < yMin) {
             yMin = y;
         }
     }
@@ -533,7 +534,7 @@ public class Plotter {
             return Color.RED;
         }
     }
-    
+
     //Method to select which color to represent grade with
     private Color setGradeColor(Double grade) {
         //Dark blue- any grade less than -5% Grade
@@ -565,9 +566,22 @@ public class Plotter {
     //Essentially calculates the grade between two points. Returns a number
     private double calculateGrade(TrackPoint point1, TrackPoint point2) {
         double elevationChange = point2.getElevation() - point1.getElevation();
-        double distance = 0.0; //TODO
+        double distance = calculateDistance(point1, point2); //TODO
 
         return (elevationChange / distance) * 100.0;
+    }
+
+    //Calculates the distance between two points in terms of x & y.
+    private double calculateDistance(TrackPoint point1, TrackPoint point2) {
+        double deltaX = (RADIUS_OF_EARTH_M + ((point2.getElevation() + point1.getElevation()) / 2)) *
+                (point2.getLongitude() * DEG_TO_RAD - point1.getLongitude() * DEG_TO_RAD) *
+                Math.cos((point2.getLatitude() * DEG_TO_RAD + point1.getLatitude() * DEG_TO_RAD) / 2);
+        double deltaY = (RADIUS_OF_EARTH_M + (point2.getElevation() + point1.getElevation()) / 2) *
+                (point2.getLatitude() * DEG_TO_RAD - point1.getLatitude() * DEG_TO_RAD);
+
+        double distance = Math.sqrt(Math.pow(deltaX, 2) + Math.pow(deltaY, 2));
+
+        return distance;
     }
 
 }
