@@ -61,13 +61,8 @@ public class Plotter {
         }
 
         ArrayList<Double> speeds = track.getTrackStats().getSpeeds(); // todo in what unit??
-
         TrackPoint trackPointZero = track.getTrackPoint(0);
         double distanceTraveled = 0;
-
-        double previousDistance = 0;
-
-        double elevationPoint = 0;
 
         for (int i = 0; i < track.getPointAmount(); i++) {
             TrackPoint currentPoint = track.getTrackPoint(i);
