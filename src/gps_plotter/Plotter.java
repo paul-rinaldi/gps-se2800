@@ -62,10 +62,6 @@ public class Plotter {
 
         double caloriesExpended = 0;
 
-        double caloriesPerFifteenKmPerHour = 1000;
-        double caloriesPerMeterElevationGain = 2;
-        double minInHour = 60;
-
         for (int i = 0; i < track.getPointAmount(); i++) {
 
             TrackPoint currentPoint = track.getTrackPoint(i);
@@ -100,21 +96,29 @@ public class Plotter {
             double elevationGain = calculateElevationGain(currentElevation, previousElevation);
             double timeChange = timePassedInMin(currentDate, previousDate);
 
-            if(timeChange > 0) { //Prevents timeChangeRatio, distanceCalories and caloriesExpended from becoming NaN
-                double distanceRatio = distance/15;
-                double timeChangeRatio = timeChange / minInHour;
-                double distanceCalories = (distanceRatio / timeChangeRatio) * caloriesPerFifteenKmPerHour;
-                double elevationCalories = elevationGain * caloriesPerMeterElevationGain;
-
-                caloriesExpended += (distanceCalories + elevationCalories);
-            } else{
-                caloriesExpended += 0;
-            }
+            caloriesExpended+= calculateCaloriesExpended(distance, timeChange, elevationGain);
 
             plotPoint(series, timePoint, caloriesExpended); //Plot point on LineChart
 
         }
         this.chart.getData().add(series);
+    }
+
+    public double calculateCaloriesExpended(double distance, double timeChange, double elevationGain){
+        double caloriesPerFifteenKmPerHour = 1000;
+        double caloriesPerMeterElevationGain = 2;
+        double minInHour = 60;
+
+        if(timeChange > 0) { //Prevents timeChangeRatio, distanceCalories and caloriesExpended from becoming NaN
+            double distanceRatio = distance/15;
+            double timeChangeRatio = timeChange / minInHour;
+            double distanceCalories = (distanceRatio / timeChangeRatio) * caloriesPerFifteenKmPerHour;
+            double elevationCalories = elevationGain * caloriesPerMeterElevationGain;
+
+            return (distanceCalories + elevationCalories);
+        } else{
+            return 0; //Return 0 because no change in time occurred
+        }
     }
 
     private double calculateTwoDDistance(double x1, double x2, double y1, double y2){
