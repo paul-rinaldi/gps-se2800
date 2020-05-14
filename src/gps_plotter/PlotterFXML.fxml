@@ -15,7 +15,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="603.0" prefWidth="1012.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gps_plotter.PlotterController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="658.0" prefWidth="1012.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gps_plotter.PlotterController">
     <children>
         <MenuBar layoutY="2.0" prefHeight="25.0" prefWidth="1012.0">
             <menus>
@@ -59,5 +59,11 @@
       </RadioButton>
       <RadioButton fx:id="distanceMI" layoutX="317.0" layoutY="145.0" mnemonicParsing="false" onAction="#graphDistanceVsTimeMI" prefHeight="17.0" prefWidth="91.0" text="Miles" toggleGroup="$distanceButtons" visible="false">
       </RadioButton>
+      <TextArea fx:id="elevationGains" visible="false" editable="false" layoutX="446.0" layoutY="595.0" prefHeight="54.0" prefWidth="534.0" />
+      <Label fx:id="elevationGainsLabel" visible="false" layoutX="325.0" layoutY="609.0" text="Elevation Gains:">
+         <font>
+            <Font size="16.0" />
+         </font>
+      </Label>
     </children>
 </AnchorPane>
