@@ -112,7 +112,7 @@ public class Plotter {
         if(timeChange > 0) { //Prevents timeChangeRatio, distanceCalories and caloriesExpended from becoming NaN
             double distanceRatio = distance/15;
             double timeChangeRatio = timeChange / minInHour;
-            double distanceCalories = (distanceRatio / timeChangeRatio) * caloriesPerFifteenKmPerHour;
+            double distanceCalories = distanceRatio * caloriesPerFifteenKmPerHour;
             double elevationCalories = elevationGain * caloriesPerMeterElevationGain;
 
             return (distanceCalories + elevationCalories);

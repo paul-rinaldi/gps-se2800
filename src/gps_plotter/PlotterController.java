@@ -141,6 +141,9 @@ public class PlotterController {
         yAxis.setAutoRanging(true);
         lastGraphLoaded = "CaloriesExpended";
 
+        showDistanceVsTimeUnits(false);
+        showElevationGainsText(false);
+
         showHideButton.disableProperty().setValue(false);
 
         this.tracksHandler = gpsController.getTracksHandler();
