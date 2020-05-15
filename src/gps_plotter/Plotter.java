@@ -58,7 +58,6 @@ public class Plotter {
         TrackPoint trackPointZero = track.getTrackPoint(0);
         Date firstDate = null;
         Date currentDate;
-        Date previousDate;
 
         double caloriesExpended = 0;
 
@@ -72,11 +71,9 @@ public class Plotter {
             //Set first date to calculate time passed
             if (i == 0) {
                 firstDate = currentPoint.getTime();
-                previousDate = firstDate;
                 previousPoint = track.getTrackPoint(i);
                 previousElevation = currentPoint.getElevation();
             } else{
-                previousDate = track.getTrackPoint(i-1).getTime();
                 previousPoint = track.getTrackPoint(i-1);
                 previousElevation = previousPoint.getElevation();
             }
@@ -94,9 +91,8 @@ public class Plotter {
             //Calculate calories expended
             double distance = calculateTwoDDistance(prevX, currentX, prevY, currentY);
             double elevationGain = calculateElevationGain(currentElevation, previousElevation);
-            double timeChange = timePassedInMin(currentDate, previousDate);
 
-            caloriesExpended+= calculateCaloriesExpended(distance, timeChange, elevationGain);
+            caloriesExpended+= calculateCaloriesExpended(distance, elevationGain);
 
             plotPoint(series, timePoint, caloriesExpended); //Plot point on LineChart
 
@@ -104,21 +100,18 @@ public class Plotter {
         this.chart.getData().add(series);
     }
 
-    public double calculateCaloriesExpended(double distance, double timeChange, double elevationGain){
+    public double calculateCaloriesExpended(double distance, double elevationGain){
+        //Set values
         double caloriesPerFifteenKmPerHour = 1000;
         double caloriesPerMeterElevationGain = 2;
-        double minInHour = 60;
 
-        if(timeChange > 0) { //Prevents timeChangeRatio, distanceCalories and caloriesExpended from becoming NaN
-            double distanceRatio = distance/15;
-            double timeChangeRatio = timeChange / minInHour;
-            double distanceCalories = distanceRatio * caloriesPerFifteenKmPerHour;
-            double elevationCalories = elevationGain * caloriesPerMeterElevationGain;
+        //Calculate
+        double distanceRatio = distance/15;
+        double distanceCalories = distanceRatio * caloriesPerFifteenKmPerHour;
+        double elevationCalories = elevationGain * caloriesPerMeterElevationGain;
 
-            return (distanceCalories + elevationCalories);
-        } else{
-            return 0; //Return 0 because no change in time occurred
-        }
+        return (distanceCalories + elevationCalories);
+
     }
 
     private double calculateTwoDDistance(double x1, double x2, double y1, double y2){
@@ -381,7 +374,7 @@ public class Plotter {
             setChartAxisLabels("Kilometer(east and west)", "Kilometers(north and south)");
             int index = getFirstLoadedIndex();
             boolean[] showOnGraph = plotterController.getShowOnGraph();
-             //If there is a track selected...
+            //If there is a track selected...
             if (index != -1) {
                 //Loads the first track's first point.
                 TrackPoint trackZero = tracksHandler.getTrack(index).getTrackPoint(0);
