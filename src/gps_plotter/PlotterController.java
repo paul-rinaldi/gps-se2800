@@ -134,6 +134,49 @@ public class PlotterController {
     }
 
     /**
+     * Plots all selected Tracks' expended calories vs time
+     */
+    public void graphCaloriesExpendedT(){
+        xAxis.setAutoRanging(true);
+        yAxis.setAutoRanging(true);
+        lastGraphLoaded = "CaloriesExpended";
+
+        showDistanceVsTimeUnits(false);
+        showElevationGainsText(false);
+
+        showHideButton.disableProperty().setValue(false);
+
+        this.tracksHandler = gpsController.getTracksHandler();
+
+        try {
+
+            if (this.lineChart.getData() != null && this.lineChart.getData().size() != 0) { //Clears graph when window is opened only if series exists
+                this.plotter.clearChart();
+            }
+
+            reenableLegend();
+
+            setChartTitle("Calories Expended vs Time");
+
+            for (int i = 0; i < this.tracksHandler.getTrackAmount(); i++) {
+                if (showOnGraph[i]) {
+                    Track t = this.tracksHandler.getTrack(i);
+
+                    if (t.getPointAmount() > 1) {
+                        plotter.plotCaloriesExpendedVsT(t);
+                    } else {
+                        createErrorDialog("Calories Expended Plotting Error", "Track: " + t.getName() + " doesn't have enough points to graph Calories Expended vs Time");
+                    }
+                }
+            }
+
+        } catch (NullPointerException n) {
+            showHideButton.disableProperty().setValue(true);
+            createErrorDialog("Calories Expended vs Time Plotting Error", "No tracks are loaded.");
+        }
+    }
+
+    /**
      * Plots all selected Tracks' distance vs time - distance unit is based on user selection
      * Default distance unit is kilometers
      */
@@ -164,7 +207,7 @@ public class PlotterController {
                     if (t.getPointAmount() > 1) {
                        plotter.plotDistanceVsTime(t, graphDistanceVsTimeInKM);
                     } else {
-                        createErrorDialog("Distance vs Time Plotting Error", "Track: " + t.getName() + " doesn't have enough points to graph Elevation Gain vs Time");
+                        createErrorDialog("Distance vs Time Plotting Error", "Track: " + t.getName() + " doesn't have enough points to graph Distance vs Time");
                     }
                 }
             }
@@ -209,7 +252,7 @@ public class PlotterController {
 
                         eGains += (t.getName() + " : " + gain + "m\n");
                     } else {
-                        createErrorDialog("Elevation vs Time Plotting Error", "Track: " + t.getName() + " doesn't have enough points to graph Elevation Gain vs Time");
+                        createErrorDialog("Elevation vs Time Plotting Error", "Track: " + t.getName() + " doesn't have enough points to graph Elevation vs Time");
                     }
                 }
             }
@@ -346,6 +389,10 @@ public class PlotterController {
                 break;
             case "Elevation Vs Time":
                 graphElevationVsTime();
+                break;
+
+            case "CaloriesExpended":
+                graphCaloriesExpendedT();
                 break;
             default:
                 System.out.println("Error unrecognized graph name: " + lastGraphLoaded);

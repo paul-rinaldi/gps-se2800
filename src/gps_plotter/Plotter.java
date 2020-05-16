@@ -45,6 +45,91 @@ public class Plotter {
     }
 
     /**
+     * Plots track's points as calories expended vs time
+     *
+     * @param track Track to plot
+     */
+    public void plotCaloriesExpendedVsT(Track track){
+        XYChart.Series series = new XYChart.Series();
+        series.setName(track.getName());
+
+        setChartAxisLabels("Time Passed (min)", "Calories Expended");
+
+        TrackPoint trackPointZero = track.getTrackPoint(0);
+        Date firstDate = null;
+        Date currentDate;
+
+        double caloriesExpended = 0;
+
+        for (int i = 0; i < track.getPointAmount(); i++) {
+
+            TrackPoint currentPoint = track.getTrackPoint(i);
+            TrackPoint previousPoint;
+            double currentElevation = currentPoint.getElevation();
+            double previousElevation;
+
+            //Set first date to calculate time passed
+            if (i == 0) {
+                firstDate = currentPoint.getTime();
+                previousPoint = track.getTrackPoint(i);
+                previousElevation = currentPoint.getElevation();
+            } else{
+                previousPoint = track.getTrackPoint(i-1);
+                previousElevation = previousPoint.getElevation();
+            }
+
+            //Get x and y values
+            double prevX = calculateXCoord(previousPoint, trackPointZero);
+            double prevY = calculateYCoord(previousPoint, trackPointZero);
+            double currentX = calculateXCoord(currentPoint, trackPointZero);
+            double currentY = calculateYCoord(currentPoint, trackPointZero);
+
+            //Find point of time to plot
+            currentDate = currentPoint.getTime();
+            double timePoint = timePassedInMin(currentDate, firstDate);
+
+            //Calculate calories expended
+            double distance = calculateTwoDDistance(prevX, currentX, prevY, currentY);
+            double elevationGain = calculateElevationGain(currentElevation, previousElevation);
+
+            caloriesExpended+= calculateCaloriesExpended(distance, elevationGain);
+
+            plotPoint(series, timePoint, caloriesExpended); //Plot point on LineChart
+
+        }
+        this.chart.getData().add(series);
+    }
+
+    public double calculateCaloriesExpended(double distance, double elevationGain){
+        //Set values
+        double caloriesPerFifteenKmPerHour = 1000;
+        double caloriesPerMeterElevationGain = 2;
+
+        //Calculate
+        double distanceRatio = distance/15;
+        double distanceCalories = distanceRatio * caloriesPerFifteenKmPerHour;
+        double elevationCalories = elevationGain * caloriesPerMeterElevationGain;
+
+        return (distanceCalories + elevationCalories);
+
+    }
+
+    private double calculateTwoDDistance(double x1, double x2, double y1, double y2){
+
+        //Convert meters to kilometers
+        x1/=M_IN_KM;
+        x2/=M_IN_KM;
+        y1/=M_IN_KM;
+        y2/=M_IN_KM;
+
+        double xComponent = (x2 - x1)*(x2 - x1);
+        double yComponent = (y2 - y1)*(y2 - y1);
+
+        double distance = Math.sqrt(xComponent + yComponent);
+        return distance;
+    }
+
+    /**
      * Plots graph of distance vs time
      *
      * @param track track to plot
@@ -289,7 +374,7 @@ public class Plotter {
             setChartAxisLabels("Kilometer(east and west)", "Kilometers(north and south)");
             int index = getFirstLoadedIndex();
             boolean[] showOnGraph = plotterController.getShowOnGraph();
-             //If there is a track selected...
+            //If there is a track selected...
             if (index != -1) {
                 //Loads the first track's first point.
                 TrackPoint trackZero = tracksHandler.getTrack(index).getTrackPoint(0);
