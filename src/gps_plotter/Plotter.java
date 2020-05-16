@@ -55,9 +55,9 @@ public class Plotter {
         series.setName(track.getName());
 
         if (kilometers) {
-            setChartAxisLabels("Speed (km/hr)", "Distance (km)");
+            setChartAxisLabels("Distance (km/hr)", "Speed (km)");
         } else {
-            setChartAxisLabels("Speed (mi/hr)", "Distance (mi)");
+            setChartAxisLabels("Distance (mi/hr)", "Speed (mi)");
         }
 
         ArrayList<Double> speeds = track.getTrackStats().getSpeeds(); // todo in what unit??

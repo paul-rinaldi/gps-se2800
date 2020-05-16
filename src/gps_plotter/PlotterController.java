@@ -42,12 +42,14 @@ public class PlotterController {
     private TracksHandler tracksHandler;
     private String lastGraphLoaded = "";
     private boolean firstTimePlottingDvsT = true;
+    private boolean firstTimePlottingSvsD = true;
 
     private Stage plotterStage;
 
     private boolean[] showOnGraph = {true, false, false, false, false, false, false, false, false, false};
 
     private boolean graphDistanceVsTimeInKM = true;
+    private boolean graphSpeedVsDistanceInKM = true;
 
     private void showDistanceSelect(boolean visible){
         this.distanceKM.setVisible(visible);
@@ -75,10 +77,12 @@ public class PlotterController {
      * Called when Kilometers button is pressed
      */
     public void graphDistanceInKM(){
-
         if(lastGraphLoaded.equals("Distance Vs Time")){
             graphDistanceVsTimeInKM = true;
             graphDistanceVsTime();
+        } else if (lastGraphLoaded.equals("Speed Vs Distance")) {
+            graphSpeedVsDistanceInKM = true;
+            graphSpeedVsDistance();
         }
     }
 
@@ -90,6 +94,9 @@ public class PlotterController {
         if(lastGraphLoaded.equals("Distance Vs Time")){
             graphDistanceVsTimeInKM = false;
             graphDistanceVsTime();
+        } else if (lastGraphLoaded.equals("Speed Vs Distance")) {
+            graphSpeedVsDistanceInKM = false;
+            graphSpeedVsDistance();
         }
 
     }
@@ -129,15 +136,17 @@ public class PlotterController {
     }
 
     /**
-     * Plots all selected Tracks' distance vs time - distance unit is based on user selection
+     * Plots all selected Tracks' speed vs distance - distance unit is based on user selection
      * Default distance unit is kilometers
      */
     @FXML
     private void graphSpeedVsDistance(){
-        String name = "Speed vs Distance";
+        String name = "Speed Vs Distance";
         xAxis.setAutoRanging(true);
         yAxis.setAutoRanging(true);
         lastGraphLoaded = name;
+
+        showDistanceSelect(true);
 
         showHideButton.disableProperty().setValue(false);
         this.tracksHandler = gpsController.getTracksHandler();
@@ -155,7 +164,7 @@ public class PlotterController {
                     Track t = this.tracksHandler.getTrack(i);
 
                     if (t.getPointAmount() > 1) {
-                        plotter.plotSpeedVsDistance(t, graphDistanceVsTimeInKM);
+                        plotter.plotSpeedVsDistance(t, graphSpeedVsDistanceInKM);
                     } else {
                         createErrorDialog(name + " Plotting Error", "Track: " + t.getName() + " doesn't have enough points to graph " + name);
                     }
@@ -370,6 +379,7 @@ public class PlotterController {
                 graphElevationVsTime();
                 break;
             case "Speed Vs Distance":
+                graphSpeedVsDistance();
                 break;
             default:
                 System.out.println("Error unrecognized graph name: " + lastGraphLoaded);
