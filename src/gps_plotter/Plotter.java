@@ -566,7 +566,7 @@ public class Plotter {
     //Essentially calculates the grade between two points. Returns a number
     private double calculateGrade(TrackPoint point1, TrackPoint point2) {
         double elevationChange = point2.getElevation() - point1.getElevation();
-        double distance = calculateDistance(point1, point2); //TODO
+        double distance = calculateDistance(point1, point2);
 
         return (elevationChange / distance) * 100.0;
     }
@@ -583,6 +583,5 @@ public class Plotter {
 
         return distance;
     }
-
 }
 
