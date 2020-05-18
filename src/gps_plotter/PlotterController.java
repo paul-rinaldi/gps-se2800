@@ -36,6 +36,10 @@ public class PlotterController {
     private RadioButton distanceMI;
     @FXML
     private Label distanceLabel;
+    @FXML
+    private TextArea elevationGains;
+    @FXML
+    private Label elevationGainsLabel;
 
     private GPSController gpsController;
     private Plotter plotter;
@@ -51,7 +55,16 @@ public class PlotterController {
     private boolean graphDistanceVsTimeInKM = true;
     private boolean graphSpeedVsDistanceInKM = true;
 
+<<<<<<< HEAD
     private void showDistanceSelect(boolean visible){
+=======
+    private void showElevationGainsText(boolean visible){
+        this.elevationGains.setVisible(visible);
+        this.elevationGainsLabel.setVisible(visible);
+    }
+
+    private void showDistanceVsTimeUnits(boolean visible){
+>>>>>>> dev
         this.distanceKM.setVisible(visible);
         this.distanceMI.setVisible(visible);
         this.distanceLabel.setVisible(visible);
@@ -136,6 +149,7 @@ public class PlotterController {
     }
 
     /**
+<<<<<<< HEAD
      * Plots all selected Tracks' speed vs distance - distance unit is based on user selection
      * Default distance unit is kilometers
      *
@@ -154,28 +168,61 @@ public class PlotterController {
         this.tracksHandler = gpsController.getTracksHandler();
 
         try {
+=======
+     * Plots all selected Tracks' expended calories vs time
+     */
+    public void graphCaloriesExpendedT(){
+        xAxis.setAutoRanging(true);
+        yAxis.setAutoRanging(true);
+        lastGraphLoaded = "CaloriesExpended";
+
+        showDistanceVsTimeUnits(false);
+        showElevationGainsText(false);
+
+        showHideButton.disableProperty().setValue(false);
+
+        this.tracksHandler = gpsController.getTracksHandler();
+
+        try {
+
+>>>>>>> dev
             if (this.lineChart.getData() != null && this.lineChart.getData().size() != 0) { //Clears graph when window is opened only if series exists
                 this.plotter.clearChart();
             }
 
             reenableLegend();
+<<<<<<< HEAD
             setChartTitle(name);
+=======
+
+            setChartTitle("Calories Expended vs Time");
+>>>>>>> dev
 
             for (int i = 0; i < this.tracksHandler.getTrackAmount(); i++) {
                 if (showOnGraph[i]) {
                     Track t = this.tracksHandler.getTrack(i);
 
                     if (t.getPointAmount() > 1) {
+<<<<<<< HEAD
                         plotter.plotSpeedVsDistance(t, graphSpeedVsDistanceInKM);
                     } else {
                         createErrorDialog(name + " Plotting Error", "Track: " + t.getName() + " doesn't have enough points to graph " + name);
+=======
+                        plotter.plotCaloriesExpendedVsT(t);
+                    } else {
+                        createErrorDialog("Calories Expended Plotting Error", "Track: " + t.getName() + " doesn't have enough points to graph Calories Expended vs Time");
+>>>>>>> dev
                     }
                 }
             }
 
         } catch (NullPointerException n) {
             showHideButton.disableProperty().setValue(true);
+<<<<<<< HEAD
             createErrorDialog(name + " Plotting Error", "No tracks are loaded.");
+=======
+            createErrorDialog("Calories Expended vs Time Plotting Error", "No tracks are loaded.");
+>>>>>>> dev
         }
     }
 
@@ -186,6 +233,7 @@ public class PlotterController {
     private void graphDistanceVsTime(){
         xAxis.setAutoRanging(true);
         yAxis.setAutoRanging(true);
+        showElevationGainsText(false);
         lastGraphLoaded = "Distance Vs Time";
 
         showHideButton.disableProperty().setValue(false);
@@ -209,7 +257,7 @@ public class PlotterController {
                     if (t.getPointAmount() > 1) {
                        plotter.plotDistanceVsTime(t, graphDistanceVsTimeInKM);
                     } else {
-                        createErrorDialog("Distance vs Time Plotting Error", "Track: " + t.getName() + " doesn't have enough points to graph Elevation Gain vs Time");
+                        createErrorDialog("Distance vs Time Plotting Error", "Track: " + t.getName() + " doesn't have enough points to graph Distance vs Time");
                     }
                 }
             }
@@ -224,6 +272,8 @@ public class PlotterController {
      * Plots all selected Tracks' elevation vs time
      */
     public void graphElevationVsTime(){
+        xAxis.setAutoRanging(true);
+        yAxis.setAutoRanging(true);
         lastGraphLoaded = "Elevation Vs Time";
 
         showHideButton.disableProperty().setValue(false);
@@ -241,17 +291,24 @@ public class PlotterController {
 
             setChartTitle("Elevation Vs. Time");
 
+            String eGains = "";
+
             for (int i = 0; i < this.tracksHandler.getTrackAmount(); i++) {
                 if (showOnGraph[i]) {
                     Track t = this.tracksHandler.getTrack(i);
 
                     if (t.getPointAmount() > 1) {
-                        this.plotter.plotElevationVsTime(t);
+                        double gain = this.plotter.plotElevationVsTime(t);
+
+                        eGains += (t.getName() + " : " + gain + "m\n");
                     } else {
-                        createErrorDialog("Elevation vs Time Plotting Error", "Track: " + t.getName() + " doesn't have enough points to graph Elevation Gain vs Time");
+                        createErrorDialog("Elevation vs Time Plotting Error", "Track: " + t.getName() + " doesn't have enough points to graph Elevation vs Time");
                     }
                 }
             }
+
+            elevationGains.setText(eGains);
+            showElevationGainsText(true);
 
         } catch (NullPointerException n) {
             showHideButton.disableProperty().setValue(true);
@@ -268,7 +325,12 @@ public class PlotterController {
         lastGraphLoaded = "Elevation Gain Vs Time";
 
         showHideButton.disableProperty().setValue(false);
+<<<<<<< HEAD
         showDistanceSelect(false);
+=======
+        showDistanceVsTimeUnits(false);
+        showElevationGainsText(false);
+>>>>>>> dev
 
         this.tracksHandler = gpsController.getTracksHandler();
 
@@ -300,12 +362,17 @@ public class PlotterController {
     }
 
     /**
-     * graphs all selected tracks on a 2D plot
+     * graphs all selected tracks on a 2D plot for instantaneous speed
      */
     public void graphTwoDPlot() {
         lastGraphLoaded = "2DPlot";
 
+<<<<<<< HEAD
         showDistanceSelect(false);
+=======
+        showDistanceVsTimeUnits(false);
+        showElevationGainsText(false);
+>>>>>>> dev
         showHideButton.disableProperty().setValue(false);
         this.tracksHandler = gpsController.getTracksHandler();
         try {
@@ -321,11 +388,32 @@ public class PlotterController {
      */
     public void graphPlotSpeedAlongPath() {
         lastGraphLoaded = "SpeedPlot";
+<<<<<<< HEAD
         showDistanceSelect(false);
+=======
+        showDistanceVsTimeUnits(false);
+        showElevationGainsText(false);
+>>>>>>> dev
         showHideButton.disableProperty().setValue(false);
         tracksHandler = gpsController.getTracksHandler();
         try {
             plotter.plotSpeedOverPath();
+        } catch (NullPointerException n) {
+            showHideButton.disableProperty().setValue(true);
+            createErrorDialog("2D Graph Plotting Error", "No tracks are loaded.");
+        }
+    }
+
+    /**
+     * graphs all selected tracks on a 2D plot
+     */
+    public void graphGrade() {
+        lastGraphLoaded = "GradePlot";
+        showDistanceVsTimeUnits(false);
+        showHideButton.disableProperty().setValue(false);
+        tracksHandler = gpsController.getTracksHandler();
+        try {
+            plotter.plotGrade();
         } catch (NullPointerException n) {
             showHideButton.disableProperty().setValue(true);
             createErrorDialog("2D Graph Plotting Error", "No tracks are loaded.");
@@ -377,11 +465,20 @@ public class PlotterController {
             case "Distance Vs Time":
                 graphDistanceVsTime();
                 break;
+            case "GradePlot":
+                graphGrade();
+                break;
             case "Elevation Vs Time":
                 graphElevationVsTime();
                 break;
+<<<<<<< HEAD
             case "Speed Vs Distance":
                 graphSpeedVsDistance();
+=======
+
+            case "CaloriesExpended":
+                graphCaloriesExpendedT();
+>>>>>>> dev
                 break;
             default:
                 System.out.println("Error unrecognized graph name: " + lastGraphLoaded);
