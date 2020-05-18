@@ -7,6 +7,7 @@ import javafx.scene.Node;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.XYChart;
 import javafx.scene.paint.Color;
+
 import java.lang.Math;
 
 import java.util.ArrayList;
@@ -46,17 +47,172 @@ public class Plotter {
     }
 
     /**
-     * Plots graph of distance vs time
+     * Plots speed (y) at each TrackPoint's distance (x) along the graph,
+     * setting the first distance's (x's) speed (y) to zero, and using
+     * slope of distance between lat lng's and their elevations over time
+     * to plot average speed between points assigned to the second distance of
+     * the average speed calculation (right hand side on the graph)
      *
-     * @param track track to plot
-     * @param kilometers determines whether the distance displayed/calculated is in miles or kilometers (true: kilometers; false: miles)
+     * @author Paul Rinaldi
+     * @param track track from which points will be plotted
      */
-    public void plotDistanceVsTime(Track track, boolean kilometers){
+    public void plotSpeedVsDistance(Track track, boolean kilometers) {
+        final double zeroSpeed = 0.0;
         XYChart.Series series = new XYChart.Series();
         series.setName(track.getName());
-        if(kilometers) {
+
+        if (kilometers) {
+            setChartAxisLabels("Distance (km)", "Speed (km/hr)");
+        } else {
+            setChartAxisLabels("Distance (mi)", "Speed (mi/hr)");
+        }
+
+        // Obtains speeds in MILES
+        ArrayList<Double> speeds = track.getTrackStats().getSpeeds();
+
+        // Initialize first trackpoint (0) for comparisons from first track point
+        TrackPoint trackPointZero = track.getTrackPoint(0);
+        double distanceTraveled = 0;
+
+        // Loop over each track point in the track, calculate distance, plot its distance
+        // and average speed over that distance at the right hand side point of the distance
+        for (int i = 0; i < track.getPointAmount(); i++) {
+            TrackPoint currentPoint = track.getTrackPoint(i);
+            TrackPoint previousPoint;
+
+            double currentElevation = currentPoint.getElevation();
+            double previousElevation;
+
+            if (i == 0) {
+                previousPoint = track.getTrackPoint(i);
+                previousElevation = currentPoint.getElevation();
+            } else {
+                previousPoint = track.getTrackPoint(i - 1);
+                previousElevation = previousPoint.getElevation();
+            }
+
+            double prevX = calculateXCoord(previousPoint, trackPointZero);
+            double prevY = calculateYCoord(previousPoint, trackPointZero);
+
+            double currentX = calculateXCoord(currentPoint, trackPointZero);
+            double currentY = calculateYCoord(currentPoint, trackPointZero);
+
+            // obtains km or mi of distance between trackpoints
+            double currentDistance = calculateThreeDimensionalDistance(prevX, currentX, prevY, currentY, previousElevation, currentElevation, kilometers);
+
+            distanceTraveled += currentDistance;
+
+            if (i == 0) {
+                // Plot point on LineChart (first speed is zero)
+                plotPoint(series, distanceTraveled, zeroSpeed);
+            } else {
+                // Plot point on LineChart (speeds only contains track(1)-track(n-1)'s speeds)
+                if (kilometers) {
+                    // convert from mi to km
+                    plotPoint(series, distanceTraveled, speeds.get(i - 1) * M_IN_MI);
+                } else {
+                    plotPoint(series, distanceTraveled, speeds.get(i - 1));
+                }
+            }
+        }
+        this.chart.getData().add(series);
+    }
+
+     /** Plots track's points as calories expended vs time
+     *
+     * @param track Track to plot
+     */
+    public void plotCaloriesExpendedVsT(Track track){
+        XYChart.Series series = new XYChart.Series();
+        series.setName(track.getName());
+
+        setChartAxisLabels("Time Passed (min)", "Calories Expended");
+
+        TrackPoint trackPointZero = track.getTrackPoint(0);
+        Date firstDate = null;
+        Date currentDate;
+
+        double caloriesExpended = 0;
+
+        for (int i = 0; i < track.getPointAmount(); i++) {
+
+            TrackPoint currentPoint = track.getTrackPoint(i);
+            TrackPoint previousPoint;
+            double currentElevation = currentPoint.getElevation();
+            double previousElevation;
+
+            //Set first date to calculate time passed
+            if (i == 0) {
+                firstDate = currentPoint.getTime();
+                previousPoint = track.getTrackPoint(i);
+                previousElevation = currentPoint.getElevation();
+            } else{
+                previousPoint = track.getTrackPoint(i-1);
+                previousElevation = previousPoint.getElevation();
+            }
+
+            //Get x and y values
+            double prevX = calculateXCoord(previousPoint, trackPointZero);
+            double prevY = calculateYCoord(previousPoint, trackPointZero);
+            double currentX = calculateXCoord(currentPoint, trackPointZero);
+            double currentY = calculateYCoord(currentPoint, trackPointZero);
+
+            //Find point of time to plot
+            currentDate = currentPoint.getTime();
+            double timePoint = timePassedInMin(currentDate, firstDate);
+
+            //Calculate calories expended
+            double distance = calculateTwoDDistance(prevX, currentX, prevY, currentY);
+            double elevationGain = calculateElevationGain(currentElevation, previousElevation);
+
+            caloriesExpended+= calculateCaloriesExpended(distance, elevationGain);
+
+            plotPoint(series, timePoint, caloriesExpended); //Plot point on LineChart
+        }
+        this.chart.getData().add(series);
+    }
+
+    public double calculateCaloriesExpended(double distance, double elevationGain){
+        //Set values
+        double caloriesPerFifteenKmPerHour = 1000;
+        double caloriesPerMeterElevationGain = 2;
+
+        //Calculate
+        double distanceRatio = distance/15;
+        double distanceCalories = distanceRatio * caloriesPerFifteenKmPerHour;
+        double elevationCalories = elevationGain * caloriesPerMeterElevationGain;
+
+        return (distanceCalories + elevationCalories);
+
+    }
+
+    private double calculateTwoDDistance(double x1, double x2, double y1, double y2){
+
+        //Convert meters to kilometers
+        x1/=M_IN_KM;
+        x2/=M_IN_KM;
+        y1/=M_IN_KM;
+        y2/=M_IN_KM;
+
+        double xComponent = (x2 - x1)*(x2 - x1);
+        double yComponent = (y2 - y1)*(y2 - y1);
+
+        double distance = Math.sqrt(xComponent + yComponent);
+        return distance;
+    }
+
+    /**
+     * Plots graph of distance vs time
+     *
+     * @param track      track to plot
+     * @param kilometers determines whether the distance displayed/calculated is in miles or kilometers (true: kilometers; false: miles)
+     */
+    public void plotDistanceVsTime(Track track, boolean kilometers) {
+        XYChart.Series series = new XYChart.Series();
+        series.setName(track.getName());
+        if (kilometers) {
             setChartAxisLabels("Time Passed (min)", "Distance (km)");
-        } else{
+        } else {
             setChartAxisLabels("Time Passed (min)", "Distance (mi)");
         }
 
@@ -77,8 +233,8 @@ public class Plotter {
                 firstDate = currentPoint.getTime();
                 previousPoint = track.getTrackPoint(i);
                 previousElevation = currentPoint.getElevation();
-            } else{
-                previousPoint = track.getTrackPoint(i-1);
+            } else {
+                previousPoint = track.getTrackPoint(i - 1);
                 previousElevation = previousPoint.getElevation();
             }
 
@@ -101,25 +257,70 @@ public class Plotter {
         this.chart.getData().add(series);
     }
 
-    private double calculateThreeDimensionalDistance(double x1, double x2, double y1, double y2, double z1, double z2, boolean kilometers){
+    private double calculateThreeDimensionalDistance(double x1, double x2, double y1, double y2, double z1, double z2, boolean kilometers) {
 
-        double divisor = kilometers ? M_IN_KM: M_IN_MI;
+        double divisor = kilometers ? M_IN_KM : M_IN_MI;
 
         //Convert distances to proper units (miles or kilometers)
-        x1/=divisor;
-        x2/=divisor;
-        y1/=divisor;
-        y2/=divisor;
-        z1/=divisor;
-        z2/=divisor;
+        x1 /= divisor;
+        x2 /= divisor;
+        y1 /= divisor;
+        y2 /= divisor;
+        z1 /= divisor;
+        z2 /= divisor;
 
-        double xComponent = (x2 - x1)*(x2 - x1);
-        double yComponent = (y2 - y1)*(y2 - y1);
-        double zComponent = (z2 - z1)*(z2 - z1);
+        double xComponent = (x2 - x1) * (x2 - x1);
+        double yComponent = (y2 - y1) * (y2 - y1);
+        double zComponent = (z2 - z1) * (z2 - z1);
 
         double distance = Math.sqrt(xComponent + yComponent + zComponent);
         return distance;
+    }
 
+
+    /**
+     * Plots elevation at each TrackPoint's date along the graph
+     *
+     * @param track track from which points will be plotted
+     * @return elevation gain from track
+     */
+
+    public double plotElevationVsTime(Track track){
+        XYChart.Series series = new XYChart.Series();
+        series.setName(track.getName());
+        setChartAxisLabels("Time Passed (min)", "Elevation (m)");
+
+        Date firstDate = null;
+        Date currentDate;
+
+        TrackPoint previousPoint = track.getTrackPoint(0);
+
+        double elevationGain = 0;
+
+        int i = 0;
+        for (TrackPoint point : track.getTrackPoints()) {
+
+            //Set first date to calculate time passed
+            if (i == 0) {
+                firstDate = point.getTime();
+            } else{
+                previousPoint = track.getTrackPoint(i-1);
+            }
+
+            currentDate = point.getTime();
+            double timePoint = timePassedInMin(currentDate, firstDate);
+
+            double currentElevation = point.getElevation();
+            double previousElevation = previousPoint.getElevation();
+
+            elevationGain += calculateElevationGain(currentElevation, previousElevation);
+
+            plotPoint(series, timePoint, currentElevation); //Plot point on LineChart
+
+            i++;
+        }
+        this.chart.getData().add(series);
+        return elevationGain;
     }
 
     /**
@@ -139,7 +340,7 @@ public class Plotter {
         Date currentDate;
 
         int i = 0;
-        for (TrackPoint point: track.getTrackPoints()) {
+        for (TrackPoint point : track.getTrackPoints()) {
 
             double currentElevation = point.getElevation();
 
@@ -166,17 +367,13 @@ public class Plotter {
     /**
      * Returns the gain in elevation from the previous elevation
      *
-     * @param current current elevation
-     * @param highest highest elevation read
+     * @param current  current elevation
+     * @param previous previous elevation
      * @return difference between them; 0 if difference is < 0
      */
-    public double calculateElevationGain(double current, double highest) {
+    public double calculateElevationGain(double current, double previous) {
 
-        if (current < 0.0 || highest < 0.0) { //Values below zero will not be expected (below sea level)
-            return 0.0;
-        }
-
-        double result = current - highest;
+        double result = current - previous;
 
         return result > 0 ? result : 0;
 
@@ -249,7 +446,7 @@ public class Plotter {
             setChartAxisLabels("Kilometer(east and west)", "Kilometers(north and south)");
             int index = getFirstLoadedIndex();
             boolean[] showOnGraph = plotterController.getShowOnGraph();
-             //If there is a track selected...
+            //If there is a track selected...
             if (index != -1) {
                 //Loads the first track's first point.
                 TrackPoint trackZero = tracksHandler.getTrack(index).getTrackPoint(0);
@@ -265,13 +462,13 @@ public class Plotter {
                             series.setName(track.getName() + " " + z);
                             //First point
                             TrackPoint currentTrackPoint = track.getTrackPoint(z);
-                            double x = calculateXCoord(currentTrackPoint, trackZero)/M_IN_KM;
-                            double y = calculateYCoord(currentTrackPoint, trackZero)/M_IN_KM;
+                            double x = calculateXCoord(currentTrackPoint, trackZero) / M_IN_KM;
+                            double y = calculateYCoord(currentTrackPoint, trackZero) / M_IN_KM;
                             plotPoint(series, x, y);
                             //Second point
                             TrackPoint nextTrackPoint = track.getTrackPoint(z + 1);
-                            x = calculateXCoord(nextTrackPoint, trackZero)/M_IN_KM;
-                            y = calculateYCoord(nextTrackPoint, trackZero)/M_IN_KM;
+                            x = calculateXCoord(nextTrackPoint, trackZero) / M_IN_KM;
+                            y = calculateYCoord(nextTrackPoint, trackZero) / M_IN_KM;
                             checkMinMax(x, y);
                             plotPoint(series, x, y);
                             //Adds the series to the chart
@@ -280,7 +477,80 @@ public class Plotter {
                             Node line = series.getNode().lookup(".chart-series-line");
 
                             //Decides line color
-                            color = setColor(speeds.get(z));
+                            color = setSpeedColor(speeds.get(z));
+
+                            //Sets the line color for the series.
+                            line.setStyle("-fx-stroke: rgb(" + rgbFormat(color) + ");");
+                        }
+                        plotterController.addTable(track.getTrackStats());
+                    }
+                }
+                chart.setLegendVisible(false);
+            }
+        } else {
+            throw new NullPointerException("No Tracks are Loaded!");
+        }
+        plotterController.scaleAxis(xMax, xMin, yMax, yMin);
+    }
+
+    /**
+     * converts all selected tracks to different colored lines representing
+     * their grade (Steepness) at that point when the graph grade button is pressed
+     *
+     * @throws throws a null pointer exception when this is called and no tracks have been loaded
+     */
+    public void plotGrade() throws NullPointerException {
+        resetMinMax();
+        //Clears the graph when window opens and a series exists.
+        checkGraph();
+        //Brings up the alternative legend.
+        plotterController.setLegendTextVisible(true);
+        plotterController.setLegendText("Dark Blue = < -5%      Light Blue = Between -5% & -1%      Green = Between -1% & 1% " +
+                "\nYellow = Between 1% & 3%      Orange = Between 3% & 5%      Red = Over 5%");
+        //Set chart name
+        plotterController.setChartTitle("Grade of Plot");
+        //Gets track handler, which holds all the tracks to be found.
+        TracksHandler tracksHandler = plotterController.getTracksHandler();
+        //Configures axises if there are tracks.
+        if (tracksHandler != null) {
+            setChartAxisLabels("Kilometer(east and west)", "Kilometers(north and south)");
+            int index = getFirstLoadedIndex();
+            boolean[] showOnGraph = plotterController.getShowOnGraph();
+            //If there is a track selected...
+            if (index != -1) {
+                //Loads the first track's first point.
+                TrackPoint trackZero = tracksHandler.getTrack(index).getTrackPoint(0);
+                //Color variable for future use.
+                Color color;
+                for (int i = 0; i < tracksHandler.getTrackAmount(); i++) {
+                    if (showOnGraph[i]) {
+                        Track track = tracksHandler.getTrack(i);
+
+                        //Goes through the track's points...
+                        for (int z = 0; z < track.getPointAmount() - 1; z++) {
+                            XYChart.Series series = new XYChart.Series();
+                            series.setName(track.getName());
+                            //First point
+                            TrackPoint currentTrackPoint = track.getTrackPoint(z);
+                            double x = calculateXCoord(currentTrackPoint, trackZero) / M_IN_KM;
+                            double y = calculateYCoord(currentTrackPoint, trackZero) / M_IN_KM;
+                            plotPoint(series, x, y);
+                            //Second point
+                            TrackPoint nextTrackPoint = track.getTrackPoint(z + 1);
+                            x = calculateXCoord(nextTrackPoint, trackZero) / M_IN_KM;
+                            y = calculateYCoord(nextTrackPoint, trackZero) / M_IN_KM;
+                            checkMinMax(x, y);
+                            plotPoint(series, x, y);
+                            //Adds the series to the chart
+                            chart.getData().add(series);
+                            //Gets the node property for the line of the newly created series.
+                            Node line = series.getNode().lookup(".chart-series-line");
+
+                            //Calculates the grade between two points
+                            double grade = calculateGrade(currentTrackPoint, nextTrackPoint);
+
+                            //Decides line color
+                            color = setGradeColor(grade);
 
                             //Sets the line color for the series.
                             line.setStyle("-fx-stroke: rgb(" + rgbFormat(color) + ");");
@@ -325,8 +595,8 @@ public class Plotter {
                         series.setName(track.getName());
                         for (int z = 0; z < track.getPointAmount(); z++) {
                             TrackPoint currentTrackPoint = track.getTrackPoint(z);
-                            double x = calculateXCoord(currentTrackPoint, trackZero)/M_IN_KM;
-                            double y = calculateYCoord(currentTrackPoint, trackZero)/M_IN_KM;
+                            double x = calculateXCoord(currentTrackPoint, trackZero) / M_IN_KM;
+                            double y = calculateYCoord(currentTrackPoint, trackZero) / M_IN_KM;
                             checkMinMax(x, y);
                             plotPoint(series, x, y);
                         }
@@ -352,14 +622,14 @@ public class Plotter {
         //multiply by 1.1 to scale the axis so the bounds are not right on the edge of the graph
         int x = (int) Math.round(xCheck * 1.05);
         int y = (int) Math.round(yCheck * 1.05);
-        if (x > xMax){
+        if (x > xMax) {
             xMax = x;
-        } else if(x < xMin){
+        } else if (x < xMin) {
             xMin = x;
         }
-        if (y > yMax){
+        if (y > yMax) {
             yMax = y;
-        } else if(y < yMin){
+        } else if (y < yMin) {
             yMin = y;
         }
     }
@@ -404,7 +674,7 @@ public class Plotter {
     }
 
     //Method to select which color to represent speed with
-    private Color setColor(Double speed) {
+    private Color setSpeedColor(Double speed) {
         //Dark blue- any speed less than 3 MPH
         if (speed < 3) {
             return Color.BLUE;
@@ -430,7 +700,6 @@ public class Plotter {
             return Color.RED;
         }
     }
-
     public void plotSpeedVsTime() {
         chart.axisSortingPolicyProperty().setValue(LineChart.SortingPolicy.NONE);
         //Clears the graph when window opens and a series exists.
@@ -453,7 +722,10 @@ public class Plotter {
                         ArrayList<Double> speeds = track.getTrackStats().getSpeeds();
                         XYChart.Series series = new XYChart.Series();
                         series.setName(track.getName());
-                        for (int z = 0; z < track.getPointAmount()-1; z++) {
+                        if (track.getPointAmount() < 2){
+                            throw new RuntimeException(""+i);
+                        }
+                        for (int z = 0; z < track.getPointAmount() - 1; z++) {
                             TrackPoint currentTrackPoint = track.getTrackPoint(z);
                             double y = (speeds.get(z) * KM_IN_MI);
                             double x = timePassedInMin(currentTrackPoint.getTime(), trackZero.getTime());
@@ -466,6 +738,55 @@ public class Plotter {
         } else {
             throw new NullPointerException("No Tracks are Loaded!");
         }
+    }
+
+    //Method to select which color to represent grade with
+    private Color setGradeColor(Double grade) {
+        //Dark blue- any grade less than -5% Grade
+        if (grade < -5) {
+            return Color.BLUE;
+        }
+        //Light blue- any grade that's >= -5% and < than -1%.
+        else if (grade >= -5 && grade < -1) {
+            return Color.AQUA;
+        }
+        //Green- any grade that's >=-1% MPH and < than 1%.
+        else if (grade >= -1 && grade < 1) {
+            return Color.GREEN;
+        }
+        //Yellow- any grade that's >= 1% MPH and < 3%.
+        else if (grade >= 1 && grade < 3) {
+            return Color.YELLOW;
+        }
+        //Orange- any grade that's >= 3% MPH and < than 5%.
+        else if (grade >= 3 && grade < 5) {
+            return Color.ORANGE;
+        }
+        //Red- Any grade that's over or equal to 5% Grade.
+        else {
+            return Color.RED;
+        }
+    }
+
+    //Essentially calculates the grade between two points. Returns a number
+    private double calculateGrade(TrackPoint point1, TrackPoint point2) {
+        double elevationChange = point2.getElevation() - point1.getElevation();
+        double distance = calculateDistance(point1, point2);
+
+        return (elevationChange / distance) * 100.0;
+    }
+
+    //Calculates the distance between two points in terms of x & y.
+    private double calculateDistance(TrackPoint point1, TrackPoint point2) {
+        double deltaX = (RADIUS_OF_EARTH_M + ((point2.getElevation() + point1.getElevation()) / 2)) *
+                (point2.getLongitude() * DEG_TO_RAD - point1.getLongitude() * DEG_TO_RAD) *
+                Math.cos((point2.getLatitude() * DEG_TO_RAD + point1.getLatitude() * DEG_TO_RAD) / 2);
+        double deltaY = (RADIUS_OF_EARTH_M + (point2.getElevation() + point1.getElevation()) / 2) *
+                (point2.getLatitude() * DEG_TO_RAD - point1.getLatitude() * DEG_TO_RAD);
+
+        double distance = Math.sqrt(Math.pow(deltaX, 2) + Math.pow(deltaY, 2));
+
+        return distance;
     }
 }
 

@@ -437,6 +437,9 @@ public class GPSController {
             plotterController.disableShowHideButton();
             this.firstTimePlotting = false;
         }
+        if (tracksHandler.getTrackAmount() > 1){
+            plotterController.setButtonValue(false);
+        }
         plotterStage.show();
     }
 
