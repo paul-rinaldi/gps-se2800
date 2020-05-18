@@ -122,7 +122,7 @@ public class GPSController {
         tenAndFifteenColumn.setPrefWidth(115);
         tenAndFifteenColumn.setCellValueFactory(new PropertyValueFactory<>("tenAndFifteen"));
 
-        TableColumn fifteenAndTwentyColumn = new TableColumn("5mph and 20mph");
+        TableColumn fifteenAndTwentyColumn = new TableColumn("15mph and 20mph");
         fifteenAndTwentyColumn.setPrefWidth(115);
         fifteenAndTwentyColumn.setCellValueFactory(new PropertyValueFactory<>("fifteenAndTwenty"));
 
