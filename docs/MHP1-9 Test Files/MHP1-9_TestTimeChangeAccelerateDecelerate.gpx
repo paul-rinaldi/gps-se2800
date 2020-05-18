@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <gpx>
   <trk>
-    <name>MHP1-9_NonElevationConstantPositiveSpeed</name>
+    <name>MHP1-9_TestTimeChangeAccelerateDecelerate</name>
     <trkseg>
       <trkpt lat="43.30000000000000" lon="88.00000000000000">
         <ele>10.0000000000000</ele>
@@ -25,23 +25,23 @@
       </trkpt>
       <trkpt lat="43.30000000000000" lon="88.25000000000000">
         <ele>10.0000000000000</ele>
-        <time>2016-02-10T14:31:00Z</time>
+        <time>2016-02-10T13:31:00Z</time>
       </trkpt>
       <trkpt lat="43.30000000000000" lon="88.30000000000000">
         <ele>10.0000000000000</ele>
-        <time>2016-02-10T14:33:00Z</time>
+        <time>2016-02-10T13:33:00Z</time>
       </trkpt>
       <trkpt lat="43.30000000000000" lon="88.35000000000000">
         <ele>10.0000000000000</ele>
-        <time>2016-02-10T14:37:00Z</time>
+        <time>2016-02-10T13:36:00Z</time>
       </trkpt>
       <trkpt lat="43.30000000000000" lon="88.40000000000000">
         <ele>10.0000000000000</ele>
-        <time>2016-02-10T14:42:00Z</time>
+        <time>2016-02-10T13:41:00Z</time>
       </trkpt>
       <trkpt lat="43.30000000000000" lon="88.45000000000000">
         <ele>10.0000000000000</ele>
-        <time>2016-02-10T14:52:00Z</time>
+        <time>2016-02-10T13:51:00Z</time>
       </trkpt>
     </trkseg>
   </trk>

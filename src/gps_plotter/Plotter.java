@@ -60,7 +60,7 @@ public class Plotter {
             setChartAxisLabels("Distance (mi)", "Speed (mi/hr)");
         }
 
-        ArrayList<Double> speeds = track.getTrackStats().getSpeeds(); // todo in what unit??
+        ArrayList<Double> speeds = track.getTrackStats().getSpeeds(); // get speeds in miles
         TrackPoint trackPointZero = track.getTrackPoint(0);
         double distanceTraveled = 0;
 
@@ -85,6 +85,7 @@ public class Plotter {
             double currentX = calculateXCoord(currentPoint, trackPointZero);
             double currentY = calculateYCoord(currentPoint, trackPointZero);
 
+            // obtains km or mi of distance between trackpoints
             double currentDistance = calculateThreeDimensionalDistance(prevX, currentX, prevY, currentY, previousElevation, currentElevation, kilometers);
 
             distanceTraveled += currentDistance;
@@ -92,7 +93,12 @@ public class Plotter {
             if (i == 0) {
                 plotPoint(series, distanceTraveled, zeroSpeed); //Plot point on LineChart (first speed is zero)
             } else {
-                plotPoint(series, distanceTraveled, speeds.get(i-1)); //Plot point on LineChart (speeds only contains track(1)-track(n-1)'s speeds)
+                //Plot point on LineChart (speeds only contains track(1)-track(n-1)'s speeds)
+                if (kilometers) {
+                    plotPoint(series, distanceTraveled, speeds.get(i-1) * M_IN_MI); // convert from mi to km
+                } else {
+                    plotPoint(series, distanceTraveled, speeds.get(i-1));
+                }
             }
         }
         this.chart.getData().add(series);
