@@ -43,7 +43,6 @@ public class GPSMain extends Application {
 		gpsController.setPlotterStage(plotterWindow);
 		plotterController.setMainController(gpsController);
 
-
 		//Set up Google maps window
         Parent rootMaps;
         FXMLLoader mapsLoader = new FXMLLoader(getClass().getResource("../maps/Capture.fxml"));
