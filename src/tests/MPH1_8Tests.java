@@ -23,7 +23,7 @@ public class MPH1_8Tests {
         try {
             parser = new Parser(gpxHandler);
             parser.parse(filename);
-            gpxHandler.getTrackHandler().calculateTrackStats("GPS Test: Various speeds");
+            gpxHandler.getTrackHandler().calculateTrackStats("GPS testSpeeds.gpx: Various speeds");
         } catch (Exception e) {
             fail("Exception Thrown");
         }
@@ -69,7 +69,7 @@ public class MPH1_8Tests {
         try {
             parser = new Parser(gpxHandler);
             parser.parse(filename);
-            gpxHandler.getTrackHandler().calculateTrackStats("GPS Test: 10 points. 73.9km");
+            gpxHandler.getTrackHandler().calculateTrackStats("GPS testSpeeds.gpx: 10 points. 73.9km");
         } catch (Exception e) {
             fail("Exception Thrown");
         }

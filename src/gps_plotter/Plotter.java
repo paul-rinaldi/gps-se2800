@@ -24,6 +24,7 @@ public class Plotter {
     private static final double MS_IN_MIN = 60000;
     private static final double M_IN_KM = 1000;
     private static final double M_IN_MI = 1609.344;
+    private static final double KM_IN_MI = 1.60934;
 
     //used to scale the graph
     private int xMax;
@@ -697,6 +698,45 @@ public class Plotter {
         //Red- Any speed that's over or equal to 20 MPH.
         else {
             return Color.RED;
+        }
+    }
+    public void plotSpeedVsTime() {
+        chart.axisSortingPolicyProperty().setValue(LineChart.SortingPolicy.NONE);
+        //Clears the graph when window opens and a series exists.
+        checkGraph();
+
+        plotterController.reenableLegend();
+
+        //Sets chart name.
+        plotterController.setChartTitle("Speed Vs. Time");
+        TracksHandler tracksHandler = plotterController.getTracksHandler();
+        if (tracksHandler != null) {
+            setChartAxisLabels("Time(Min)", "Speed(Km/Hr)");
+            int index = getFirstLoadedIndex();
+            boolean[] showOnGraph = plotterController.getShowOnGraph();
+            if (index != -1) {
+                TrackPoint trackZero = tracksHandler.getTrack(index).getTrackPoint(0);
+                for (int i = 0; i < tracksHandler.getTrackAmount(); i++) {
+                    if (showOnGraph[i]) {
+                        Track track = tracksHandler.getTrack(i);
+                        ArrayList<Double> speeds = track.getTrackStats().getSpeeds();
+                        XYChart.Series series = new XYChart.Series();
+                        series.setName(track.getName());
+                        if (track.getPointAmount() < 2){
+                            throw new RuntimeException(""+i);
+                        }
+                        for (int z = 0; z < track.getPointAmount() - 1; z++) {
+                            TrackPoint currentTrackPoint = track.getTrackPoint(z);
+                            double y = (speeds.get(z) * KM_IN_MI);
+                            double x = timePassedInMin(currentTrackPoint.getTime(), trackZero.getTime());
+                            plotPoint(series, x, y);
+                        }
+                        this.chart.getData().add(series);
+                    }
+                }
+            }
+        } else {
+            throw new NullPointerException("No Tracks are Loaded!");
         }
     }
 

@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
 <?import javafx.scene.chart.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
@@ -16,6 +15,7 @@
                         <MenuItem mnemonicParsing="false" onAction="#graphPlotSpeedAlongPath" text="View Speed Plot" />
                   <MenuItem mnemonicParsing="false" onAction="#graphGrade" text="View Grade Plot" />
                         <MenuItem mnemonicParsing="false" onAction="#graphElevationGainVsTime" text="Elevation Gain vs Time" />
+                  <MenuItem mnemonicParsing="false" onAction="#graphSpeedVsTime" text="Speed Vs. Time" />
                         <MenuItem mnemonicParsing="false" onAction="#graphDistanceVsTimeStartup" text="Distance vs Time" />
                         <MenuItem mnemonicParsing="false" onAction="#graphElevationVsTime" text="Elevation vs Time" />
                         <MenuItem mnemonicParsing="false" onAction="#graphCaloriesExpendedT" text="Calories Expended vs Time" />
@@ -46,7 +46,7 @@
       <Label fx:id="distanceLabel" layoutX="317.0" layoutY="95.0" text="Distance Units:" visible="false" />
       <RadioButton fx:id="distanceKM" layoutX="317.0" layoutY="119.0" mnemonicParsing="false" onAction="#graphDistanceInKM" prefHeight="17.0" prefWidth="91.0" text="Kilometers" visible="false">
           <toggleGroup>
-              <ToggleGroup fx:id="distanceButtons" />
+              <ToggleGroup fx:id="distanceButtons"/>
           </toggleGroup>
       </RadioButton>
       <RadioButton fx:id="distanceMI" layoutX="317.0" layoutY="145.0" mnemonicParsing="false" onAction="#graphDistanceInMI" prefHeight="17.0" prefWidth="91.0" text="Miles" toggleGroup="$distanceButtons" visible="false">

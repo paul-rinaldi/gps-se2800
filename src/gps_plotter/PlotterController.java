@@ -393,6 +393,30 @@ public class PlotterController {
     }
 
     /**
+     * graphs all selected tracks speed in Km/Hr vs the time in min
+     */
+    public void graphSpeedVsTime() {
+        xAxis.setAutoRanging(true);
+        yAxis.setAutoRanging(true);
+        showDistanceVsTimeUnits(false);
+        lastGraphLoaded = "Speed Vs Time";
+
+        showHideButton.disableProperty().setValue(false);
+        this.tracksHandler = gpsController.getTracksHandler();
+        try {
+            plotter.plotSpeedVsTime();
+        } catch (NullPointerException n) {
+            showHideButton.disableProperty().setValue(true);
+            createErrorDialog("2D Graph Plotting Error", "No tracks are loaded.");
+        } catch (RuntimeException e){
+            showOnGraph[(int)Double.parseDouble(e.getMessage())] = false;
+            showHideButton.selectedProperty().setValue(false);
+            createErrorDialog("Invalid GPX File", "The Track Must have at least two points " +
+                    "to show speed vs time");
+        }
+    }
+
+    /**
      * graphs all selected tracks on a 2D plot
      */
     public void graphPlotSpeedAlongPath() {
@@ -472,6 +496,9 @@ public class PlotterController {
                 break;
             case "Distance Vs Time":
                 graphDistanceVsTime();
+                break;
+            case "Speed Vs Time":
+                graphSpeedVsTime();
                 break;
             case "GradePlot":
                 graphGrade();
@@ -570,6 +597,14 @@ public class PlotterController {
 
     public void setChartTitle(String title){
         chartTitle.setText(title);
+    }
+
+    /**
+     * updates the value of the show/hide button
+     * @param bool sets the button to this value
+     */
+    public void setButtonValue(boolean bool){
+        showHideButton.selectedProperty().setValue(bool);
     }
 
     /**
