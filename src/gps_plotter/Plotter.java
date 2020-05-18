@@ -46,7 +46,78 @@ public class Plotter {
     }
 
     /**
-     * Plots track's points as calories expended vs time
+     * Plots speed (y) at each TrackPoint's distance (x) along the graph,
+     * setting the first distance's (x's) speed (y) to zero, and using
+     * slope of distance between lat lng's and their elevations over time
+     * to plot average speed between points assigned to the second distance of
+     * the average speed calculation (right hand side on the graph)
+     *
+     * @author Paul Rinaldi
+     * @param track track from which points will be plotted
+     */
+    public void plotSpeedVsDistance(Track track, boolean kilometers) {
+        final double zeroSpeed = 0.0;
+        XYChart.Series series = new XYChart.Series();
+        series.setName(track.getName());
+
+        if (kilometers) {
+            setChartAxisLabels("Distance (km)", "Speed (km/hr)");
+        } else {
+            setChartAxisLabels("Distance (mi)", "Speed (mi/hr)");
+        }
+
+        // Obtains speeds in MILES
+        ArrayList<Double> speeds = track.getTrackStats().getSpeeds();
+
+        // Initialize first trackpoint (0) for comparisons from first track point
+        TrackPoint trackPointZero = track.getTrackPoint(0);
+        double distanceTraveled = 0;
+
+        // Loop over each track point in the track, calculate distance, plot its distance
+        // and average speed over that distance at the right hand side point of the distance
+        for (int i = 0; i < track.getPointAmount(); i++) {
+            TrackPoint currentPoint = track.getTrackPoint(i);
+            TrackPoint previousPoint;
+
+            double currentElevation = currentPoint.getElevation();
+            double previousElevation;
+
+            if (i == 0) {
+                previousPoint = track.getTrackPoint(i);
+                previousElevation = currentPoint.getElevation();
+            } else {
+                previousPoint = track.getTrackPoint(i - 1);
+                previousElevation = previousPoint.getElevation();
+            }
+
+            double prevX = calculateXCoord(previousPoint, trackPointZero);
+            double prevY = calculateYCoord(previousPoint, trackPointZero);
+
+            double currentX = calculateXCoord(currentPoint, trackPointZero);
+            double currentY = calculateYCoord(currentPoint, trackPointZero);
+
+            // obtains km or mi of distance between trackpoints
+            double currentDistance = calculateThreeDimensionalDistance(prevX, currentX, prevY, currentY, previousElevation, currentElevation, kilometers);
+
+            distanceTraveled += currentDistance;
+
+            if (i == 0) {
+                // Plot point on LineChart (first speed is zero)
+                plotPoint(series, distanceTraveled, zeroSpeed);
+            } else {
+                // Plot point on LineChart (speeds only contains track(1)-track(n-1)'s speeds)
+                if (kilometers) {
+                    // convert from mi to km
+                    plotPoint(series, distanceTraveled, speeds.get(i - 1) * M_IN_MI);
+                } else {
+                    plotPoint(series, distanceTraveled, speeds.get(i - 1));
+                }
+            }
+        }
+        this.chart.getData().add(series);
+    }
+
+     /** Plots track's points as calories expended vs time
      *
      * @param track Track to plot
      */
@@ -96,7 +167,6 @@ public class Plotter {
             caloriesExpended+= calculateCaloriesExpended(distance, elevationGain);
 
             plotPoint(series, timePoint, caloriesExpended); //Plot point on LineChart
-
         }
         this.chart.getData().add(series);
     }
@@ -204,7 +274,6 @@ public class Plotter {
 
         double distance = Math.sqrt(xComponent + yComponent + zComponent);
         return distance;
-
     }
 
 
