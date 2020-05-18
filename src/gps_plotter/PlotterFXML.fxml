@@ -18,11 +18,8 @@
                         <MenuItem mnemonicParsing="false" onAction="#graphElevationGainVsTime" text="Elevation Gain vs Time" />
                         <MenuItem mnemonicParsing="false" onAction="#graphDistanceVsTimeStartup" text="Distance vs Time" />
                         <MenuItem mnemonicParsing="false" onAction="#graphElevationVsTime" text="Elevation vs Time" />
-<<<<<<< HEAD
-                        <MenuItem mnemonicParsing="false" onAction="#graphSpeedVsDistance" text="Speed vs Distance" />
-=======
                         <MenuItem mnemonicParsing="false" onAction="#graphCaloriesExpendedT" text="Calories Expended vs Time" />
->>>>>>> dev
+                        <MenuItem mnemonicParsing="false" onAction="#graphSpeedVsDistance" text="Speed vs Distance" />
                     </items>
                 </Menu>
             </menus>
