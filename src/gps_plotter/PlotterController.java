@@ -138,6 +138,8 @@ public class PlotterController {
     /**
      * Plots all selected Tracks' speed vs distance - distance unit is based on user selection
      * Default distance unit is kilometers
+     *
+     * @author Paul Rinaldi
      */
     @FXML
     private void graphSpeedVsDistance(){

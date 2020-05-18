@@ -45,8 +45,13 @@ public class Plotter {
     }
 
     /**
-     * Plots speed (y) at each TrackPoint's distance (x) along the graph
+     * Plots speed (y) at each TrackPoint's distance (x) along the graph,
+     * setting the first distance's (x's) speed (y) to zero, and using
+     * slope of distance between lat lng's and their elevations over time
+     * to plot average speed between points assigned to the second distance of
+     * the average speed calculation (right hand side on the graph)
      *
+     * @author Paul Rinaldi
      * @param track track from which points will be plotted
      */
     public void plotSpeedVsDistance(Track track, boolean kilometers) {
@@ -60,17 +65,22 @@ public class Plotter {
             setChartAxisLabels("Distance (mi)", "Speed (mi/hr)");
         }
 
-        ArrayList<Double> speeds = track.getTrackStats().getSpeeds(); // get speeds in miles
+        // Obtains speeds in MILES
+        ArrayList<Double> speeds = track.getTrackStats().getSpeeds();
+
+        // Initialize first trackpoint (0) for comparisons from first track point
         TrackPoint trackPointZero = track.getTrackPoint(0);
         double distanceTraveled = 0;
 
+        // Loop over each track point in the track, calculate distance, plot its distance
+        // and average speed over that distance at the right hand side point of the distance
         for (int i = 0; i < track.getPointAmount(); i++) {
             TrackPoint currentPoint = track.getTrackPoint(i);
             TrackPoint previousPoint;
 
             double currentElevation = currentPoint.getElevation();
             double previousElevation;
-            //Set first date to calculate time passed
+
             if (i == 0) {
                 previousPoint = track.getTrackPoint(i);
                 previousElevation = currentPoint.getElevation();
@@ -91,11 +101,13 @@ public class Plotter {
             distanceTraveled += currentDistance;
 
             if (i == 0) {
-                plotPoint(series, distanceTraveled, zeroSpeed); //Plot point on LineChart (first speed is zero)
+                // Plot point on LineChart (first speed is zero)
+                plotPoint(series, distanceTraveled, zeroSpeed);
             } else {
-                //Plot point on LineChart (speeds only contains track(1)-track(n-1)'s speeds)
+                // Plot point on LineChart (speeds only contains track(1)-track(n-1)'s speeds)
                 if (kilometers) {
-                    plotPoint(series, distanceTraveled, speeds.get(i-1) * M_IN_MI); // convert from mi to km
+                    // convert from mi to km
+                    plotPoint(series, distanceTraveled, speeds.get(i-1) * M_IN_MI);
                 } else {
                     plotPoint(series, distanceTraveled, speeds.get(i-1));
                 }
