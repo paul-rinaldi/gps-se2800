@@ -14,7 +14,7 @@
                         <MenuItem mnemonicParsing="false" onAction="#exit" text="Close" />
                         <MenuItem mnemonicParsing="false" onAction="#graphTwoDPlot" text="View 2D Plot" />
                         <MenuItem mnemonicParsing="false" onAction="#graphPlotSpeedAlongPath" text="View Speed Plot" />
-                  <MenuItem mnemonicParsing="false" onAction="#graphPlotSpeedAlongPath" text="View Grade Plot" />
+                  <MenuItem mnemonicParsing="false" onAction="#graphGrade" text="View Grade Plot" />
                         <MenuItem mnemonicParsing="false" onAction="#graphElevationGainVsTime" text="Elevation Gain vs Time" />
                         <MenuItem mnemonicParsing="false" onAction="#graphDistanceVsTimeStartup" text="Distance vs Time" />
                         <MenuItem mnemonicParsing="false" onAction="#graphElevationVsTime" text="Elevation vs Time" />

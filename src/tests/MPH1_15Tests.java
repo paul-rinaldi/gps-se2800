@@ -1,15 +1,86 @@
 package tests;
 
-import gps.Track;
-import gps.TrackPoint;
-import gps.TracksHandler;
+import gps.*;
 import javafx.scene.paint.Color;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
+
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.fail;
 
 public class MPH1_15Tests {
     private static final double DEG_TO_RAD = 0.0174533;
     private static final double RADIUS_OF_EARTH_M = 6371000;
+
+     /**
+     * tests the GPSBellCurve.gpx file for correct colors. This file is meant to
+      * test if all 7 colors appear, so the order should be Blue, Aqua, Green, Yellow, Orange, Red.
+     */
+    @Test
+    public void testGPSBellCurve() {
+        GPXHandler gpxHandler = new GPXHandler();
+        String filename = System.getProperty("user.dir") + "\\docs\\MHP1-15 Test Files\\GPSBellCurve.gpx";
+        Parser parser = null;
+        try {
+            parser = new Parser(gpxHandler);
+            parser.parse(filename);
+            gpxHandler.getTrackHandler().calculateTrackStats("GPS Test: 10 points. 73.9km");
+        } catch (Exception e) {
+            fail("Exception Thrown");
+        }
+        //Calculated by calculating the distance and time between two points, then
+        //calculating the speed in MPH, and finally choose the color based on what the speed was.
+        Color[] expectedOutput = {Color.BLUE, Color.AQUA,Color.GREEN,Color.YELLOW, Color.ORANGE, Color.RED};
+        Color[] methodOutput = plotGrade(gpxHandler.getTrackHandler());
+        assertArrayEquals(expectedOutput, methodOutput);
+    }
+
+    /**
+     * tests the GPSEvenElevation.gpx file for correct colors. Since this file always has a
+     * constant slope, it should result in 9 greens.
+     */
+    @Test
+    public void testGPSEvenElevation() {
+        GPXHandler gpxHandler = new GPXHandler();
+        String filename = System.getProperty("user.dir") + "\\docs\\MHP1-15 Test Files\\GPSEvenElevation.gpx";
+        Parser parser = null;
+        try {
+            parser = new Parser(gpxHandler);
+            parser.parse(filename);
+            gpxHandler.getTrackHandler().calculateTrackStats("GPS Test: 10 points. 73.9km");
+        } catch (Exception e) {
+            fail("Exception Thrown");
+        }
+        //Calculated by calculating the distance and time between two points, then
+        //calculating the speed in MPH, and finally choose the color based on what the speed was.
+        Color[] expectedOutput = {Color.GREEN, Color.GREEN,Color.GREEN,Color.GREEN,Color.GREEN,Color.GREEN,Color.GREEN,Color.GREEN,Color.GREEN};
+        Color[] methodOutput = plotGrade(gpxHandler.getTrackHandler());
+        assertArrayEquals(expectedOutput, methodOutput);
+    }
+
+     /**
+     * tests the GPSTest10.gpx file for correct colors. Since this file for the first 4 sections rises,
+      * then drops at the same rate, this should result in red, red ,red, red, blue, blue, blue, blue
+     */
+    @Test
+    public void testGPSTest10() {
+        GPXHandler gpxHandler = new GPXHandler();
+        String filename = System.getProperty("user.dir") + "\\docs\\GPSTest10.gpx";
+        Parser parser = null;
+        try {
+            parser = new Parser(gpxHandler);
+            parser.parse(filename);
+            gpxHandler.getTrackHandler().calculateTrackStats("GPS Test: 10 points. 73.9km");
+        } catch (Exception e) {
+            fail("Exception Thrown");
+        }
+        //Calculated by calculating the distance and time between two points, then
+        //calculating the speed in MPH, and finally choose the color based on what the speed was.
+        Color[] expectedOutput = {Color.RED, Color.RED, Color.RED, Color.RED, Color.BLUE, Color.BLUE, Color.BLUE, Color.BLUE, Color.BLUE};
+        Color[] methodOutput = plotGrade(gpxHandler.getTrackHandler());
+        assertArrayEquals(expectedOutput, methodOutput);
+    }
 
     /**
      * a modified version of the method in plotter to not use javafxml objects. returns an
@@ -18,7 +89,7 @@ public class MPH1_15Tests {
      * @param tracksHandler the tracks handler that simulates the one gotten from plotterController
      * @return a Color array of lines to replace the adding to graph function
      */
-    private Color[] plotSpeedOverPath(TracksHandler tracksHandler) {
+    private Color[] plotGrade(TracksHandler tracksHandler) {
         ArrayList<Color> array = new ArrayList<>();
         if (tracksHandler != null) {
             int index = 0;
