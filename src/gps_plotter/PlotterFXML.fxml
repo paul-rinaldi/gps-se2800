@@ -1,19 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
-<?import javafx.scene.chart.LineChart?>
-<?import javafx.scene.chart.NumberAxis?>
-<?import javafx.scene.control.CheckBox?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.Menu?>
-<?import javafx.scene.control.MenuBar?>
-<?import javafx.scene.control.MenuItem?>
-<?import javafx.scene.control.RadioButton?>
-<?import javafx.scene.control.Spinner?>
-<?import javafx.scene.control.TableView?>
-<?import javafx.scene.control.TextArea?>
-<?import javafx.scene.control.ToggleGroup?>
-<?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.text.Font?>
+<?import javafx.scene.chart.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="658.0" prefWidth="1012.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gps_plotter.PlotterController">
     <children>
@@ -24,10 +13,13 @@
                         <MenuItem mnemonicParsing="false" onAction="#exit" text="Close" />
                         <MenuItem mnemonicParsing="false" onAction="#graphTwoDPlot" text="View 2D Plot" />
                         <MenuItem mnemonicParsing="false" onAction="#graphPlotSpeedAlongPath" text="View Speed Plot" />
+                  <MenuItem mnemonicParsing="false" onAction="#graphGrade" text="View Grade Plot" />
                         <MenuItem mnemonicParsing="false" onAction="#graphElevationGainVsTime" text="Elevation Gain vs Time" />
+                  <MenuItem mnemonicParsing="false" onAction="#graphSpeedVsTime" text="Speed Vs. Time" />
                         <MenuItem mnemonicParsing="false" onAction="#graphDistanceVsTimeStartup" text="Distance vs Time" />
                         <MenuItem mnemonicParsing="false" onAction="#graphElevationVsTime" text="Elevation vs Time" />
                         <MenuItem mnemonicParsing="false" onAction="#graphCaloriesExpendedT" text="Calories Expended vs Time" />
+                        <MenuItem mnemonicParsing="false" onAction="#graphSpeedVsDistance" text="Speed vs Distance" />
                     </items>
                 </Menu>
             </menus>
@@ -52,12 +44,12 @@
       </Label>
       <TextArea fx:id="LegendText" editable="false" layoutX="362.0" layoutY="556.0" prefHeight="38.0" prefWidth="568.0" text="Dark Blue = &lt; 3 MPH     Light Blue = Between 3 &amp; 7 MPH     Green = Between 7 &amp; 10 MPH                                                 hi" visible="false" />
       <Label fx:id="distanceLabel" layoutX="317.0" layoutY="95.0" text="Distance Units:" visible="false" />
-      <RadioButton fx:id="distanceKM" layoutX="317.0" layoutY="119.0" mnemonicParsing="false" onAction="#graphDistanceVsTimeKM" prefHeight="17.0" prefWidth="91.0" text="Kilometers" visible="false">
+      <RadioButton fx:id="distanceKM" layoutX="317.0" layoutY="119.0" mnemonicParsing="false" onAction="#graphDistanceInKM" prefHeight="17.0" prefWidth="91.0" text="Kilometers" visible="false">
           <toggleGroup>
-              <ToggleGroup fx:id="distanceButtons" />
+              <ToggleGroup fx:id="distanceButtons"/>
           </toggleGroup>
       </RadioButton>
-      <RadioButton fx:id="distanceMI" layoutX="317.0" layoutY="145.0" mnemonicParsing="false" onAction="#graphDistanceVsTimeMI" prefHeight="17.0" prefWidth="91.0" text="Miles" toggleGroup="$distanceButtons" visible="false">
+      <RadioButton fx:id="distanceMI" layoutX="317.0" layoutY="145.0" mnemonicParsing="false" onAction="#graphDistanceInMI" prefHeight="17.0" prefWidth="91.0" text="Miles" toggleGroup="$distanceButtons" visible="false">
       </RadioButton>
       <TextArea fx:id="elevationGains" visible="false" editable="false" layoutX="446.0" layoutY="595.0" prefHeight="54.0" prefWidth="534.0" />
       <Label fx:id="elevationGainsLabel" visible="false" layoutX="325.0" layoutY="609.0" text="Elevation Gains:">

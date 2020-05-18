@@ -46,12 +46,20 @@ public class PlotterController {
     private TracksHandler tracksHandler;
     private String lastGraphLoaded = "";
     private boolean firstTimePlottingDvsT = true;
+    private boolean firstTimePlottingSvsD = true;
 
     private Stage plotterStage;
 
     private boolean[] showOnGraph = {true, false, false, false, false, false, false, false, false, false};
 
     private boolean graphDistanceVsTimeInKM = true;
+    private boolean graphSpeedVsDistanceInKM = true;
+
+    private void showDistanceSelect(boolean visible){
+        this.distanceKM.setVisible(visible);
+        this.distanceMI.setVisible(visible);
+        this.distanceLabel.setVisible(visible);
+    }
 
     private void showElevationGainsText(boolean visible){
         this.elevationGains.setVisible(visible);
@@ -59,6 +67,7 @@ public class PlotterController {
     }
 
     private void showDistanceVsTimeUnits(boolean visible){
+
         this.distanceKM.setVisible(visible);
         this.distanceMI.setVisible(visible);
         this.distanceLabel.setVisible(visible);
@@ -72,29 +81,38 @@ public class PlotterController {
             this.distanceKM.setSelected(true); //Initially sets KM radio button to selected
             this.firstTimePlottingDvsT = false;
         }
-        showDistanceVsTimeUnits(true);
+
+        this.distanceKM.setSelected(graphDistanceVsTimeInKM);
+        this.distanceMI.setSelected(!graphDistanceVsTimeInKM);
+
+        showDistanceSelect(true);
         graphDistanceVsTime();
     }
 
     /**
      * Called when Kilometers button is pressed
      */
-    public void graphDistanceVsTimeKM(){
-
+    public void graphDistanceInKM(){
         if(lastGraphLoaded.equals("Distance Vs Time")){
             graphDistanceVsTimeInKM = true;
             graphDistanceVsTime();
+        } else if (lastGraphLoaded.equals("Speed Vs Distance")) {
+            graphSpeedVsDistanceInKM = true;
+            graphSpeedVsDistance();
         }
     }
 
     /**
      * Called when Miles button is pressed
      */
-    public void graphDistanceVsTimeMI(){
+    public void graphDistanceInMI(){
 
         if(lastGraphLoaded.equals("Distance Vs Time")){
             graphDistanceVsTimeInKM = false;
             graphDistanceVsTime();
+        } else if (lastGraphLoaded.equals("Speed Vs Distance")) {
+            graphSpeedVsDistanceInKM = false;
+            graphSpeedVsDistance();
         }
 
     }
@@ -133,8 +151,8 @@ public class PlotterController {
         });
     }
 
-    /**
-     * Plots all selected Tracks' expended calories vs time
+    /** Plots all selected Tracks' expended calories vs time
+     *
      */
     public void graphCaloriesExpendedT(){
         xAxis.setAutoRanging(true);
@@ -149,7 +167,6 @@ public class PlotterController {
         this.tracksHandler = gpsController.getTracksHandler();
 
         try {
-
             if (this.lineChart.getData() != null && this.lineChart.getData().size() != 0) { //Clears graph when window is opened only if series exists
                 this.plotter.clearChart();
             }
@@ -166,13 +183,59 @@ public class PlotterController {
                         plotter.plotCaloriesExpendedVsT(t);
                     } else {
                         createErrorDialog("Calories Expended Plotting Error", "Track: " + t.getName() + " doesn't have enough points to graph Calories Expended vs Time");
+
+                    }
+                }
+            }
+        } catch (NullPointerException n) {
+            showHideButton.disableProperty().setValue(true);
+            createErrorDialog("Calories Expended vs Time Plotting Error", "No tracks are loaded.");
+        }
+    }
+
+    /**
+     * Plots all selected Tracks' speed vs distance - distance unit is based on user selection
+     * Default distance unit is kilometers
+     *
+     * @author Paul Rinaldi
+     */
+    @FXML
+    private void graphSpeedVsDistance(){
+        String name = "Speed Vs Distance";
+        xAxis.setAutoRanging(true);
+        yAxis.setAutoRanging(true);
+        lastGraphLoaded = name;
+
+        showDistanceSelect(true);
+
+        showHideButton.disableProperty().setValue(false);
+        this.tracksHandler = gpsController.getTracksHandler();
+
+        try {
+
+            if (this.lineChart.getData() != null && this.lineChart.getData().size() != 0) { //Clears graph when window is opened only if series exists
+                this.plotter.clearChart();
+            }
+
+            reenableLegend();
+
+            setChartTitle(name);
+
+            for (int i = 0; i < this.tracksHandler.getTrackAmount(); i++) {
+                if (showOnGraph[i]) {
+                    Track t = this.tracksHandler.getTrack(i);
+
+                    if (t.getPointAmount() > 1) {
+                        plotter.plotSpeedVsDistance(t, graphSpeedVsDistanceInKM);
+                    } else {
+                        createErrorDialog(name + " Plotting Error", "Track: " + t.getName() + " doesn't have enough points to graph " + name);
                     }
                 }
             }
 
         } catch (NullPointerException n) {
             showHideButton.disableProperty().setValue(true);
-            createErrorDialog("Calories Expended vs Time Plotting Error", "No tracks are loaded.");
+            createErrorDialog(name + " Plotting Error", "No tracks are loaded.");
         }
     }
 
@@ -227,7 +290,7 @@ public class PlotterController {
         lastGraphLoaded = "Elevation Vs Time";
 
         showHideButton.disableProperty().setValue(false);
-        showDistanceVsTimeUnits(false);
+        showDistanceSelect(false);
 
         this.tracksHandler = gpsController.getTracksHandler();
 
@@ -275,6 +338,8 @@ public class PlotterController {
         lastGraphLoaded = "Elevation Gain Vs Time";
 
         showHideButton.disableProperty().setValue(false);
+
+        showDistanceSelect(false);
         showDistanceVsTimeUnits(false);
         showElevationGainsText(false);
 
@@ -308,13 +373,15 @@ public class PlotterController {
     }
 
     /**
-     * graphs all selected tracks on a 2D plot
+     * graphs all selected tracks on a 2D plot for instantaneous speed
      */
     public void graphTwoDPlot() {
         lastGraphLoaded = "2DPlot";
 
+        showDistanceSelect(false);
         showDistanceVsTimeUnits(false);
         showElevationGainsText(false);
+
         showHideButton.disableProperty().setValue(false);
         this.tracksHandler = gpsController.getTracksHandler();
         try {
@@ -326,16 +393,59 @@ public class PlotterController {
     }
 
     /**
+     * graphs all selected tracks speed in Km/Hr vs the time in min
+     */
+    public void graphSpeedVsTime() {
+        xAxis.setAutoRanging(true);
+        yAxis.setAutoRanging(true);
+        showDistanceVsTimeUnits(false);
+        lastGraphLoaded = "Speed Vs Time";
+
+        showHideButton.disableProperty().setValue(false);
+        this.tracksHandler = gpsController.getTracksHandler();
+        try {
+            plotter.plotSpeedVsTime();
+        } catch (NullPointerException n) {
+            showHideButton.disableProperty().setValue(true);
+            createErrorDialog("2D Graph Plotting Error", "No tracks are loaded.");
+        } catch (RuntimeException e){
+            showOnGraph[(int)Double.parseDouble(e.getMessage())] = false;
+            showHideButton.selectedProperty().setValue(false);
+            createErrorDialog("Invalid GPX File", "The Track Must have at least two points " +
+                    "to show speed vs time");
+        }
+    }
+
+    /**
      * graphs all selected tracks on a 2D plot
      */
     public void graphPlotSpeedAlongPath() {
         lastGraphLoaded = "SpeedPlot";
+
+        showDistanceSelect(false);
         showDistanceVsTimeUnits(false);
         showElevationGainsText(false);
+
         showHideButton.disableProperty().setValue(false);
         tracksHandler = gpsController.getTracksHandler();
         try {
             plotter.plotSpeedOverPath();
+        } catch (NullPointerException n) {
+            showHideButton.disableProperty().setValue(true);
+            createErrorDialog("2D Graph Plotting Error", "No tracks are loaded.");
+        }
+    }
+
+    /**
+     * graphs all selected tracks on a 2D plot
+     */
+    public void graphGrade() {
+        lastGraphLoaded = "GradePlot";
+        showDistanceVsTimeUnits(false);
+        showHideButton.disableProperty().setValue(false);
+        tracksHandler = gpsController.getTracksHandler();
+        try {
+            plotter.plotGrade();
         } catch (NullPointerException n) {
             showHideButton.disableProperty().setValue(true);
             createErrorDialog("2D Graph Plotting Error", "No tracks are loaded.");
@@ -387,10 +497,18 @@ public class PlotterController {
             case "Distance Vs Time":
                 graphDistanceVsTime();
                 break;
+            case "Speed Vs Time":
+                graphSpeedVsTime();
+                break;
+            case "GradePlot":
+                graphGrade();
+                break;
             case "Elevation Vs Time":
                 graphElevationVsTime();
                 break;
-
+            case "Speed Vs Distance":
+                graphSpeedVsDistance();
+                break;
             case "CaloriesExpended":
                 graphCaloriesExpendedT();
                 break;
@@ -482,6 +600,14 @@ public class PlotterController {
     }
 
     /**
+     * updates the value of the show/hide button
+     * @param bool sets the button to this value
+     */
+    public void setButtonValue(boolean bool){
+        showHideButton.selectedProperty().setValue(bool);
+    }
+
+    /**
      * sets both axis to the same scale based on the variables passed in, sets the max value for both the x and y axis
      * based on what number is greater, similarly sets the x and y axis min's to which number is smaller.
      * @param xMax the max x axis value
@@ -562,7 +688,3 @@ public class PlotterController {
     }
 
 }
-
-
-
-
