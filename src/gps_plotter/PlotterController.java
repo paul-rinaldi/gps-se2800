@@ -308,7 +308,7 @@ public class PlotterController {
     }
 
     /**
-     * graphs all selected tracks on a 2D plot
+     * graphs all selected tracks on a 2D plot for instantaneous speed
      */
     public void graphTwoDPlot() {
         lastGraphLoaded = "2DPlot";
@@ -336,6 +336,22 @@ public class PlotterController {
         tracksHandler = gpsController.getTracksHandler();
         try {
             plotter.plotSpeedOverPath();
+        } catch (NullPointerException n) {
+            showHideButton.disableProperty().setValue(true);
+            createErrorDialog("2D Graph Plotting Error", "No tracks are loaded.");
+        }
+    }
+
+    /**
+     * graphs all selected tracks on a 2D plot
+     */
+    public void graphGrade() {
+        lastGraphLoaded = "GradePlot";
+        showDistanceVsTimeUnits(false);
+        showHideButton.disableProperty().setValue(false);
+        tracksHandler = gpsController.getTracksHandler();
+        try {
+            plotter.plotGrade();
         } catch (NullPointerException n) {
             showHideButton.disableProperty().setValue(true);
             createErrorDialog("2D Graph Plotting Error", "No tracks are loaded.");
@@ -386,6 +402,9 @@ public class PlotterController {
                 break;
             case "Distance Vs Time":
                 graphDistanceVsTime();
+                break;
+            case "GradePlot":
+                graphGrade();
                 break;
             case "Elevation Vs Time":
                 graphElevationVsTime();
