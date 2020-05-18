@@ -455,8 +455,6 @@ public class Plotter {
                         series.setName(track.getName());
                         for (int z = 0; z < track.getPointAmount()-1; z++) {
                             TrackPoint currentTrackPoint = track.getTrackPoint(z);
-                            //TODO delete
-                            System.out.println(speeds.get(z) * KM_IN_MI);
                             double y = (speeds.get(z) * KM_IN_MI);
                             double x = timePassedInMin(currentTrackPoint.getTime(), trackZero.getTime());
                             plotPoint(series, x, y);

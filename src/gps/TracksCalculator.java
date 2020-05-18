@@ -145,9 +145,6 @@ public class TracksCalculator {
     private void calcSpeed(double deltaT, double distance, ArrayList<Double> speedList) {
         double speedK = (distance * M_TO_KM) / deltaT;
         double speedM = (distance * M_TO_MI) / deltaT;
-        System.out.println(deltaT);
-        System.out.println(distance);
-        System.out.println(speedK);
         //Adds calculated mile speed to speed list.
         speedList.add(speedM);
 
