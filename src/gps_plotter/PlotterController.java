@@ -218,13 +218,13 @@ public class PlotterController {
     }
 
     /**
-     * graphs all selected tracks on a 2D plot
+     * graphs all selected tracks speed in Km/Hr vs the time in min
      */
     public void graphSpeedVsTime() {
         xAxis.setAutoRanging(true);
         yAxis.setAutoRanging(true);
         showDistanceVsTimeUnits(false);
-        lastGraphLoaded = "Speed Vs. Time";
+        lastGraphLoaded = "Speed Vs Time";
 
         showHideButton.disableProperty().setValue(false);
         this.tracksHandler = gpsController.getTracksHandler();
@@ -296,6 +296,9 @@ public class PlotterController {
                 break;
             case "Distance Vs Time":
                 graphDistanceVsTime();
+                break;
+            case "Speed Vs Time":
+                graphSpeedVsTime();
                 break;
             default:
                 System.out.println("Error unrecognized graph name: " + lastGraphLoaded);

@@ -23,6 +23,7 @@ public class Plotter {
     private static final double MS_IN_MIN = 60000;
     private static final double M_IN_KM = 1000;
     private static final double M_IN_MI = 1609.344;
+    private static final double KM_IN_MI = 1.60934;
 
     //used to scale the graph
     private int xMax;
@@ -444,9 +445,8 @@ public class Plotter {
             setChartAxisLabels("Time(Min)", "Speed(Km/Hr)");
             int index = getFirstLoadedIndex();
             boolean[] showOnGraph = plotterController.getShowOnGraph();
-            TrackPoint trackZero = tracksHandler.getTrack(index).getTrackPoint(0);
-            int firstMinutes = trackZero.getTime().getMinutes() + (trackZero.getTime().getHours() * 60);
             if (index != -1) {
+                TrackPoint trackZero = tracksHandler.getTrack(index).getTrackPoint(0);
                 for (int i = 0; i < tracksHandler.getTrackAmount(); i++) {
                     if (showOnGraph[i]) {
                         Track track = tracksHandler.getTrack(i);
@@ -455,9 +455,10 @@ public class Plotter {
                         series.setName(track.getName());
                         for (int z = 0; z < track.getPointAmount()-1; z++) {
                             TrackPoint currentTrackPoint = track.getTrackPoint(z);
-                            double y = speeds.get(z);
-                            double x = (currentTrackPoint.getTime().getMinutes() +
-                                    currentTrackPoint.getTime().getHours()*60) - firstMinutes;
+                            //TODO delete
+                            System.out.println(speeds.get(z) * KM_IN_MI);
+                            double y = (speeds.get(z) * KM_IN_MI);
+                            double x = timePassedInMin(currentTrackPoint.getTime(), trackZero.getTime());
                             plotPoint(series, x, y);
                         }
                         this.chart.getData().add(series);

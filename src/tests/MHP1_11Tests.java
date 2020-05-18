@@ -24,7 +24,7 @@ public class MHP1_11Tests {
         try {
             parser = new Parser(gpxHandler);
             parser.parse(filename);
-            gpxHandler.getTrackHandler().calculateTrackStats("GPS Test: 10 points. 73.9km");
+            gpxHandler.getTrackHandler().calculateTrackStats("GPS testSpeeds.gpx: 10 points. 73.9km");
         } catch (Exception e) {
             fail("Exception Thrown");
         }
@@ -51,7 +51,7 @@ public class MHP1_11Tests {
         try {
             parser = new Parser(gpxHandler);
             parser.parse(filename);
-            gpxHandler.getTrackHandler().calculateTrackStats("GPS Test: 2 points. 8260 meters");
+            gpxHandler.getTrackHandler().calculateTrackStats("GPS testSpeeds.gpx: 2 points. 8260 meters");
         } catch (Exception e) {
             fail("Exception Thrown");
         }
@@ -108,11 +108,11 @@ public class MHP1_11Tests {
         try {
             parser = new Parser(gpxHandler);
             parser.parse(filename);
-            gpxHandler.getTrackHandler().calculateTrackStats("GPS Test: 10 points. 73.9km");
+            gpxHandler.getTrackHandler().calculateTrackStats("GPS testSpeeds.gpx: 10 points. 73.9km");
         } catch (Exception e) {
             fail("Exception Thrown");
         }
-        double result = gpxHandler.getTrackHandler().getTrack("GPS Test: 10 points. 73.9km").getTrackStats().getDistK();
+        double result = gpxHandler.getTrackHandler().getTrack("GPS testSpeeds.gpx: 10 points. 73.9km").getTrackStats().getDistK();
         assertEquals(distanceKm, result, distanceKm*DELTA);
     }
 
@@ -130,11 +130,11 @@ public class MHP1_11Tests {
         try {
             parser = new Parser(gpxHandler);
             parser.parse(filename);
-            gpxHandler.getTrackHandler().calculateTrackStats("GPS Test: 10 points. 73.9km");
+            gpxHandler.getTrackHandler().calculateTrackStats("GPS testSpeeds.gpx: 10 points. 73.9km");
         } catch (Exception e) {
             fail("Exception Thrown");
         }
-        double result = gpxHandler.getTrackHandler().getTrack("GPS Test: 10 points. 73.9km").getTrackStats().getDistM();
+        double result = gpxHandler.getTrackHandler().getTrack("GPS testSpeeds.gpx: 10 points. 73.9km").getTrackStats().getDistM();
         assertEquals(distanceMi, result, distanceMi*DELTA);
     }
 

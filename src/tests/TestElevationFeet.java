@@ -17,14 +17,14 @@ public class TestElevationFeet {
         try {
             parser = new Parser(gpxHandler);
             parser.parse(filename);
-            gpxHandler.getTrackHandler().calculateTrackStats("GPS Test: 10 points. 73.9km");
+            gpxHandler.getTrackHandler().calculateTrackStats("GPS testSpeeds.gpx: 10 points. 73.9km");
         } catch (Exception e) {
             fail("Exception Thrown");
         }
 
         //Act
-        double elevationFeet = gpxHandler.getTrackHandler().getTrack("GPS Test: 10 points. 73.9km").getTrackStats().getMaxElevFt();
-        double elevationMeters = gpxHandler.getTrackHandler().getTrack("GPS Test: 10 points. 73.9km").getTrackStats().getMaxElevM();
+        double elevationFeet = gpxHandler.getTrackHandler().getTrack("GPS testSpeeds.gpx: 10 points. 73.9km").getTrackStats().getMaxElevFt();
+        double elevationMeters = gpxHandler.getTrackHandler().getTrack("GPS testSpeeds.gpx: 10 points. 73.9km").getTrackStats().getMaxElevM();
 
         //Assert
         assertEquals(elevationMeters*3.2808, elevationFeet);
@@ -39,14 +39,14 @@ public class TestElevationFeet {
         try {
             parser = new Parser(gpxHandler);
             parser.parse(filename);
-            gpxHandler.getTrackHandler().calculateTrackStats("GPS Test: 10 points. 73.9km");
+            gpxHandler.getTrackHandler().calculateTrackStats("GPS testSpeeds.gpx: 10 points. 73.9km");
         } catch (Exception e) {
             fail("Exception Thrown");
         }
 
         //Act
-        double elevationFeet = gpxHandler.getTrackHandler().getTrack("GPS Test: 10 points. 73.9km").getTrackStats().getMinElevFt();
-        double elevationMeters = gpxHandler.getTrackHandler().getTrack("GPS Test: 10 points. 73.9km").getTrackStats().getMinElevM();
+        double elevationFeet = gpxHandler.getTrackHandler().getTrack("GPS testSpeeds.gpx: 10 points. 73.9km").getTrackStats().getMinElevFt();
+        double elevationMeters = gpxHandler.getTrackHandler().getTrack("GPS testSpeeds.gpx: 10 points. 73.9km").getTrackStats().getMinElevM();
         //Assert
         assertEquals(elevationMeters*3.2808, elevationFeet);
     }
@@ -60,14 +60,14 @@ public class TestElevationFeet {
         try {
             parser = new Parser(gpxHandler);
             parser.parse(filename);
-            gpxHandler.getTrackHandler().calculateTrackStats("GPS Test: 2 points. 8260 meters");
+            gpxHandler.getTrackHandler().calculateTrackStats("GPS testSpeeds.gpx: 2 points. 8260 meters");
         } catch (Exception e) {
             fail("Exception Thrown");
         }
 
         //Act
-        double elevationFeet = gpxHandler.getTrackHandler().getTrack("GPS Test: 2 points. 8260 meters").getTrackStats().getMaxElevFt();
-        double elevationMeters = gpxHandler.getTrackHandler().getTrack("GPS Test: 2 points. 8260 meters").getTrackStats().getMaxElevM();
+        double elevationFeet = gpxHandler.getTrackHandler().getTrack("GPS testSpeeds.gpx: 2 points. 8260 meters").getTrackStats().getMaxElevFt();
+        double elevationMeters = gpxHandler.getTrackHandler().getTrack("GPS testSpeeds.gpx: 2 points. 8260 meters").getTrackStats().getMaxElevM();
         //Assert
         assertEquals(elevationMeters*3.2808, elevationFeet);
     }
@@ -81,14 +81,14 @@ public class TestElevationFeet {
         try {
             parser = new Parser(gpxHandler);
             parser.parse(filename);
-            gpxHandler.getTrackHandler().calculateTrackStats("GPS Test: 2 points. 8260 meters");
+            gpxHandler.getTrackHandler().calculateTrackStats("GPS testSpeeds.gpx: 2 points. 8260 meters");
         } catch (Exception e) {
             fail("Exception Thrown");
         }
 
         //Act
-        double elevationFeet = gpxHandler.getTrackHandler().getTrack("GPS Test: 2 points. 8260 meters").getTrackStats().getMinElevFt();
-        double elevationMeters = gpxHandler.getTrackHandler().getTrack("GPS Test: 2 points. 8260 meters").getTrackStats().getMinElevM();
+        double elevationFeet = gpxHandler.getTrackHandler().getTrack("GPS testSpeeds.gpx: 2 points. 8260 meters").getTrackStats().getMinElevFt();
+        double elevationMeters = gpxHandler.getTrackHandler().getTrack("GPS testSpeeds.gpx: 2 points. 8260 meters").getTrackStats().getMinElevM();
         //Assert
         assertEquals(elevationMeters*3.2808, elevationFeet);
     }

@@ -88,7 +88,6 @@ public class TracksCalculator {
             if (i != pointNum - 1) {
                 a = track.getTrackPoint(i);
                 b = track.getTrackPoint(i + 1);
-
                 deltaX = (RADIUS_OF_EARTH_M + ((b.getElevation() + a.getElevation()) / 2)) *
                         (b.getLongitude() * DEG_TO_RAD - a.getLongitude() * DEG_TO_RAD) *
                         Math.cos((b.getLatitude() * DEG_TO_RAD + a.getLatitude() * DEG_TO_RAD) / 2);
@@ -146,7 +145,9 @@ public class TracksCalculator {
     private void calcSpeed(double deltaT, double distance, ArrayList<Double> speedList) {
         double speedK = (distance * M_TO_KM) / deltaT;
         double speedM = (distance * M_TO_MI) / deltaT;
-
+        System.out.println(deltaT);
+        System.out.println(distance);
+        System.out.println(speedK);
         //Adds calculated mile speed to speed list.
         speedList.add(speedM);
 
