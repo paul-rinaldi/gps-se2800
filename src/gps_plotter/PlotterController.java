@@ -171,8 +171,9 @@ public class PlotterController {
                 this.plotter.clearChart();
             }
 
-            setChartTitle("Calories Expended vs Time");
             reenableLegend();
+
+            setChartTitle("Calories Expended vs Time");
 
             for (int i = 0; i < this.tracksHandler.getTrackAmount(); i++) {
                 if (showOnGraph[i]) {
@@ -186,7 +187,6 @@ public class PlotterController {
                     }
                 }
             }
-
         } catch (NullPointerException n) {
             showHideButton.disableProperty().setValue(true);
             createErrorDialog("Calories Expended vs Time Plotting Error", "No tracks are loaded.");
@@ -218,6 +218,7 @@ public class PlotterController {
             }
 
             reenableLegend();
+
             setChartTitle(name);
 
             for (int i = 0; i < this.tracksHandler.getTrackAmount(); i++) {
@@ -228,7 +229,6 @@ public class PlotterController {
                         plotter.plotSpeedVsDistance(t, graphSpeedVsDistanceInKM);
                     } else {
                         createErrorDialog(name + " Plotting Error", "Track: " + t.getName() + " doesn't have enough points to graph " + name);
-
                     }
                 }
             }
