@@ -748,9 +748,15 @@ public class Plotter {
                         if (track.getPointAmount() < 2){
                             throw new RuntimeException(""+i);
                         }
-                        for (int z = 0; z < track.getPointAmount() - 1; z++) {
+                        for (int z = 0; z < track.getPointAmount(); z++) {
                             TrackPoint currentTrackPoint = track.getTrackPoint(z);
-                            double y = (speeds.get(z) * KM_IN_MI);
+                            double y;
+                            if(z==0) {
+                                y = 0;
+
+                            } else{
+                                y = (speeds.get(z-1) * KM_IN_MI);
+                            }
                             double x = timePassedInMin(currentTrackPoint.getTime(), trackZero.getTime());
                             plotPoint(series, x, y);
                         }
