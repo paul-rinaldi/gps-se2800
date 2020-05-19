@@ -1,11 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.CheckMenuItem?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.Spinner?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="441.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gps.GPSController">
+<AnchorPane prefHeight="441.0" prefWidth="1236.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gps.GPSController">
    <children>
-      <MenuBar layoutY="2.0" prefHeight="25.0" prefWidth="600.0">
+      <MenuBar layoutY="2.0" prefHeight="25.0" prefWidth="1300.0">
         <menus>
           <Menu mnemonicParsing="false" text="File">
             <items>
@@ -21,6 +29,20 @@
             <Menu mnemonicParsing="false" text="Google Maps">
                <items>
                   <MenuItem mnemonicParsing="false" onAction="#showMapsWindow" text="Open Maps Window" />
+               </items>
+            </Menu>
+            <Menu fx:id="tableOptions" disable="true" mnemonicParsing="false" text="Table">
+               <items>
+                  <CheckMenuItem fx:id="trackOne" mnemonicParsing="false" onAction="#updateTable" visible="false" />
+                  <CheckMenuItem fx:id="trackTwo" mnemonicParsing="false" onAction="#updateTable" visible="false" />
+                  <CheckMenuItem fx:id="trackThree" mnemonicParsing="false" onAction="#updateTable" visible="false" />
+                  <CheckMenuItem fx:id="trackFour" mnemonicParsing="false" onAction="#updateTable" visible="false" />
+                  <CheckMenuItem fx:id="trackFive" mnemonicParsing="false" onAction="#updateTable" visible="false" />
+                  <CheckMenuItem fx:id="trackSix" mnemonicParsing="false" onAction="#updateTable" visible="false" />
+                  <CheckMenuItem fx:id="trackSeven" mnemonicParsing="false" onAction="#updateTable" visible="false" />
+                  <CheckMenuItem fx:id="trackEight" mnemonicParsing="false" onAction="#updateTable" visible="false" />
+                  <CheckMenuItem fx:id="trackNine" mnemonicParsing="false" onAction="#updateTable" visible="false" />
+                  <CheckMenuItem fx:id="trackTen" mnemonicParsing="false" onAction="#updateTable" visible="false" />
                </items>
             </Menu>
         </menus>
@@ -57,5 +79,11 @@
       <TextField fx:id="minElevFeet" editable="false" layoutX="319.0" layoutY="229.0" prefHeight="26.0" prefWidth="94.0" />
       <Label layoutX="429.0" layoutY="204.0" text="Meters" />
       <Label layoutX="429.0" layoutY="234.0" text="Feet" />
+      <TableView fx:id="speedTable" layoutX="532.0" layoutY="66.0" prefHeight="370.0" prefWidth="760.0" />
+      <Label layoutX="814.0" layoutY="34.0" text="Miles Traveled at Speeds">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Label>
    </children>
 </AnchorPane>
