@@ -392,6 +392,7 @@ public class PlotterController {
         xAxis.setAutoRanging(true);
         yAxis.setAutoRanging(true);
         showDistanceSelect(false);
+        showElevationGainsText(false);
         lastGraphLoaded = "Speed Vs Time";
 
         showHideButton.disableProperty().setValue(false);
@@ -435,6 +436,7 @@ public class PlotterController {
     public void graphGrade() {
         lastGraphLoaded = "GradePlot";
         showDistanceSelect(false);
+        showElevationGainsText(false);
         showHideButton.disableProperty().setValue(false);
         tracksHandler = gpsController.getTracksHandler();
         try {
