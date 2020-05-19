@@ -257,7 +257,19 @@ public class Plotter {
         this.chart.getData().add(series);
     }
 
-    private double calculateThreeDimensionalDistance(double x1, double x2, double y1, double y2, double z1, double z2, boolean kilometers) {
+    /**
+     * Calculates the distance between two 3D cartesian points
+     *
+     * @param x1 - cartesian meters x1 point
+     * @param x2 - cartesian meters x2 point
+     * @param y1 - cartesian meters y1 point
+     * @param y2 - cartesian meters y2 point
+     * @param z1 - elevation meters z1 point
+     * @param z2 - elevation meters z2 point
+     * @param kilometers - if true, distance is returned in km, else distance result is in miles
+     * @return distance between two locations (x1, y1, z1) and (x2, y2, z2) in km or mi
+     */
+    public static double calculateThreeDimensionalDistance(double x1, double x2, double y1, double y2, double z1, double z2, boolean kilometers) {
 
         double divisor = kilometers ? M_IN_KM : M_IN_MI;
 
@@ -276,7 +288,6 @@ public class Plotter {
         double distance = Math.sqrt(xComponent + yComponent + zComponent);
         return distance;
     }
-
 
     /**
      * Plots elevation at each TrackPoint's date along the graph
@@ -654,13 +665,25 @@ public class Plotter {
         }
     }
 
-    private double calculateXCoord(TrackPoint currentTrackPoint, TrackPoint trackZero) {
+    /**
+     * Calculates 3D cartesian x coordinate from 2 trackpoints
+     * @param currentTrackPoint - trackpoint to measure to
+     * @param trackZero - trackpoint to measure from
+     * @return double x cartesian coordinate
+     */
+    public static double calculateXCoord(TrackPoint currentTrackPoint, TrackPoint trackZero) {
         return (RADIUS_OF_EARTH_M + ((trackZero.getElevation() + currentTrackPoint.getElevation()) / 2)) *
                 (trackZero.getLongitude() * DEG_TO_RAD - currentTrackPoint.getLongitude() * DEG_TO_RAD) *
                 Math.cos((trackZero.getLatitude() * DEG_TO_RAD + currentTrackPoint.getLatitude() * DEG_TO_RAD) / 2) * -1;
     }
 
-    private double calculateYCoord(TrackPoint currentTrackPoint, TrackPoint trackZero) {
+    /**
+     * Calculates 3D cartesian y coordinate from 2 trackpoints
+     * @param currentTrackPoint - trackpoint to measure to
+     * @param trackZero - trackpoint to measure from
+     * @return double y cartesian coordinate
+     */
+    public static double calculateYCoord(TrackPoint currentTrackPoint, TrackPoint trackZero) {
         return (RADIUS_OF_EARTH_M + (trackZero.getElevation() + currentTrackPoint.getElevation()) / 2) *
                 (trackZero.getLatitude() * DEG_TO_RAD - currentTrackPoint.getLatitude() * DEG_TO_RAD) * -1;
     }

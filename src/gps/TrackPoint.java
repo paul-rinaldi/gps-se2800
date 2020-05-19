@@ -19,7 +19,7 @@ public class TrackPoint {
 	 * Creates a Track Point with the given latitude, longitude, elevation, and time
 	 * @param latitude the desired latitude
 	 * @param longitude the desired longitude
-	 * @param elevation the desired elevation
+	 * @param elevation the desired elevation in meters
 	 * @param time the desired time
 	 */
 	public TrackPoint(double latitude, double longitude, double elevation, Date time) {
