@@ -1,4 +1,3 @@
-// paul rinaldi branch -- 
 package gps;
 
 
@@ -6,17 +5,17 @@ import gps_plotter.PlotterController;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Spinner;
-import javafx.scene.control.SpinnerValueFactory;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import maps.CaptureController;
 import org.xml.sax.SAXException;
 
 import java.io.File;
+import java.util.ArrayList;
 
 /**
  * Handles all GUI events and distributes tasks to other classes
@@ -64,12 +63,76 @@ public class GPSController {
     private TextField maxSpeedMPH;
     @FXML
     private TextField maxSpeedKPH;
+    @FXML
+    private TableView speedTable;
+    @FXML
+    private Menu tableOptions;
+    @FXML
+    private CheckMenuItem trackOne;
+    @FXML
+    private CheckMenuItem trackTwo;
+    @FXML
+    private CheckMenuItem trackThree;
+    @FXML
+    private CheckMenuItem trackFour;
+    @FXML
+    private CheckMenuItem trackFive;
+    @FXML
+    private CheckMenuItem trackSix;
+    @FXML
+    private CheckMenuItem trackSeven;
+    @FXML
+    private CheckMenuItem trackEight;
+    @FXML
+    private CheckMenuItem trackNine;
+    @FXML
+    private CheckMenuItem trackTen;
+
+    private ArrayList<DistanceTraveledAtSpeed> tableData = new ArrayList<>();
     private PlotterController plotterController;
     private Stage plotterStage;
     private CaptureController mapsController;
     private Stage mapsStage;
 
     private boolean firstTimePlotting = true;
+
+    /**
+     * Initializes JavaFX table element
+     */
+    @FXML
+    public void initialize() {
+        //set up table rows and columns
+        TableColumn nameColumn = new TableColumn("Track Name");
+        nameColumn.setPrefWidth(100);
+        nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
+
+        TableColumn lessThanThreeColumn = new TableColumn("less than 3mph");
+        lessThanThreeColumn.setPrefWidth(100);
+        lessThanThreeColumn.setCellValueFactory(new PropertyValueFactory<>("lessThanThree"));
+
+        TableColumn threeAndSevenColumn = new TableColumn("3mph and 7mph");
+        threeAndSevenColumn.setPrefWidth(100);
+        threeAndSevenColumn.setCellValueFactory(new PropertyValueFactory<>("threeAndSeven"));
+
+        TableColumn sevenAndTenColumn = new TableColumn("7mph and 10mph");
+        sevenAndTenColumn.setPrefWidth(115);
+        sevenAndTenColumn.setCellValueFactory(new PropertyValueFactory<>("sevenAndTen"));
+
+        TableColumn tenAndFifteenColumn = new TableColumn("10mph and 15mph");
+        tenAndFifteenColumn.setPrefWidth(115);
+        tenAndFifteenColumn.setCellValueFactory(new PropertyValueFactory<>("tenAndFifteen"));
+
+        TableColumn fifteenAndTwentyColumn = new TableColumn("15mph and 20mph");
+        fifteenAndTwentyColumn.setPrefWidth(115);
+        fifteenAndTwentyColumn.setCellValueFactory(new PropertyValueFactory<>("fifteenAndTwenty"));
+
+        TableColumn greaterThanTwentyColumn = new TableColumn("more than 20mph");
+        greaterThanTwentyColumn.setPrefWidth(115);
+        greaterThanTwentyColumn.setCellValueFactory(new PropertyValueFactory<>("greaterThanTwenty"));
+
+        speedTable.getColumns().addAll(nameColumn, lessThanThreeColumn, threeAndSevenColumn, sevenAndTenColumn,
+                tenAndFifteenColumn, fifteenAndTwentyColumn, greaterThanTwentyColumn);
+    }
 
     public GPSController() {
         trackNames = FXCollections.observableArrayList();
@@ -346,6 +409,7 @@ public class GPSController {
 
                     calcTrackStats();
 
+                    updateTableMenu(trackLoaded);
                 }
 
             } else {
@@ -374,6 +438,49 @@ public class GPSController {
         }
 
 
+    }
+    //adds the track data to an arraylist as they are loaded so the data doesn't have to be calculated several times
+    private void updateTableMenu(Track trackLoaded) {
+        tableOptions.setDisable(false);
+        DistanceTraveledAtSpeed temp = new DistanceTraveledAtSpeed(trackLoaded);
+        try {
+            temp.calculateData();
+            tableData.add(temp);
+        } catch (RuntimeException e) {
+            tableData.add(null);
+        }
+        switch (10-tracksRemaining){
+            case 1: trackOne.setText(trackLoaded.getName());
+                trackOne.setVisible(true);
+                break;
+            case 2: trackTwo.setText(trackLoaded.getName());
+                trackTwo.setVisible(true);
+                break;
+            case 3: trackThree.setText(trackLoaded.getName());
+                trackThree.setVisible(true);
+                break;
+            case 4: trackFour.setText(trackLoaded.getName());
+                trackFour.setVisible(true);
+                break;
+            case 5: trackFive.setText(trackLoaded.getName());
+                trackFive.setVisible(true);
+                break;
+            case 6: trackSix.setText(trackLoaded.getName());
+                trackSix.setVisible(true);
+                break;
+            case 7: trackSeven.setText(trackLoaded.getName());
+                trackSeven.setVisible(true);
+                break;
+            case 8: trackEight.setText(trackLoaded.getName());
+                trackEight.setVisible(true);
+                break;
+            case 9: trackNine.setText(trackLoaded.getName());
+                trackNine.setVisible(true);
+                break;
+            case 10: trackTen.setText(trackLoaded.getName());
+                trackTen.setVisible(true);
+                break;
+        }
     }
 
     /**
@@ -444,6 +551,114 @@ public class GPSController {
     }
 
     /**
+     * event handler for the check menu items in the plot menu, shows or hides the specified data on the table
+     * @param actionEvent the event that caused this method to be called
+     */
+    public void updateTable(ActionEvent actionEvent){
+            if (actionEvent.getSource().toString().contains("id=trackOne")) {
+                if (tableData.get(0) == null){
+                    trackOne.setSelected(false);
+                    createInfoDialog("Not Enough Points", "The track must have at least two track points to " +
+                            "create a table of speeds traveled");
+                }else if (trackOne.isSelected()) {
+                    speedTable.getItems().add(tableData.get(0));
+                } else {
+                    speedTable.getItems().remove(tableData.get(0));
+                }
+            } else if (actionEvent.getSource().toString().contains("id=trackTwo")) {
+                if (tableData.get(1) == null){
+                    trackTwo.setSelected(false);
+                    createInfoDialog("Not Enough Points", "The track must have at least two track points to " +
+                            "create a table of speeds traveled");
+                }else if (trackTwo.isSelected()) {
+                    speedTable.getItems().add(tableData.get(1));
+                } else {
+                    speedTable.getItems().remove(tableData.get(1));
+                }
+            } else if (actionEvent.getSource().toString().contains("id=trackThree")) {
+                if (tableData.get(2) == null){
+                    trackThree.setSelected(false);
+                    createInfoDialog("Not Enough Points", "The track must have at least two track points to " +
+                            "create a table of speeds traveled");
+                }else if (trackThree.isSelected()) {
+                    speedTable.getItems().add(tableData.get(2));
+                } else {
+                    speedTable.getItems().remove(tableData.get(2));
+                }
+            } else if (actionEvent.getSource().toString().contains("id=trackFour")) {
+                if (tableData.get(3) == null){
+                    trackFour.setSelected(false);
+                    createInfoDialog("Not Enough Points", "The track must have at least two track points to " +
+                            "create a table of speeds traveled");
+                }else if (trackFour.isSelected()) {
+                    speedTable.getItems().add(tableData.get(3));
+                } else {
+                    speedTable.getItems().remove(tableData.get(3));
+                }
+            } else if (actionEvent.getSource().toString().contains("id=trackFive")) {
+                if (tableData.get(4) == null){
+                    trackFive.setSelected(false);
+                    createInfoDialog("Not Enough Points", "The track must have at least two track points to " +
+                            "create a table of speeds traveled");
+                }else if (trackFive.isSelected()) {
+                    speedTable.getItems().add(tableData.get(4));
+                } else {
+                    speedTable.getItems().remove(tableData.get(4));
+                }
+            } else if (actionEvent.getSource().toString().contains("id=trackSix")) {
+                if (tableData.get(5) == null){
+                    trackSix.setSelected(false);
+                    createInfoDialog("Not Enough Points", "The track must have at least two track points to " +
+                            "create a table of speeds traveled");
+                }else if (trackSix.isSelected()) {
+                    speedTable.getItems().add(tableData.get(5));
+                } else {
+                    speedTable.getItems().remove(tableData.get(5));
+                }
+            } else if (actionEvent.getSource().toString().contains("id=trackSeven")) {
+                if (tableData.get(6) == null){
+                    trackSeven.setSelected(false);
+                    createInfoDialog("Not Enough Points", "The track must have at least two track points to " +
+                            "create a table of speeds traveled");
+                }else if (trackSeven.isSelected()) {
+                    speedTable.getItems().add(tableData.get(6));
+                } else {
+                    speedTable.getItems().remove(tableData.get(6));
+                }
+            } else if (actionEvent.getSource().toString().contains("id=trackEight")) {
+                if (tableData.get(7) == null){
+                    trackEight.setSelected(false);
+                    createInfoDialog("Not Enough Points", "The track must have at least two track points to " +
+                            "create a table of speeds traveled");
+                }else if (trackEight.isSelected()) {
+                    speedTable.getItems().add(tableData.get(7));
+                } else {
+                    speedTable.getItems().remove(tableData.get(7));
+                }
+            } else if (actionEvent.getSource().toString().contains("id=trackNine")) {
+                if (tableData.get(8) == null){
+                    trackNine.setSelected(false);
+                    createInfoDialog("Not Enough Points", "The track must have at least two track points to " +
+                            "create a table of speeds traveled");
+                }else if (trackNine.isSelected()) {
+                    speedTable.getItems().add(tableData.get(8));
+                } else {
+                    speedTable.getItems().remove(tableData.get(8));
+                }
+            } else {
+                if (tableData.get(9) == null){
+                    trackTen.setSelected(false);
+                    createInfoDialog("Not Enough Points", "The track must have at least two track points to " +
+                            "create a table of speeds traveled");
+                }else if (trackTen.isSelected()) {
+                    speedTable.getItems().add(tableData.get(9));
+                } else {
+                    speedTable.getItems().remove(tableData.get(9));
+                }
+            }
+    }
+
+    /**
      * Shows Google Maps window
      */
     public void showMapsWindow() {
@@ -458,5 +673,4 @@ public class GPSController {
     public void exit() { //Austin
         Platform.exit();
     }
-
 }
