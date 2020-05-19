@@ -66,13 +66,6 @@ public class PlotterController {
         this.elevationGainsLabel.setVisible(visible);
     }
 
-    private void showDistanceVsTimeUnits(boolean visible){
-
-        this.distanceKM.setVisible(visible);
-        this.distanceMI.setVisible(visible);
-        this.distanceLabel.setVisible(visible);
-    }
-
     /**
      * Called when Distance Vs Time menu item is pressed
      */
@@ -159,7 +152,7 @@ public class PlotterController {
         yAxis.setAutoRanging(true);
         lastGraphLoaded = "CaloriesExpended";
 
-        showDistanceVsTimeUnits(false);
+        showDistanceSelect(false);
         showElevationGainsText(false);
 
         showHideButton.disableProperty().setValue(false);
@@ -207,6 +200,7 @@ public class PlotterController {
         lastGraphLoaded = name;
 
         showDistanceSelect(true);
+        showElevationGainsText(false);
 
         showHideButton.disableProperty().setValue(false);
         this.tracksHandler = gpsController.getTracksHandler();
@@ -247,6 +241,7 @@ public class PlotterController {
         xAxis.setAutoRanging(true);
         yAxis.setAutoRanging(true);
         showElevationGainsText(false);
+
         lastGraphLoaded = "Distance Vs Time";
 
         showHideButton.disableProperty().setValue(false);
@@ -340,7 +335,6 @@ public class PlotterController {
         showHideButton.disableProperty().setValue(false);
 
         showDistanceSelect(false);
-        showDistanceVsTimeUnits(false);
         showElevationGainsText(false);
 
         this.tracksHandler = gpsController.getTracksHandler();
@@ -379,7 +373,6 @@ public class PlotterController {
         lastGraphLoaded = "2DPlot";
 
         showDistanceSelect(false);
-        showDistanceVsTimeUnits(false);
         showElevationGainsText(false);
 
         showHideButton.disableProperty().setValue(false);
@@ -398,7 +391,8 @@ public class PlotterController {
     public void graphSpeedVsTime() {
         xAxis.setAutoRanging(true);
         yAxis.setAutoRanging(true);
-        showDistanceVsTimeUnits(false);
+        showDistanceSelect(false);
+        showElevationGainsText(false);
         lastGraphLoaded = "Speed Vs Time";
 
         showHideButton.disableProperty().setValue(false);
@@ -423,7 +417,7 @@ public class PlotterController {
         lastGraphLoaded = "SpeedPlot";
 
         showDistanceSelect(false);
-        showDistanceVsTimeUnits(false);
+        showDistanceSelect(false);
         showElevationGainsText(false);
 
         showHideButton.disableProperty().setValue(false);
@@ -441,7 +435,8 @@ public class PlotterController {
      */
     public void graphGrade() {
         lastGraphLoaded = "GradePlot";
-        showDistanceVsTimeUnits(false);
+        showDistanceSelect(false);
+        showElevationGainsText(false);
         showHideButton.disableProperty().setValue(false);
         tracksHandler = gpsController.getTracksHandler();
         try {
